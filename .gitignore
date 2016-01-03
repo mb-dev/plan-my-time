@@ -1,0 +1,12 @@
+node_modules
+static/js/index.js
+static/js/index.js.map
+static/js/vendor.bundle.js
+static/js/vendor.bundle.js.map
+static/icons
+static/images
+coverage
+
+api/env
+api/venv
+__pycache__
