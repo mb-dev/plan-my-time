@@ -2,27 +2,26 @@ import React from 'react';
 import {Link} from 'react-router';
 import classNames from 'classnames';
 
-import userStore  from '../../stores/users_store';
+import store from '../../stores/store'
 import actions from '../../actions/actions';
-import apiClient from '../../libraries/api_client/api_client';
 
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {currentUser: null, saveSuccessfully: true};
-    this.onUsersStoreChange = this.onUsersStoreChange.bind(this);
+    this.onStoreChange = this.onStoreChange.bind(this);
   }
   handleLogin() {
     actions.authorizeWithDropbox();
   }
-  onUsersStoreChange() {
-    this.setState({currentUser: userStore.getCurrentUser()});
+  onStoreChange() {
+
   }
   componentDidMount() {
-    userStore.addChangeListener(this.onUsersStoreChange);
+    store.addChangeListener(this.onStoreChange);
   }
   componentWillUnmount() {
-    userStore.removeChangeListener(this.onUsersStoreChange);
+    store.removeChangeListener(this.onStoreChange);
   }
   render() {
     var userSection;
@@ -76,5 +75,5 @@ export default class Header extends React.Component {
 }
 
 Header.contextTypes = {
-  router: React.PropTypes.func.isRequired
+  router: React.PropTypes.object
 }

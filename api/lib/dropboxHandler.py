@@ -1,4 +1,9 @@
-from dropbox import DropboxOAuth2Flow
+import dropbox
+from dropbox.oauth import DropboxOAuth2Flow, BadRequestException, BadStateException, CsrfException, NotApprovedException, ProviderException
+from dropbox.client import DropboxClient
+from dropbox.files import WriteMode, GetMetadataError
+from dropbox.exceptions import ApiError
+
 import errors
 
 class DropboxHandler(object):
@@ -18,18 +23,44 @@ class DropboxHandler(object):
     return authorize_url
 
   # URL handler for /dropbox-auth-finish
-  def dropbox_auth_finish(self, web_app_session):
+  def dropbox_auth_finish(self, config, session, query):
     try:
       access_token, user_id, url_state = \
-              self.__get_dropbox_auth_flow(web_app_session).finish(
-                  request.query_params)
+              self.__get_dropbox_auth_flow(config, session).finish(query)
+      return access_token, user_id, url_state
     except BadRequestException as e:
       raise errors.AppException(errors.DROPBOX_BAD_REQUEST)
     except BadStateException as e:
       raise errors.AppException(errors.DROPBOX_INVALID_STATE)
     except CsrfException as e:
+      print(e)
       raise errors.AppException(errors.DROPBOX_CSRF_ERROR)
     except NotApprovedException as e:
       raise errors.AppException(errors.DROPBOX_NOT_APPROVED)
     except ProviderException as e:
       raise errors.AppException(errors.DROPBOX_PROVIDER_EXCEPTION)
+
+  def get_user_info(self, access_token):
+    client = DropboxClient(access_token)
+    info = client.account_info()
+    return {
+      "email": info["email"],
+      "verified": info["email_verified"],
+      "first_name": info["name_details"]["given_name"],
+      "last_name": info["name_details"]["surname"],
+      "country": info["country"]
+    }
+
+  def get_file_or_create(self, access_token, path):
+    dbx = dropbox.Dropbox(access_token)
+    try:
+      metadata = dbx.files_get_metadata(path)
+      metadata, response = dbx.files_download(path)
+      return response.content.decode('utf-8')
+    except ApiError as e:
+      if type(e.error) is GetMetadataError:
+        pass
+      else:
+        raise
+    metadata = dbx.files_upload("", path, WriteMode('overwrite'))
+    return ""

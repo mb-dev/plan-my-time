@@ -1,29 +1,14 @@
 import {EventEmitter} from 'events'
-import apiClient from '../libraries/api_client/api_client'
 import dispatcher from '../dispatcher/dispatcher'
 import ActionType from './action_types'
 
 var CHANGE_EVENT = 'change';
 
-class UserStore extends EventEmitter {
+class Store extends EventEmitter {
   constructor() {
     super();
-    this.currentUser = null;
+    this.state = {};
   }
-  getCurrentUser() {
-    return this.currentUser;
-  }
-  loadCurrentUser() {
-    if (this.currentUser) {
-      return;
-    }
-
-    // apiClient.getCurrentUser((data) => {
-    //   this.currentUser = data;
-    //   this.emitChange();
-    // });
-  }
-
   emitChange() {
     this.emit(CHANGE_EVENT);
   }
@@ -35,16 +20,16 @@ class UserStore extends EventEmitter {
   }
   handleDispatch(payload) {
     switch (payload.actionType) {
-      case ActionType.USER.LOGOUT:
-        this.currentUser = null;
+      case ActionType.TASKS.TEXT_CHANGED_FROM_SERVER:
+        this.state.text = payload.newText;
+        this.state.lastUpdated = new Date();
         this.emitChange();
         break
     }
   }
-
 }
 
-var store = new UserStore();
+var store = new Store();
 dispatcher.register(store.handleDispatch.bind(store));
 
 export default store;

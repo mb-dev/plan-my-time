@@ -1,6 +1,4 @@
 import React from 'react';
-import {RouteHandler} from 'react-router'
-
 import Header      from '../../components/header/header'
 import Footer      from '../../components/footer/footer'
 
@@ -9,7 +7,7 @@ export default class App extends React.Component {
     return (
       <div>
         <Header />
-        <RouteHandler/>
+        {this.props.children}
         <Footer />
       </div>
     )
