@@ -13,6 +13,13 @@
     "css-loader": "^0.16.0",
     "eslint": "^1.2.0",
     "flux": "^2.0.3",
+    "gulp": "^3.9.0",
+    "gulp-bg": "0.0.8",
+    "gulp-nodemon": "^2.0.6",
+    "gulp-notify": "^2.2.0",
+    "gulp-shell": "^0.4.2",
+    "gulp-spawn-mocha": "^2.2.1",
+    "gulp-util": "^3.0.6",
     "jquery": "*",
     "less": "^2.5.1",
     "less-loader": "^2.2.0",
@@ -32,12 +39,6 @@
     "react": "^0.14.5",
     "react-bootstrap": "^0.28.1",
     "react-dom": "^0.14.5",
-    "react-router": "^2.0.0-rc4",
-    "gulp": "^3.9.0",
-    "gulp-bg": "0.0.8",
-    "gulp-notify": "^2.2.0",
-    "gulp-shell": "^0.4.2",
-    "gulp-spawn-mocha": "^2.2.1",
-    "gulp-util": "^3.0.6"
+    "react-router": "^2.0.0-rc4"
   }
 }
