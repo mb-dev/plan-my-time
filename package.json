@@ -38,6 +38,6 @@
     "gulp-notify": "^2.2.0",
     "gulp-shell": "^0.4.2",
     "gulp-spawn-mocha": "^2.2.1",
-    "gulp-util": "^3.0.6",
+    "gulp-util": "^3.0.6"
   }
 }
