@@ -3,6 +3,9 @@ language: python
 python:
   - "3.5"
 
+node_js:
+  - "5.3"
+
 services:
   - mongodb
 
