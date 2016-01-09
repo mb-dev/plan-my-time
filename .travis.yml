@@ -15,7 +15,7 @@ cache:
     - api/env
 
 install:
-  - "cd api; pip install -r requirements.txt"
+  - "cd api; pip install -r requirements.txt; cd .."
 
 before_script:
   - npm install
