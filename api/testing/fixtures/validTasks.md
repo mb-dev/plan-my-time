@@ -1,4 +1,4 @@
 - 7am #wakeup
-- 1pm #lunch with @Joana at $BlueBottle
+- 1pm #lunch with @barak-obama at $blue-bottle
 - 2:15pm #yoga
 - 11pm #sleep

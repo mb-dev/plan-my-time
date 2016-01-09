@@ -45,7 +45,9 @@ gulp.task('server', function () {
   });
 });
 
-gulp.task("test", ['mocha']);
+gulp.task('pythontest', shell.task(['env/bin/python3 -m unittest discover -p "*_test.py"'], {cwd: 'api'}));
+
+gulp.task("test", ['pythontest']);
 
 gulp.task("dev", ["webpack", "server", "api"]);
 
