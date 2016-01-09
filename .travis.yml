@@ -11,10 +11,11 @@ cache:
     - node_modules
     - api/env
 
-install: "cd api; pip install -r requirements.txt"
+install:
+  - "cd api; pip install -r requirements.txt"
 
 before_script:
-  - npm install
+  - npm install --dev
 
 script:
   - gulp test
