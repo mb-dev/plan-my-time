@@ -3,10 +3,9 @@ from dropbox.oauth import DropboxOAuth2Flow, BadRequestException, BadStateExcept
 from dropbox.client import DropboxClient
 from dropbox.files import WriteMode, GetMetadataError
 from dropbox.exceptions import ApiError
+import lib.errors
 
-import errors
-
-class DropboxHandler(object):
+class DropboxApi(object):
   # session[csrf_token_session_key] will be stored
   def __get_dropbox_auth_flow(self, config, session):
     return DropboxOAuth2Flow(
@@ -56,11 +55,16 @@ class DropboxHandler(object):
     try:
       metadata = dbx.files_get_metadata(path)
       metadata, response = dbx.files_download(path)
-      return response.content.decode('utf-8')
+      return {"content": response.content.decode('utf-8'), "last_modified": metadata.server_modified, "rev": metadata.rev}
     except ApiError as e:
       if type(e.error) is GetMetadataError:
         pass
       else:
         raise
     metadata = dbx.files_upload("", path, WriteMode('overwrite'))
-    return ""
+    return {"content": "", "last_modified": metadata.server_modified, "rev": metadata.rev}
+
+  def update_file(self, access_token, path, text):
+    dbx = dropbox.Dropbox(access_token)
+    metadata = dbx.files_upload(text, path, WriteMode('overwrite'))
+    return {"last_modified": metadata.server_modified, "rev": metadata.rev}

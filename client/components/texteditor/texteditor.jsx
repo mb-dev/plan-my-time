@@ -10,7 +10,6 @@ export default class TextEditor extends React.Component {
   }
   componentDidMount() {
     this.mainTextArea.focus();
-    this.updateStateTimer();
   }
   componentWillUnmount() {
     clearTimeout(this.timer);
@@ -18,23 +17,26 @@ export default class TextEditor extends React.Component {
   componentWillReceiveProps() {
 
   }
-  updateStateTimer() {
+  sendUpdateAfterTimeout() {
+    // throttle
+    if (this.timer) {
+      return;
+    }
     this.timer = setTimeout(() => {
       if (this.state.text != this.mainTextArea.value) {
         this.state.text = this.mainTextArea.value;
-        console.log('text area updated');
+        this.props.onUpdate(this.mainTextArea.value);
       }
-      this.updateStateTimer();
     }, 5000);
   }
   onChange(e) {
-
+    this.sendUpdateAfterTimeout();
   }
 
   render() {
     return (
       <div className="text-editor">
-        <textarea ref={(c) => this.mainTextArea = c} defaultValue={this.state.text} onChange={this.onChange}></textarea>
+        <textarea ref={(c) => this.mainTextArea = c} defaultValue={this.state.text} onChange={this.onChange.bind(this)}></textarea>
       </div>
     );
   }

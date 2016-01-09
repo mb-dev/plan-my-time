@@ -1,37 +1,27 @@
-import config from '../../config/config'
-import storage from '../storage/storage'
+import $       from 'jquery'
+import config  from '../../config/config'
+import request from '../request/request'
 
-import $ from 'jquery'
-
-class TimeApiClient {
+class ApiClient {
+  // auth
   getDropboxAuthUrl(success) {
     $.get(config.apiServer + '/authorize/url', success);
   }
   finalizeDropboxAuth(state, code, csrf, success) {
     $.post(config.apiServer + '/authorize/finalize', {csrf_token: csrf, state: state, code: code}, success);
   }
+  // tasks
   getTodayTasks(success) {
-    let req = this._addBearerToken({
-      url: config.apiServer + '/tasks/today',
-      success: success
-    });
-    $.ajax(req, success);
+    request('GET', '/tasks/today', {}, true, success);
   }
-
-
-
-  _addBearerToken(params) {
-    let bearerToken = storage.getBearerToken();
-    if (!bearerToken) {
-      return null;
-    }
-    params.beforeSend = function(xhr) {
-      xhr.setRequestHeader("Authorization", bearerToken);
+  updateTodayTasks(text, success) {
+    let req = {
+      data: {text: text}
     };
-    return params;
+    request('POST', '/tasks/today', req, true, success);
   }
 }
 
-var timeApiClient = new TimeApiClient();
+var apiClient = new ApiClient();
 
-export default timeApiClient;
+export default apiClient;

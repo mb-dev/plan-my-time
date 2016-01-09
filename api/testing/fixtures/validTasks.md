@@ -1,0 +1,4 @@
+- 7am #wakeup
+- 1pm #lunch with @Joana at $BlueBottle
+- 2:15pm #yoga
+- 11pm #sleep

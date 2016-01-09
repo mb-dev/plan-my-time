@@ -1,7 +1,8 @@
-import React from 'react';
-import store from '../../stores/store'
-import actions from '../../actions/actions'
+import React      from 'react';
+import store      from '../../stores/store'
+import actions    from '../../actions/actions'
 import TextEditor from '../../components/texteditor/texteditor'
+import formatters from '../../libraries/formatters/formatters'
 
 require('./home.less');
 
@@ -21,6 +22,9 @@ export default class Home extends React.Component {
   onStoreChanged() {
     this.updateState(this.props);
   }
+  onTextUpdated(text) {
+    actions.updateTodayTasks(text);
+  }
   updateState(props) {
     this.setState({
       text: store.state.text,
@@ -32,8 +36,8 @@ export default class Home extends React.Component {
       <div className="home-page container">
         { this.state.text !== undefined &&
           <div>
-            <div>Last updated {this.state.lastUpdated}</div>
-            <TextEditor text={this.state.text} />
+            <div>Last updated {formatters.displayTimeAgo(this.state.lastUpdated)}</div>
+            <TextEditor text={this.state.text} onUpdate={this.onTextUpdated} />
           </div>
         }
       </div>
