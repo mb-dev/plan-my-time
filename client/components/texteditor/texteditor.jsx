@@ -27,7 +27,8 @@ export default class TextEditor extends React.Component {
         this.state.text = this.mainTextArea.value;
         this.props.onUpdate(this.mainTextArea.value);
       }
-    }, 5000);
+      this.timer = null;
+    }, 10 * 1000);
   }
   onChange(e) {
     this.sendUpdateAfterTimeout();

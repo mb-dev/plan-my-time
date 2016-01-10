@@ -5,6 +5,9 @@ from dropbox.files import WriteMode, GetMetadataError
 from dropbox.exceptions import ApiError
 import lib.errors
 
+def convert_metadata(metadata):
+  return {"name": metadata.name, "last_modified": metadata.server_modified, "rev": metadata.rev}
+
 class DropboxApi(object):
   # session[csrf_token_session_key] will be stored
   def __get_dropbox_auth_flow(self, config, session):
@@ -50,21 +53,39 @@ class DropboxApi(object):
       "country": info["country"]
     }
 
+  # files
+  def get_file_content(self, access_token, path):
+    dbx = dropbox.Dropbox(access_token)
+    metadata, response = dbx.files_download(path)
+    return {"content": response.content.decode('utf-8'), **convert_metadata(metadata)}
+
   def get_file_or_create(self, access_token, path):
     dbx = dropbox.Dropbox(access_token)
     try:
-      metadata = dbx.files_get_metadata(path)
-      metadata, response = dbx.files_download(path)
-      return {"content": response.content.decode('utf-8'), "last_modified": metadata.server_modified, "rev": metadata.rev}
+      return self.get_file_content(access_token, path)
     except ApiError as e:
+      print(e)
       if type(e.error) is GetMetadataError:
         pass
       else:
         raise
     metadata = dbx.files_upload("", path, WriteMode('overwrite'))
-    return {"content": "", "last_modified": metadata.server_modified, "rev": metadata.rev}
+    return {"content": "", **convert_metadata(metadata)}
 
   def update_file(self, access_token, path, text):
     dbx = dropbox.Dropbox(access_token)
     metadata = dbx.files_upload(text, path, WriteMode('overwrite'))
-    return {"last_modified": metadata.server_modified, "rev": metadata.rev}
+    return convert_metadata(metadata)
+
+  # returns: array of metadata
+  def get_files_in_folder(self, access_token):
+    files = []
+    dbx = dropbox.Dropbox(access_token)
+    cursor = None
+    has_more = True
+    while has_more:
+      result = dbx.files_list_folder('', cursor)
+      files += [convert_metadata(metadata) for metadata in result.entries]
+      cursor = result.cursor
+      has_more = result.has_more
+    return files

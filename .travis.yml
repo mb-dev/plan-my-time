@@ -13,6 +13,7 @@ cache:
   directories:
     - node_modules
     - /home/travis/virtualenv/python3.5.0/lib/python3.5/site-packages
+    - pip
 
 install:
   - "cd api; pip install -r requirements.txt; cd .."

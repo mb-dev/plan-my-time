@@ -15,6 +15,7 @@ export default class Home extends React.Component {
   componentDidMount() {
     store.addChangeListener(this.onStoreChanged);
     actions.getTodayTasks();
+    actions.getMetadata();
   }
   componentWillUnmount() {
     store.removeChangeListener(this.onStoreChanged);

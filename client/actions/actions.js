@@ -20,11 +20,15 @@ class Actions {
   }
   // tasks
   getTodayTasks() {
-    if (!storage.getBearerToken()) {
-      return;
-    }
+    if (!storage.getBearerToken()) { return; }
     apiClient.getTodayTasks(function(data) {
       dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified});
+    });
+  }
+  getMetadata() {
+    if (!storage.getBearerToken()) { return; }
+    apiClient.getMetadata(function(data) {
+      dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data});
     });
   }
   updateTodayTasks(text) {

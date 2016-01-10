@@ -14,6 +14,9 @@ class ApiClient {
   getTodayTasks(success) {
     request('GET', '/tasks/today', {}, true, success);
   }
+  getMetadata(success) {
+    request('GET', '/tasks/metadata', {}, true, success);
+  }
   updateTodayTasks(text, success) {
     let req = {
       data: {text: text}

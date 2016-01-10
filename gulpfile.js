@@ -45,14 +45,11 @@ gulp.task('server', function () {
   });
 });
 
-gulp.task('pythontest', function() {
-  var cmd = 'env/bin/python3 -m unittest discover -p "*_test.py"';
-  if (CI) {
-    cmd = 'python -m unittest discover -p "*_test.py"';
-  }
-
-  shell.task([], {cwd: 'api'})
-});
+var testCmd = 'env/bin/python3 -m unittest discover -p "*_test.py"';
+if (CI) {
+  testCmd = 'python -m unittest discover -p "*_test.py"';
+}
+gulp.task('pythontest', shell.task([testCmd], {cwd: 'api'}));
 
 gulp.task("test", ['pythontest']);
 
