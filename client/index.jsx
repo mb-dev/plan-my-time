@@ -19,4 +19,4 @@ render((
       <IndexRoute component={Home}/>
     </Route>
   </Router>
-), document.body);
+), document.getElementById('app'));

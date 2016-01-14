@@ -29,6 +29,9 @@ class Store extends EventEmitter {
         this.state.text = payload.newText;
         this.state.lastUpdated = new Date(payload.lastUpdated);
         this.emitChange();
+      case ActionType.TASKS.GET_METADATA:
+        this.state.metadata = payload.metadata;
+        this.emitChange();
     }
   }
 }

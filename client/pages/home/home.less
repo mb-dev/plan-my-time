@@ -1,5 +1,22 @@
+@padding: 20px;
+
 .home-page {
-  padding: 20px;
+  padding: @padding;
+
+  .main-pane {
+    float: left;
+    width: calc(~"100% - 200px" - @padding);
+    margin-bottom: @padding;
+  }
+  .right-pane {
+    float: left;
+    width: 200px;
+    margin-left: @padding;
+  }
+  .summary-pane {
+    margin-top: @padding;
+    clear: both;
+  }
 
   .text-editor {
     width: 100%;

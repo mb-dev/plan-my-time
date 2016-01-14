@@ -1,4 +1,5 @@
 import re
+import datetime
 from dateutil import parser
 
 timeRegex = re.compile(r'([0-9:]+(am|pm)?)')
@@ -35,7 +36,7 @@ class TasksParser:
       duration = None
       if last_date is not None:
         duration = time - last_date
-        self.tasks[-1]["duration"] = duration
+        self.tasks[-1]["duration"] = duration.seconds
       last_date = time
       people = peopleRegex.findall(line)
       self.people += people

@@ -4,6 +4,11 @@ function displayTimeAgo(date) {
   return moment(date).fromNow();
 }
 
+function displayDuration(seconds) {
+  return moment.duration(seconds, 'seconds').humanize();
+}
+
 export default {
-  displayTimeAgo: displayTimeAgo
+  displayTimeAgo: displayTimeAgo,
+  displayDuration: displayDuration
 }
