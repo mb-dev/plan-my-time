@@ -22,8 +22,9 @@ def getMetadata():
   dropbox = DropboxApi()
   files = dropbox.get_files_in_folder(g.user["dropbox_access_token"])
   files = [dropbox.get_file_content(g.user["dropbox_access_token"], '/' + metadata["name"]) for metadata in files]
-  files = [TasksParser(to_date_str(metadata["name"]), metadata["content"]).to_dict() for metadata in files]
-  return jsonify(metadata=files)
+  metadata_arr = [TasksParser(to_date_str(metadata["name"]), metadata["content"]).to_dict() for metadata in files]
+  summary = TasksParser.summerize(metadata_arr)
+  return jsonify(metadata=files, summary=summary)
 
 @app.route('/tasks/today', methods= ['POST'])
 @auth.auth_required
