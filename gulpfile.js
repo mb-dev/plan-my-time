@@ -28,7 +28,9 @@ gulp.task("mocha", function() {
 
 var timeServiceBg;
 gulp.task('api', timeServiceBg = bg('python3', 'api/service.py'));
-
+gulp.task('watch:api', function() {
+	return gulp.watch(['api/**/*.py'], ['api']);
+});
 gulp.task('server', function () {
   nodemon({
     script: 'server/server.js',
@@ -53,7 +55,7 @@ gulp.task('pythontest', shell.task([testCmd], {cwd: 'api'}));
 
 gulp.task("test", ['pythontest']);
 
-gulp.task("dev", ["webpack", "server", "api"]);
+gulp.task("dev", ["webpack", "server", "api", "watch:api"]);
 
 gulp.task("webpack", function() {
 		if (CI) {

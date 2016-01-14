@@ -14,8 +14,8 @@ import Home            from './pages/home/home'
 render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
-      <Route path="logout" handler={Logout} />
-      <Route path="auth/dropbox/callback" handler={DropboxCallback} />
+      <Route path="logout" component={Logout} />
+      <Route path="auth/dropbox/callback" component={DropboxCallback} />
       <IndexRoute component={Home}/>
     </Route>
   </Router>

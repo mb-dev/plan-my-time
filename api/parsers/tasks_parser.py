@@ -16,6 +16,7 @@ class TasksParser:
 
     # parse
     lines = content.split('\n')
+    last_date = None
     for line in lines:
       if not line.startswith('-'):
         continue
@@ -26,16 +27,22 @@ class TasksParser:
       if not time.endswith('am') and not time.endswith('pm'):
         time += 'am'
       try:
-        time_parsed = str(parser.parse(datestr + ' ' + time))
+        time = parser.parse(datestr + ' ' + time)
+        time_parsed = str(time)
       except ValueError:
         continue
+
+      duration = None
+      if last_date is not None:
+        duration = str(time - last_date)
+      last_date = time
       people = peopleRegex.findall(line)
       self.people += people
       tags = tagRegex.findall(line)
       self.tags += tags
       locations = locationRegex.findall(line)
       self.locations += locations
-      self.tasks.append({"start_time": time_parsed, "duration": None, "line": line})
+      self.tasks.append({"start_time": time_parsed, "duration": duration, "line": line})
 
   def to_dict(self):
     return {

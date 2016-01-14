@@ -2,12 +2,12 @@ import React from 'react';
 
 import actions from '../../actions/actions'
 
-export default class GoogleCallback extends React.Component {
+export default class DropboxCallback extends React.Component {
   componentDidMount() {
-    let {state, code} = this.props.query;
+    let {state, code} = this.props.location.query;
 
     if(state && code) {
-      actions.finalizeDropboxAuth(state, code, this.context.router);
+      actions.finalizeDropboxAuth(state, code);
     }
   }
   render() {
@@ -17,8 +17,4 @@ export default class GoogleCallback extends React.Component {
       </div>
     )
   }
-}
-
-GoogleCallback.contextTypes = {
-  router: React.PropTypes.func.isRequired
 }

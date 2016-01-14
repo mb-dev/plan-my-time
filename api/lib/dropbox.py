@@ -1,9 +1,10 @@
 import dropbox
 from dropbox.oauth import DropboxOAuth2Flow, BadRequestException, BadStateException, CsrfException, NotApprovedException, ProviderException
 from dropbox.client import DropboxClient
-from dropbox.files import WriteMode, GetMetadataError
+from dropbox.files import WriteMode, GetMetadataError, DownloadError, LookupError
 from dropbox.exceptions import ApiError
 import lib.errors
+from pprint import pprint
 
 def convert_metadata(metadata):
   return {"name": metadata.name, "last_modified": metadata.server_modified, "rev": metadata.rev}
@@ -64,8 +65,7 @@ class DropboxApi(object):
     try:
       return self.get_file_content(access_token, path)
     except ApiError as e:
-      print(e)
-      if type(e.error) is GetMetadataError:
+      if type(e.error) is DownloadError and e.error.is_path() and e.error.get_path().is_not_found():
         pass
       else:
         raise

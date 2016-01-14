@@ -2,6 +2,7 @@ from app import app
 from lib.dropbox import DropboxApi
 import models.user as user
 from flask import jsonify, request
+import jwt
 
 @app.route('/authorize/url', methods = ['GET'])
 def authorize():
