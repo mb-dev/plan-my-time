@@ -10,12 +10,13 @@ export default class TextEditor extends React.Component {
   }
   componentDidMount() {
     this.mainTextArea.focus();
+    this.setState({lineCount: this.lineCount()});
   }
   componentWillUnmount() {
     clearTimeout(this.timer);
   }
-  componentWillReceiveProps() {
-
+  componentWillReceiveProps(props) {
+    this.mainTextArea.value = props.text;
   }
   sendUpdateAfterTimeout() {
     // throttle
@@ -30,14 +31,18 @@ export default class TextEditor extends React.Component {
       this.timer = null;
     }, 10 * 1000);
   }
+  lineCount() {
+    return this.mainTextArea.value.match(/\n/g).length + 1;
+  }
   onChange(e) {
+    this.setState({lineCount: this.lineCount()});
     this.sendUpdateAfterTimeout();
   }
 
   render() {
     return (
       <div className="text-editor">
-        <textarea ref={(c) => this.mainTextArea = c} defaultValue={this.state.text} onChange={this.onChange.bind(this)}></textarea>
+        <textarea ref={(c) => this.mainTextArea = c} defaultValue={this.state.text} onChange={this.onChange.bind(this)} rows={this.state.lineCount}></textarea>
       </div>
     );
   }

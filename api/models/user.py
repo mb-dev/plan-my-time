@@ -1,11 +1,8 @@
 import pymongo
-from pymongo import MongoClient
 from bson.objectid import ObjectId
+import lib.mongo as mongo
 
-client = MongoClient('localhost', 27017)
-db = client['plan-my-time']
-users = db['users']
-
+users = mongo.db['users']
 users.ensure_index([('email',pymongo.ASCENDING)], unique=True, dropDups=True)
 
 def create_or_find_user(info):

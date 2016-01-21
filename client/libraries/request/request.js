@@ -12,7 +12,12 @@ export default function makeRequest(type, url, req, addToken, success) {
       xhr.setRequestHeader("Authorization", bearerToken);
     };
   }
-  req.url = config.apiServer + url;
+  // query = '';
+  // if (req.query) {
+  //   query += '?' + Object.keys(req.query).map((key) => { return key + '=' + req.query[key]; }).join('&');
+  // }
+
+  req.url = config.apiServer + url;// + query;
   req.type = type;
   req.success = success;
   return $.ajax(req);

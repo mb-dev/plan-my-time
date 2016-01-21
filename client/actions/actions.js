@@ -18,23 +18,27 @@ class Actions {
       browserHistory.push('/');
     });
   }
-  // tasks
-  getTodayTasks() {
+  // journal
+  getJournal(date) {
     if (!storage.getBearerToken()) { return; }
-    apiClient.getTodayTasks(function(data) {
+    apiClient.getJournal(date, function(data) {
       dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified});
     });
   }
-  getMetadata() {
+  getMetadata(date) {
     if (!storage.getBearerToken()) { return; }
-    apiClient.getMetadata(function(data) {
+    apiClient.getMetadata(date, function(data) {
       dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data});
     });
   }
-  updateTodayTasks(text) {
-    apiClient.updateTodayTasks(text, function(data) {
+  updateJournal(date, text) {
+    apiClient.updateJournal(date, text, function(data) {
       dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_UPDATE_SUCCESS, newText: text, lastUpdated: data.last_modified});
     });
+  }
+  switchDate(date) {
+    dispatcher.dispatch({actionType: ActionType.TASKS.CHANGE_DATE, newDate: date});
+    this.getJournal(date);
   }
 }
 

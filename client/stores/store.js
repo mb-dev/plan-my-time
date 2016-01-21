@@ -7,7 +7,7 @@ var CHANGE_EVENT = 'change';
 class Store extends EventEmitter {
   constructor() {
     super();
-    this.state = {};
+    this.state = {date: new Date()};
   }
   emitChange() {
     this.emit(CHANGE_EVENT);
@@ -29,9 +29,15 @@ class Store extends EventEmitter {
         this.state.text = payload.newText;
         this.state.lastUpdated = new Date(payload.lastUpdated);
         this.emitChange();
+        break;
       case ActionType.TASKS.GET_METADATA:
         this.state.metadata = payload.metadata;
         this.emitChange();
+        break;
+      case ActionType.TASKS.CHANGE_DATE:
+        this.state.date = payload.newDate;
+        this.emitChange();
+        break;
     }
   }
 }

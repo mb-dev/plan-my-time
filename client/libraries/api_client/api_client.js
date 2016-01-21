@@ -1,6 +1,7 @@
-import $       from 'jquery'
-import config  from '../../config/config'
-import request from '../request/request'
+import $          from 'jquery'
+import config     from '../../config/config'
+import request    from '../request/request'
+import * as formatters from '../formatters/formatters'
 
 class ApiClient {
   // auth
@@ -10,18 +11,24 @@ class ApiClient {
   finalizeDropboxAuth(state, code, csrf, success) {
     $.post(config.apiServer + '/authorize/finalize', {csrf_token: csrf, state: state, code: code}, success);
   }
-  // tasks
-  getTodayTasks(success) {
-    request('GET', '/tasks/today', {}, true, success);
+  // journals
+  getJournal(date, success) {
+    let dateStr = formatters.getYearMonthDate(date);
+    request('GET', '/journal', {data: {date: dateStr}}, true, success);
   }
-  getMetadata(success) {
-    request('GET', '/tasks/metadata', {}, true, success);
+  getMetadata(date, success) {
+    let dateStr = formatters.getYearMonth(date);
+    request('GET', '/journal/metadata', {data: {date: dateStr}}, true, success);
   }
-  updateTodayTasks(text, success) {
+  updateJournal(date, text, success) {
+    let dateStr = formatters.getYearMonthDate(date);
     let req = {
-      data: {text: text}
+      data: {
+        text: text,
+        date: dateStr
+      }
     };
-    request('POST', '/tasks/today', req, true, success);
+    request('POST', '/journal', req, true, success);
   }
 }
 

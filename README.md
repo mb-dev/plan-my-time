@@ -34,13 +34,14 @@ Internally those files are converted to json journal files, that contain #tags, 
 
 ## API
 
-### GET /tasks/today
+### GET /journal?date=YYYY-MM-DD
 Retrieves the markdown file from dropbox and returns it.
 
-### POST /tasks/today
+### POST /journal
+{text: 'content here', date: 'YYYY-MM-DD'}
 Updates the markdown file on dropbox with new journal
 
-### GET /tasks/metadata
+### GET /journal/metadata
 Summarizes all journals (TODO: limit to a time period) and return JSON metadata. Also contains summary of time spent per #tag.
 
 ## Installation

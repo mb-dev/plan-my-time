@@ -4,7 +4,6 @@ from dropbox.client import DropboxClient
 from dropbox.files import WriteMode, GetMetadataError, DownloadError, LookupError
 from dropbox.exceptions import ApiError
 import lib.errors
-from pprint import pprint
 
 def convert_metadata(metadata):
   return {"name": metadata.name, "last_modified": metadata.server_modified, "rev": metadata.rev}

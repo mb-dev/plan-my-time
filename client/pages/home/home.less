@@ -3,6 +3,32 @@
 .home-page {
   padding: @padding;
 
+  .day-nav {
+    > .day {
+      display: inline-block;
+      width: 60px;
+      text-align: center;
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid blue;
+      text-decoration: none;
+
+      .date {
+        display: block;
+      }
+      .day {
+        display: block;
+      }
+      &.today {
+        background-color: yellow;
+      }
+      &.active {
+        border-color: orange;
+        cursor: default;
+      }
+    }
+  }
+
   .main-pane {
     float: left;
     width: calc(~"100% - 200px" - @padding);
@@ -21,5 +47,6 @@
   .text-editor {
     width: 100%;
     min-height: 200px;
+    margin-top: 10px;
   }
 }
