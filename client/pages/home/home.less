@@ -10,8 +10,12 @@
       text-align: center;
       padding: 10px;
       margin-right: 10px;
-      border: 1px solid blue;
+      border: 1px solid #969696;
       text-decoration: none;
+
+      &:hover {
+        border-color: #59c3d8;
+      }
 
       .date {
         display: block;
@@ -20,10 +24,10 @@
         display: block;
       }
       &.today {
-        background-color: yellow;
+        background-color: #f3fbfe;
       }
       &.active {
-        border-color: orange;
+        border-color: #59c3d8;
         cursor: default;
       }
     }

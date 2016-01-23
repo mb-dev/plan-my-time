@@ -1,6 +1,7 @@
 import re
 import datetime
 from dateutil import parser
+import lib.date_helpers as date_helpers
 
 timeRegex = re.compile(r'([0-9:]+(am|pm)?)')
 peopleRegex = re.compile(r'@([\w-]+)')
@@ -8,7 +9,8 @@ tagRegex = re.compile(r'#([\w-]+)')
 locationRegex = re.compile(r'\$([\w-]+)')
 
 class TasksParser:
-  def __init__(self, datestr, content):
+  def __init__(self, date_str, content):
+    self.date_str = date_str
     self.content = content
     self.tags = []
     self.people = []
@@ -28,7 +30,7 @@ class TasksParser:
       if not time.endswith('am') and not time.endswith('pm'):
         time += 'am'
       try:
-        time = parser.parse(datestr + ' ' + time)
+        time = parser.parse(date_str + ' ' + time)
         time_parsed = str(time)
       except ValueError:
         continue
@@ -53,14 +55,17 @@ class TasksParser:
 
   def to_dict(self):
     return {
+      "date": self.date_str,
       "people": self.people,
       "tags": self.tags,
       "locations": self.locations,
       "tasks": self.tasks
     }
 
+  # summerize the metadata relative to date.
+  # metadata should contain only elements that are in the same month as date
   @staticmethod
-  def summerize(metadata_arr):
+  def summerize(metadata_arr, date):
     tag_summary = {}
     for metadata in metadata_arr:
       for task in metadata["tasks"]:
@@ -68,7 +73,14 @@ class TasksParser:
           continue
         for tag in task["tags"]:
           if tag not in tag_summary:
-            tag_summary[tag] = task["duration"]
-          else:
-            tag_summary[tag] += task["duration"]
+            tag_summary[tag] = {"day": 0, "week": 0, "month": 0}
+
+          metadata_date = date_helpers.parse_date_str(metadata["date"])
+          if date_helpers.is_same_week(date, metadata_date):
+            tag_summary[tag]["week"] += task["duration"]
+
+          if date_helpers.is_same_day(date, metadata_date):
+            tag_summary[tag]["day"] += task["duration"]
+
+          tag_summary[tag]["month"] += task["duration"]
     return tag_summary

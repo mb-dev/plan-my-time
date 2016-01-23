@@ -2,15 +2,10 @@ import pymongo
 import datetime
 from bson.objectid import ObjectId
 import lib.mongo as mongo
+import lib.date_helpers as date_helpers
 
 entries = mongo.db['entries']
 entries.ensure_index([('user_id',pymongo.ASCENDING), ('name',pymongo.ASCENDING)], unique=True, dropDups=True)
-
-def beginning_of_the_month(month, year):
-  return datetime.datetime(year, month, 1)
-
-def end_of_month(month, year):
-  return datetime.datetime(year, month, 28)
 
 # user_id ObjectId(user)
 # name "2015-01-01"
@@ -31,8 +26,7 @@ def create_or_update_entry(user_id, name, date, metadata):
   entry = {"user_id": ObjectId(user_id), "name": name, "date": date, "metadata": metadata, "updatedAt": datetime.datetime.utcnow()}
   return entries.insert_one(entry).inserted_id
 
-def find_for_user_and_month(user_id, month, year):
-  # from_date = beginning_of_the_month(month, year)
-  # end_date = end_of_month(month, year)
-  # "date": {"$between": [from_date, end_date]}
-  return list(entries.find({"user_id": user_id}))
+def find_for_user_and_month(user_id, date):
+  from_date = date_helpers.beginning_of_the_month(date)
+  end_date = date_helpers.end_of_month(date)
+  return list(entries.find({"user_id": user_id, "date": {"$gte": from_date, "$lte":end_date}}))

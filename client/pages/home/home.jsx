@@ -3,6 +3,7 @@ import React      from 'react';
 import store      from '../../stores/store';
 import actions    from '../../actions/actions';
 import TextEditor from '../../components/texteditor/texteditor';
+import SummaryPane from '../../components/summary_pane/summary_pane'
 import * as formatters from '../../libraries/formatters/formatters';
 
 require('./home.less');
@@ -85,16 +86,7 @@ export default class Home extends React.Component {
         <section className="right-pane">
           <h2>Tags:</h2>
         </section>
-        <section className="summary-pane">
-          <h2>Summary</h2>
-          { this.state.summary !== undefined &&
-            <ul>
-              { Object.keys(this.state.summary).map((key) => { return (
-                <li key={key}>{key}: {formatters.displayDuration(this.state.summary[key])}</li>
-              )}) }
-            </ul>
-          }
-        </section>
+        <SummaryPane summary={this.state.summary}></SummaryPane>
       </div>
     );
   }

@@ -1,4 +1,6 @@
 import datetime
+from app import app
+
 def template(path):
   return path + "\n\n- 7:00am #wakeup\n- 8:30am #breakfast\n- 9am #persona-project"
 
@@ -9,7 +11,8 @@ files = {}
 
 class DropboxApi(object):
   def dropbox_auth_start(self, get_file_content, web_app_session):
-    return get_file_content.APP_URL + "/auth/dropbox/callback"
+    web_app_session["dropbox-auth-csrf-token"] = 'csrf-token'.encode('utf-8')
+    return app.config["APP_URL"] + "/auth/dropbox/callback?state=123&code=456"
 
   def dropbox_auth_finish(self, get_file_content, session, query):
     return "fakeId", None, None

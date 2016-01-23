@@ -17,7 +17,7 @@ class ApiClient {
     request('GET', '/journal', {data: {date: dateStr}}, true, success);
   }
   getMetadata(date, success) {
-    let dateStr = formatters.getYearMonth(date);
+    let dateStr = formatters.getYearMonthDate(date);
     request('GET', '/journal/metadata', {data: {date: dateStr}}, true, success);
   }
   updateJournal(date, text, success) {
