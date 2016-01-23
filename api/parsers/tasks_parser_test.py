@@ -1,4 +1,5 @@
 import unittest
+import datetime
 import testing.helpers as test
 import parsers.tasks_parser as parsers
 
@@ -36,8 +37,10 @@ class TestStringMethods(unittest.TestCase):
 
   def test_summerize(self):
     metadata_arr = [self.parser.to_dict(), self.parser.to_dict()]
-    summary = parsers.TasksParser.summerize(metadata_arr)
-    self.assertEqual(summary["lunch"], duration(2, 30))
+    summary = parsers.TasksParser.summerize(metadata_arr, datetime.datetime(2015, 1, 1))
+    self.assertEqual(summary["lunch"]["day"], duration(2, 30))
+    self.assertEqual(summary["lunch"]["week"], duration(2, 30))
+    self.assertEqual(summary["lunch"]["month"], duration(2, 30))
 
 if __name__ == '__main__':
     unittest.main()
