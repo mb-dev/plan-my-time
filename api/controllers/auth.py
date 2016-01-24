@@ -4,14 +4,14 @@ import models.user as user
 from flask import jsonify, request
 import jwt
 
-@app.route('/authorize/url', methods = ['GET'])
+@app.route('/api/authorize/url', methods = ['GET'])
 def authorize():
   session = {}
   dropbox = DropboxApi()
   redirect_url = dropbox.dropbox_auth_start(app.config, session)
   return jsonify(url=redirect_url, csrf_token=session["dropbox-auth-csrf-token"].decode("utf-8"))
 
-@app.route('/authorize/finalize', methods = ['POST'])
+@app.route('/api/authorize/finalize', methods = ['POST'])
 def finalize():
   session = {'dropbox-auth-csrf-token': request.form['csrf_token']}
   query = {'state': request.form['csrf_token'], 'code': request.form['code']}

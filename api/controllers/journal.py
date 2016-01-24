@@ -14,7 +14,7 @@ def to_date_str(filename):
 def today():
   return datetime.datetime.today().replace(hour=0, minute=0, second=0)
 
-@app.route('/journal', methods= ['GET'])
+@app.route('/api/journal', methods= ['GET'])
 @auth.auth_required
 def getJournal():
   date_str = request.args.get('date')
@@ -25,19 +25,19 @@ def getJournal():
   content_and_metadata = dropbox.get_file_or_create(g.user["dropbox_access_token"], "/" + filename)
   return jsonify(content_and_metadata)
 
-@app.route('/journal/metadata', methods= ['GET'])
+@app.route('/api/journal/metadata', methods= ['GET'])
 @auth.auth_required
 def getMetadata():
   date_str = request.args.get('date')
   if not date_str:
-    return "missing date", 400  
+    return "missing date", 400
   date = date_helpers.parse_date_str(date_str)
   entries = models.entries.find_for_user_and_month(g.user["_id"], date)
   entry_metadata_arr = [entry["metadata"] for entry in entries]
   summary = TasksParser.summerize(entry_metadata_arr, date)
   return jsonify(metadata=entry_metadata_arr, summary=summary)
 
-@app.route('/journal', methods= ['POST'])
+@app.route('/api/journal', methods= ['POST'])
 @auth.auth_required
 def updateJournal():
   date_str = request.form['date']
