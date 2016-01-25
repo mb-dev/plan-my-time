@@ -7,8 +7,8 @@ var config = {
 // production settings
 if (window.location.href.indexOf('moshebergman.com') > 0) {
   config = {
-    apiServer: 'http://plan-my-time.moshebergman.com/api',
-    httpServer: 'http://plan-my-time.moshebergman.com',
+    apiServer: 'https://plan-my-time.moshebergman.com/api',
+    httpServer: 'https://plan-my-time.moshebergman.com',
     iconServer: '/'
   }
 }
