@@ -5,8 +5,8 @@ import lib.date_helpers   as     date_helpers
 from app                  import app
 from flask                import jsonify, request, g
 from lib                  import auth
-from lib.dropbox_fake     import DropboxApi
 from parsers.tasks_parser import TasksParser
+from lib.dropbox          import DropboxApi
 
 def to_date_str(filename):
   return filename[:-3]
