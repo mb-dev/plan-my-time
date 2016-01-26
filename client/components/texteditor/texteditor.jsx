@@ -18,10 +18,10 @@ export default class TextEditor extends React.Component {
   }
   componentWillReceiveProps(props) {
     this.mainTextArea.value = props.text;
-    this.debounceOnUpdate = _.debounce(function() {
-      this.state.text = this.mainTextArea.value;
-      props.onUpdate();
-    }, 2000, {maxWait: 10000});
+    this.debounceOnUpdate = _.debounce(function(text) {
+      this.state.text = text;
+      props.onUpdate(text);
+    }.bind(this), 2000, {maxWait: 10000});
   }
   lineCount() {
     return this.mainTextArea.value.match(/\n/g).length + 1;
