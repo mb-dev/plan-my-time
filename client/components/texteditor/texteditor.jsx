@@ -18,6 +18,7 @@ export default class TextEditor extends React.Component {
   }
   componentWillReceiveProps(props) {
     this.mainTextArea.value = props.text;
+    this.debounceOnUpdate = _.debounce(props.onUpdate, 2000, {maxWait: 10000});
   }
   lineCount() {
     return this.mainTextArea.value.match(/\n/g).length + 1;
@@ -25,13 +26,13 @@ export default class TextEditor extends React.Component {
   onChange(e) {
     this.setState({lineCount: this.lineCount()});
     this.state.text = this.mainTextArea.value;
-    this.props.onUpdate(this.mainTextArea.value);
+    this.debounceOnUpdate(this.mainTextArea.value);
   }
 
   render() {
     return (
       <div className="text-editor">
-        <textarea ref={(c) => this.mainTextArea = c} defaultValue={this.state.text} onChange={_.debounce(this.onChange.bind(this), 2000, {maxWait: 10000})} rows={this.state.lineCount}></textarea>
+        <textarea ref={(c) => this.mainTextArea = c} defaultValue={this.state.text} onChange={this.onChange.bind(this)} rows={this.state.lineCount}></textarea>
       </div>
     );
   }
