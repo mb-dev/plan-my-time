@@ -22,7 +22,7 @@ class Actions {
   getJournal(date) {
     if (!storage.getBearerToken()) { return; }
     apiClient.getJournal(date, function(data) {
-      dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified});
+      dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified, newDate: date});
     });
   }
   getMetadata(date) {
@@ -37,7 +37,6 @@ class Actions {
     });
   }
   switchDate(date) {
-    dispatcher.dispatch({actionType: ActionType.TASKS.CHANGE_DATE, newDate: date});
     this.getJournal(date);
   }
 }

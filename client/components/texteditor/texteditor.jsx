@@ -7,7 +7,11 @@ export default class TextEditor extends React.Component {
   constructor(props) {
     super(props);
     this.timer = null;
-    this.state = {text: props.text}
+    this.state = {text: props.text};
+    this.debounceOnUpdate = _.debounce(() => {
+      this.state.text = this.mainTextArea.value;
+      this.props.onUpdate(this.mainTextArea.value);
+    }, 5000, {maxWait: 10000});
   }
   componentDidMount() {
     this.mainTextArea.focus();
@@ -17,11 +21,10 @@ export default class TextEditor extends React.Component {
     clearTimeout(this.timer);
   }
   componentWillReceiveProps(props) {
-    this.mainTextArea.value = props.text;
-    this.debounceOnUpdate = _.debounce(() => {
-      this.state.text = this.mainTextArea.value;
-      props.onUpdate(this.mainTextArea.value);
-    }, 5000, {maxWait: 10000});
+    if (this.state.lastTextName != props.textName) {
+      this.state.lastTextName = props.textName;
+      this.mainTextArea.value = props.text;
+    }
   }
   lineCount() {
     return this.mainTextArea.value.match(/\n/g).length + 1;

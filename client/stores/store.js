@@ -22,6 +22,7 @@ class Store extends EventEmitter {
     switch (payload.actionType) {
       case ActionType.TASKS.TEXT_CHANGED_FROM_SERVER:
         this.state.text = payload.newText;
+        this.state.date = payload.newDate;
         this.state.lastUpdated = new Date(payload.lastUpdated);
         this.emitChange();
         break;

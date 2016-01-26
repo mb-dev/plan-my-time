@@ -79,7 +79,7 @@ export default class Home extends React.Component {
           { this.state.text !== undefined &&
             <div>
               <div>Last updated {formatters.displayTimeAgo(this.state.lastUpdated)}</div>
-              <TextEditor text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} />
+              <TextEditor text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>
             </div>
           }
         </section>
