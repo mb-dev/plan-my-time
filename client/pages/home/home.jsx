@@ -1,9 +1,10 @@
-import _          from 'lodash';
-import React      from 'react';
-import store      from '../../stores/store';
-import actions    from '../../actions/actions';
-import TextEditor from '../../components/texteditor/texteditor';
-import SummaryPane from '../../components/summary_pane/summary_pane'
+import _               from 'lodash';
+import React           from 'react';
+import store           from '../../stores/store';
+import actions         from '../../actions/actions';
+import DateNavigation  from '../../components/date_navigation/date_navigation'
+import TextEditor      from '../../components/texteditor/texteditor';
+import SummaryPane     from '../../components/summary_pane/summary_pane'
 import * as formatters from '../../libraries/formatters/formatters';
 
 require('./home.less');
@@ -39,41 +40,13 @@ export default class Home extends React.Component {
       summary: store.state.metadata ? store.state.metadata.summary : undefined
     });
   }
-  onChangeDate(date, e) {
-    e.preventDefault();
+  onChangeDate(date) {  
     actions.switchDate(date);
   }
   render() {
-    let getDateRange = function(date) {
-      let startDiff = -3;
-      let endDiff = 3;
-      if (formatters.isToday(date)) {
-        startDiff = -7;
-        endDiff = 0;
-      }
-      return _.range(startDiff, endDiff+1).map(function(diff) {
-        return [diff, formatters.getDateByDiff(date, diff)];
-      });
-    }
-    let dateRange = getDateRange(this.state.date);
-
     return (
       <div className="home-page container">
-        <nav className="day-nav">
-          { dateRange.map((diffDate) => {
-            let diff = diffDate[0];
-            let date = diffDate[1];
-            let activeClass = diff == 0 ? 'active' : '';
-            let todayClass = formatters.isToday(date) ? 'today' : '';
-            let className = 'day ' + activeClass + ' ' + todayClass;
-            return (
-              <a className={className} key={date} onClick={this.onChangeDate.bind(this, date)} href=''>
-                <span className="date">{date.getDate()}</span>
-                <span className="day">{formatters.getDayOfWeek(date)}</span>
-              </a>
-            )
-          })}
-        </nav>
+        <DateNavigation date={this.state.date} onUpdate={this.onChangeDate.bind(this)}></DateNavigation>
         <section className="main-pane">
           <h2>Today:</h2>
           { this.state.text !== undefined &&

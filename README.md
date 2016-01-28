@@ -1,15 +1,7 @@
 [![Build Status](https://travis-ci.org/mb-dev/plan-my-time.svg?branch=master)](https://travis-ci.org/mb-dev/plan-my-time/)
 
 # About Plan My Time
-Plan My Time is a is an open-source time management app built in React/Python.
-
-The main goal of the application is to be able to assist with tracking of short repeat tasks.
-Examples:
-- Doing Yoga for 10 minutes every day
-- Working on side project for an hour a week
-- Writing a blog post for 30 minutes a day.
-
-Tracking which task got it's allotted time during the week can be a challenge that this app aims to solve.
+Plan My Time is a is an open-source time management app built in React/Python. Just like Mint manages money, with this app you record time spent per category and get a report at the end of the period.
 
 ***This is still a work in progress.***
 
@@ -18,7 +10,7 @@ Tracking which task got it's allotted time during the week can be a challenge th
 React Client <-> Python API Server       <-> Dropbox
 Browser      <-> Node.JS Static Server
 
-The main data source in the app is a "day journal" which records which tasks got done at which time.
+The main data source in the app is a daily activity journal which records which tasks got done at which time.
 
 Example:
 ```
