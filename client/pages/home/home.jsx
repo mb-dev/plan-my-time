@@ -6,6 +6,7 @@ import DateNavigation  from '../../components/date_navigation/date_navigation'
 import TextEditor      from '../../components/texteditor/texteditor';
 import SummaryPane     from '../../components/summary_pane/summary_pane'
 import * as formatters from '../../libraries/formatters/formatters';
+import HourMarker      from '../../app/time_tracker/hour_marker'
 
 require('./home.less');
 
@@ -13,6 +14,7 @@ export default class Home extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.onStoreChanged = this.onStoreChanged.bind(this);
+    this.hourMarker = new HourMarker();
     this.state = {};
   }
   componentWillMount() {
@@ -40,7 +42,7 @@ export default class Home extends React.Component {
       summary: store.state.metadata ? store.state.metadata.summary : undefined
     });
   }
-  onChangeDate(date) {  
+  onChangeDate(date) {
     actions.switchDate(date);
   }
   render() {
@@ -48,13 +50,12 @@ export default class Home extends React.Component {
       <div className="home-page container">
         <DateNavigation date={this.state.date} onUpdate={this.onChangeDate.bind(this)}></DateNavigation>
         <section className="main-pane">
-          <h2>Today:</h2>
-          { this.state.text !== undefined &&
-            <div>
-              <div>Last updated {formatters.displayTimeAgo(this.state.lastUpdated)}</div>
-              <TextEditor text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>
-            </div>
+        { this.state.text !== undefined &&
+          <TextEditor text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>
           }
+          <div className="break-notifications">
+            <input type="checkbox" defaultChecked="true"/> Enable Break Notifications
+          </div>
         </section>
         <section className="right-pane">
           <h2>Tags:</h2>

@@ -5,11 +5,14 @@
   "engines": {
     "node": "5.3"
   },
+  "scripts":{
+    "start-android": "node node_modules/react-native/local-cli/cli.js start"
+  },
   "devDependencies": {
     "assert": "^1.3.0",
-    "babel-core": "^6.0.20",
+    "babel-core": "^6.4.5",
     "babel-eslint": "^5.0.0-beta6",
-    "babel-loader": "^6.0.1",
+    "babel-loader": "^6.2.1",
     "babel-preset-es2015": "^6.0.15",
     "babel-preset-react": "^6.0.15",
     "babel-preset-stage-0": "^6.0.15",
@@ -46,6 +49,8 @@
     "react-bootstrap": "^0.28.1",
     "react-dom": "^0.14.5",
     "react-hot-loader": "^1.3.0",
-    "react-router": "^2.0.0-rc4"
+    "react-router": "^2.0.0-rc4",
+    "react-native": "^0.19.0",
+    "react-native-button":"^1.3.1"
   }
 }

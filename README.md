@@ -33,6 +33,9 @@ Task tags are counted on a monthly basis.
 ]
 ```
 
+## Break notification
+Version 1 allows turning on break notifications at predefined interval. There will be notification every 10 minutes and then every :50 minutes a special "take a break notification"
+
 ## API
 
 ### GET /journal?date=YYYY-MM-DD

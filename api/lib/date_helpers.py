@@ -19,3 +19,14 @@ def beginning_of_the_month(date):
 
 def end_of_month(date):
   return datetime.datetime(date.year, date.month, 1) + relativedelta(months=+1) - datetime.timedelta(days=1)
+
+def today_str():
+  return datetime.datetime.today().strftime('%Y-%m-%d')
+
+def time_now_aprox():
+  now = datetime.datetime.today()
+  now = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute - now.minute % 10, 0)
+  if now.minute == 0:
+    return now.strftime('%I%p')
+  else:
+    return now.strftime('%I:%M%p')

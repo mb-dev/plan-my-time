@@ -1,15 +1,15 @@
 const DEBUG = process.env.NODE_ENV === 'debug';
 const CI = process.env.CI === 'true';
 
-var child 				   = require('child_process');
+var child            = require('child_process');
 var gulp             = require('gulp');
-var gutil				     = require('gulp-util');
-var shell 			     = require('gulp-shell');
-var webpack 		     = require('webpack');
-var mocha					   = require('gulp-spawn-mocha');
+var gutil            = require('gulp-util');
+var shell            = require('gulp-shell');
+var webpack          = require('webpack');
+var mocha            = require('gulp-spawn-mocha');
 var webpackConfig    = require('./webpack.config.js');
 var webpackHotConfig = require('./webpack.hot.config.js');
-var notify				   = require('gulp-notify');
+var notify           = require('gulp-notify');
 var WebpackDevServer = require('webpack-dev-server');
 var nodemon          = require('gulp-nodemon');
 var bg               = require('gulp-bg');
@@ -19,9 +19,9 @@ process.on('uncaughtException', function (er) {
 });
 
 gulp.task('mocha', function() {
-	return gulp.src(['client/**/*.test.js'], {read: false})
-		.pipe(mocha({
-			compilers: 'js:babel/register',
+  return gulp.src(['client/**/*.test.js'], {read: false})
+    .pipe(mocha({
+      compilers: 'js:babel/register',
       R: 'spec'
     }));
 });
@@ -29,7 +29,7 @@ gulp.task('mocha', function() {
 var timeServiceBg;
 gulp.task('api', timeServiceBg = bg('python3', 'api/service.py'));
 gulp.task('watch:api', function() {
-	return gulp.watch(['api/**/*.py'], ['api']);
+  return gulp.watch(['api/**/*.py'], ['api']);
 });
 gulp.task('server', function () {
   nodemon({
@@ -57,19 +57,20 @@ gulp.task('test', ['pythontest']);
 
 gulp.task('dev', ['webpack', 'server', 'api', 'watch:api']);
 
-gulp.task('webpack', function() {
-		if (CI) {
-			webpackConfig.watch = false;
-			webpackConfig.bail = true;
-		}
+gulp.task('webpack', function(cb) {
+    if (CI) {
+      webpackConfig.watch = false;
+      webpackConfig.bail = true;
+    }
     // run webpack
     webpack(webpackConfig, function(err, stats) {
       if (err) {
-				throw new gutil.PluginError('webpack', err);
-			}
+        throw new gutil.PluginError('webpack', err);
+      }
       gutil.log('[webpack]', stats.toString({
           // output options
       }));
+      cb();
     });
 });
 
