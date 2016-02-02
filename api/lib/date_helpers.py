@@ -10,6 +10,9 @@ def is_same_week(date1, date2):
 def is_same_day(date1, date2):
   return date1.year == date2.year and date1.month == date2.month and date1.year == date2.year
 
+def parse_datetime_str(datetime_str):
+  return datetime.datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
+
 def parse_date_str(date_str):
   year,month,day = [int(part) for part in date_str.split('-')]
   return datetime.datetime(year, month, day)
@@ -23,10 +26,12 @@ def end_of_month(date):
 def today_str():
   return datetime.datetime.today().strftime('%Y-%m-%d')
 
-def time_now_aprox():
-  now = datetime.datetime.today()
-  now = datetime.datetime(now.year, now.month, now.day, now.hour, now.minute - now.minute % 10, 0)
-  if now.minute == 0:
-    return now.strftime('%I%p')
+def time_now_prox():
+  return time_aprox(datetime.datetime.today())
+
+def time_aprox(dt):
+  dt = datetime.datetime(dt.year, dt.month, dt.day, dt.hour, dt.minute - dt.minute % 10, 0)
+  if dt.minute == 0:
+    return dt.strftime('%-I%p').lower()
   else:
-    return now.strftime('%I:%M%p')
+    return dt.strftime('%I:%M%p').lower()

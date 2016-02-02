@@ -8,8 +8,9 @@ def duration(hours, minutes=0, seconds=0):
 
 class TestStringMethods(unittest.TestCase):
   def setUp(self):
-    with open(test.path('fixtures/tasksSample.md')) as f: content = f.read()
-    self.parser = parsers.TasksParser('2015-01-01', content)
+    with open(test.path('fixtures/tasksSample.md')) as f: 
+      self.content = f.read()
+    self.parser = parsers.TasksParser('2015-01-01', self.content)
 
   def test_tags(self):
     self.assertEqual(self.parser.tags, ['wakeup', 'lunch', 'yoga', 'sleep'])
@@ -41,6 +42,19 @@ class TestStringMethods(unittest.TestCase):
     self.assertEqual(summary["lunch"]["day"], duration(2, 30))
     self.assertEqual(summary["lunch"]["week"], duration(2, 30))
     self.assertEqual(summary["lunch"]["month"], duration(2, 30))
+
+  def test_to_file(self):
+    lines = self.content.split("\n")
+    n = len(lines)
+    content_without_last_two_lines = "\n".join(lines[:n-3])
+    new_file_content = self.parser.to_tasks_file()
+    self.assertEqual(new_file_content.strip(), content_without_last_two_lines)
+
+  def test_add_line(self):
+    self.parser.add_line(datetime.datetime(2015, 1, 1, 15, 0, 0), '#yoga')
+    self.assertEqual(self.parser.tasks[3]['line'], '3pm #yoga')
+    # ensure previous task now has correct duration
+    self.assertEqual(self.parser.tasks[2]['duration'], duration(0, 45))
 
 if __name__ == '__main__':
     unittest.main()
