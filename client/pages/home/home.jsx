@@ -3,6 +3,7 @@ import React           from 'react';
 import store           from '../../stores/store';
 import actions         from '../../actions/actions';
 import DateNavigation  from '../../components/date_navigation/date_navigation'
+import ProgressBar     from '../../components/progress_bar/progress_bar'
 import TextEditor      from '../../components/texteditor/texteditor';
 import SummaryPane     from '../../components/summary_pane/summary_pane'
 import * as formatters from '../../libraries/formatters/formatters';
@@ -46,9 +47,11 @@ export default class Home extends React.Component {
     actions.switchDate(date);
   }
   render() {
+    let percentLeft = 25;
     return (
       <div className="home-page container">
         <DateNavigation date={this.state.date} onUpdate={this.onChangeDate.bind(this)}></DateNavigation>
+        <ProgressBar completed={percentLeft}></ProgressBar>
         <section className="main-pane">
         { this.state.text !== undefined &&
           <TextEditor text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>

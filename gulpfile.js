@@ -57,7 +57,7 @@ gulp.task('test', ['pythontest']);
 
 gulp.task('dev', ['webpack', 'server', 'api', 'watch:api']);
 
-gulp.task('webpack', function(cb) {
+gulp.task('webpack', function() {
     if (CI) {
       webpackConfig.watch = false;
       webpackConfig.bail = true;
@@ -70,7 +70,6 @@ gulp.task('webpack', function(cb) {
       gutil.log('[webpack]', stats.toString({
           // output options
       }));
-      cb();
     });
 });
 
