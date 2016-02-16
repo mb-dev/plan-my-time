@@ -2,13 +2,13 @@ import _               from 'lodash';
 import React           from 'react';
 import store           from '../../stores/store';
 import actions         from '../../actions/actions';
-import DateNavigation  from '../../components/date_navigation/date_navigation'
-import ProgressBar     from '../../components/progress_bar/progress_bar'
+import DateNavigation  from '../../components/date_navigation/date_navigation';
+import ProgressBar     from '../../components/progress_bar/progress_bar';
 import TextEditor      from '../../components/texteditor/texteditor';
-import SummaryPane     from '../../components/summary_pane/summary_pane'
+import SummaryPane     from '../../components/summary_pane/summary_pane';
 import * as formatters from '../../libraries/formatters/formatters';
-import HourMarker      from '../../app/time_tracker/hour_marker'
-
+import HourMarker      from '../../app/time_tracker/hour_marker';
+import MetadataTracker from '../../app/metadata_tracker/metadata_tracker';
 require('./home.less');
 
 export default class Home extends React.Component {
@@ -16,6 +16,7 @@ export default class Home extends React.Component {
     super(props, context);
     this.onStoreChanged = this.onStoreChanged.bind(this);
     this.hourMarker = new HourMarker();
+    this.metadataTracker = new MetadataTracker();
     this.state = {};
   }
   componentWillMount() {
@@ -28,6 +29,7 @@ export default class Home extends React.Component {
   }
   componentWillUnmount() {
     store.removeChangeListener(this.onStoreChanged);
+    this.metadataTracker.unsubscribe();
   }
   onStoreChanged() {
     this.updateState(this.props);
@@ -39,6 +41,9 @@ export default class Home extends React.Component {
     this.setState({
       date: store.state.date,
       text: store.state.text,
+      currentTask: store.state.currentTask,
+      percent: store.state.currentPercent || 0,
+      nextTask: store.state.nextTask,
       lastUpdated: store.state.lastUpdated ? store.state.lastUpdated.toString() : undefined,
       summary: store.state.metadata ? store.state.metadata.summary : undefined
     });
@@ -47,11 +52,13 @@ export default class Home extends React.Component {
     actions.switchDate(date);
   }
   render() {
-    let percentLeft = 25;
+    let percentLeft = this.state.percent * 100;
     return (
       <div className="home-page container">
         <DateNavigation date={this.state.date} onUpdate={this.onChangeDate.bind(this)}></DateNavigation>
         <ProgressBar completed={percentLeft}></ProgressBar>
+        <div>Current Task: {this.state.currentTask && this.state.currentTask.line}</div>
+        <div>Next Task: {this.state.nextTask && this.state.nextTask.line}</div>
         <section className="main-pane">
         { this.state.text !== undefined &&
           <TextEditor text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>

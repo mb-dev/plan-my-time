@@ -1,7 +1,7 @@
-import $          from 'jquery'
-import config     from '../../config/config'
-import request    from '../request/request'
-import * as formatters from '../formatters/formatters'
+import $          from 'jquery';
+import config     from '../../config/config';
+import request    from '../request/request';
+import * as formatters from '../formatters/formatters';
 
 class ApiClient {
   // auth

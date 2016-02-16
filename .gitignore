@@ -41,6 +41,8 @@ project.xcworkspace
 .idea
 .gradle
 local.properties
+.tern-port
+.#*
 
 # node.js
 #

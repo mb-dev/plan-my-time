@@ -1,8 +1,8 @@
-import apiClient from '../libraries/api_client/api_client'
-import storage from '../libraries/storage/storage'
-import dispatcher from '../dispatcher/dispatcher'
-import ActionType from '../stores/action_types'
-import { browserHistory } from 'react-router'
+import apiClient from '../libraries/api_client/api_client';
+import storage from '../libraries/storage/storage';
+import dispatcher from '../dispatcher/dispatcher';
+import ActionType from '../stores/action_types';
+import { browserHistory } from 'react-router';
 
 class Actions {
   // auth
@@ -32,9 +32,19 @@ class Actions {
     });
   }
   updateJournal(date, text) {
-    apiClient.updateJournal(date, text, function(data) {
+    apiClient.updateJournal(date, text, (data) => {
       dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_UPDATE_SUCCESS, newText: text, lastUpdated: data.last_modified});
+      this.getMetadata(date);
     });
+  }
+  updateCurrentTask(task) {
+    dispatcher.dispatch({actionType: ActionType.TASKS.CURRENT_TASK_CHANGED, newTask: task});
+  }
+  updateNextTask(task) {
+    dispatcher.dispatch({actionType: ActionType.TASKS.NEXT_TASK_CHANGED, newTask: task});
+  }
+  updateCurrentPercent(percent) {
+    dispatcher.dispatch({actionType: ActionType.TASKS.CURRENT_PERCENT_CHANGED, newPercent: percent});
   }
   switchDate(date) {
     this.getJournal(date);

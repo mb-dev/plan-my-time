@@ -1,6 +1,6 @@
-import {EventEmitter} from 'events'
-import dispatcher from '../dispatcher/dispatcher'
-import ActionType from './action_types'
+import {EventEmitter} from 'events';
+import dispatcher from '../dispatcher/dispatcher';
+import ActionType from './action_types';
 
 var CHANGE_EVENT = 'change';
 
@@ -37,6 +37,18 @@ class Store extends EventEmitter {
         break;
       case ActionType.TASKS.CHANGE_DATE:
         this.state.date = payload.newDate;
+        this.emitChange();
+        break;
+      case ActionType.TASKS.CURRENT_PERCENT_CHANGED:
+        this.state.currentPercent = payload.newPercent;
+        this.emitChange();
+        break;
+      case ActionType.TASKS.CURRENT_TASK_CHANGED:
+        this.state.currentTask = payload.newTask;
+        this.emitChange();
+        break;
+      case ActionType.TASKS.NEXT_TASK_CHANGED:
+        this.state.nextTask = payload.newTask;
         this.emitChange();
         break;
     }
