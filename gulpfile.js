@@ -27,7 +27,7 @@ gulp.task('mocha', function() {
 });
 
 var timeServiceBg;
-gulp.task('api', timeServiceBg = bg('python3', 'api/service.py'));
+gulp.task('api', timeServiceBg = bg('python', 'api/service.py'));
 gulp.task('watch:api', function() {
   return gulp.watch(['api/**/*.py'], ['api']);
 });
@@ -47,10 +47,7 @@ gulp.task('server', function () {
   });
 });
 
-var testCmd = 'env/bin/python3 -m unittest discover -p "*_test.py"';
-if (CI) {
-  testCmd = 'python -m unittest discover -p "*_test.py"';
-}
+testCmd = 'python -m unittest discover -p "*_test.py"';
 gulp.task('pythontest', shell.task([testCmd], {cwd: 'api'}));
 
 gulp.task('test', ['pythontest']);
