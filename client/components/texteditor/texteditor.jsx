@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash';
 import React from 'react';
 
 require('./texteditor.less');
@@ -27,7 +27,11 @@ export default class TextEditor extends React.Component {
     }
   }
   lineCount() {
-    return this.mainTextArea.value.match(/\n/g).length + 1;
+    let matches = this.mainTextArea.value.match(/\n/g);
+    if (!matches) {
+      return 1;
+    }
+    return matches.length + 1;
   }
   onChange(e) {
     this.setState({lineCount: this.lineCount()});
