@@ -25,12 +25,12 @@ class TasksFile:
     self.content = read_tasks_file(date_str)
     self.manager = tasks_parser.TasksParser(date_str, self.content)
 
-  def read(self):
+  #def read(self):
    
   def content(self):
     if not self.content:
       self.read()
     return self.content
 
-  def add_line(time, message):
+  #def add_line(time, message):
 
