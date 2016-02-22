@@ -4,6 +4,7 @@ import lib.mongo as mongo
 
 users = mongo.db['users']
 users.ensure_index([('email',pymongo.ASCENDING)], unique=True, dropDups=True)
+users.ensure_index([('dropbox_user_id',pymongo.ASCENDING)], unique=True, dropDups=True)
 
 def create_or_find_user(info):
   user = users.find_one({"email": info["email"]})
@@ -13,3 +14,6 @@ def create_or_find_user(info):
 
 def find_user_by_id(id):
   return users.find_one({"_id": ObjectId(id)})
+
+def find_user_by_dropbox_id(id):
+  return users.find_one({"dropbox_user_id": id})
