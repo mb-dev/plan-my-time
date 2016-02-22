@@ -43,7 +43,7 @@ gulp.task('server', function () {
       js: 'node --harmony --use_strict'
     }
   }).on('restart', function () {
-    console.log('restarted!')
+    console.log('restarted!');
   });
 });
 

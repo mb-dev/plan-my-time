@@ -47,7 +47,7 @@ def init():
     print("file {0} already exists".format(today_file_name))
     return
 
-  if not os.path.isfile(template_file):
+  if not os.path.isfile(template_path):
     print("Template file is not found")
     return
 
