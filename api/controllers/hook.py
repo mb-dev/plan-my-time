@@ -1,8 +1,9 @@
-from flask                import jsonify, request, g
+from flask                import jsonify, request, g, abort
 from app                  import app
 from hashlib import sha256
 import hmac
 import threading
+import json
 from models import user, entries
 from lib.dropbox          import DropboxApi
 from parsers.tasks_parser import TasksParser
@@ -17,10 +18,10 @@ def webook():
 
   # Make sure this is a valid request from Dropbox
   signature = request.headers.get('X-Dropbox-Signature')
-  if not hmac.compare_digest(signature, hmac.new(app.config['DROPBOX_APP_SECRET'], request.data, sha256).hexdigest()):
+  if not hmac.compare_digest(signature, hmac.new(app.config['DROPBOX_APP_SECRET'].encode(), request.data, sha256).hexdigest()):
     abort(403)
 
-  for account in json.loads(request.data)['list_folder']['accounts']:
+  for account in json.loads(request.data.decode("utf-8"))['delta']['users']:
     # We need to respond quickly to the webhook request, so we do the
     # actual work in a separate thread. For more robustness, it's a
     # good idea to add the work to a reliable queue and process the queue
@@ -32,12 +33,15 @@ def webook():
 
 def process_user(dropbox_user_id):
   # OAuth token for the user
-  usr = user.find_user_by_dropbox_id(dropbox_user_id)
+
+  usr = user.find_user_by_dropbox_id(str(dropbox_user_id))
   if not usr:
-    app.logger.error("User {0] was not found".format(dropbox_user_id))
+    app.logger.error("User {0} was not found".format(dropbox_user_id))
     return
 
-  cursor = usr["hook_cursor"]
+  cursor = None
+  if "hook_cursor" in usr:
+    cursor = usr["hook_cursor"]
 
   app.logger.info("Processing update for user {0}".format(usr["email"]))
 
@@ -51,4 +55,4 @@ def process_user(dropbox_user_id):
     models.entries.create_or_update_entry(usr["_id"], result["name"], date_str, entry_metadata)
 
   app.logger.info("Finished processing update for user {0}".format(usr["email"]))
-  user.save_hook_cursor(usr["_id"], token)
+  user.save_hook_cursor(usr["_id"], cursor)
