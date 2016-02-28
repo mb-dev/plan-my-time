@@ -1,4 +1,4 @@
 import controllers.auth
-import controllers.dropbox
+import controllers.hook
 import controllers.error
 import controllers.journal

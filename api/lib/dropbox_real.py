@@ -6,7 +6,7 @@ from dropbox.exceptions import ApiError
 import lib.errors
 
 def convert_metadata(metadata):
-  return {"name": metadata.name, "last_modified": metadata.server_modified, "rev": metadata.rev}
+  return {"name": metadata.name, "path_lower": metadata.path_lower, "last_modified": metadata.server_modified, "rev": metadata.rev}
 
 class DropboxApi(object):
   # session[csrf_token_session_key] will be stored
@@ -76,11 +76,44 @@ class DropboxApi(object):
     metadata = dbx.files_upload(text, path, WriteMode('overwrite'))
     return convert_metadata(metadata)
 
+# {
+#     "entries": [
+#         {
+#             ".tag": "file",
+#             "name": "Prime_Numbers.txt",
+#             "path_lower": "/homework/math/prime_numbers.txt",
+#             "path_display": "/Homework/math/Prime_Numbers.txt",
+#             "id": "id:a4ayc_80_OEAAAAAAAAAXw",
+#             "client_modified": "2015-05-12T15:50:38Z",
+#             "server_modified": "2015-05-12T15:50:38Z",
+#             "rev": "a1c10ce0dd78",
+#             "size": 7212,
+#             "sharing_info": {
+#                 "read_only": true,
+#                 "parent_shared_folder_id": "84528192421",
+#                 "modified_by": "dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc"
+#             }
+#         },
+#         {
+#             ".tag": "folder",
+#             "name": "math",
+#             "path_lower": "/homework/math",
+#             "path_display": "/Homework/math",
+#             "id": "id:a4ayc_80_OEAAAAAAAAAXz",
+#             "sharing_info": {
+#                 "read_only": false,
+#                 "parent_shared_folder_id": "84528192421"
+#             }
+#         }
+#     ],
+#     "cursor": "ZtkX9_EHj3x7PMkVuFIhwKYXEpwpLwyxp9vMKomUhllil9q7eWiAu",
+#     "has_more": false
+# }
+
   # returns: array of metadata
-  def get_files_in_folder(self, access_token):
+  def get_files_in_folder(self, access_token, cursor = None):
     files = []
     dbx = dropbox.Dropbox(access_token)
-    cursor = None
     has_more = True
     while has_more:
       result = dbx.files_list_folder('', cursor)

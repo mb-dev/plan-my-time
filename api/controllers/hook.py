@@ -3,8 +3,9 @@ from app                  import app
 from hashlib import sha256
 import hmac
 import threading
-from models import user
+from models import user, entries
 from lib.dropbox          import DropboxApi
+from parsers.tasks_parser import TasksParser
 
 @app.route('/api/dropbox/hook', methods= ['GET'])
 def webhook():
@@ -29,12 +30,20 @@ def webook():
 
 
 def process_user(dropbox_user_id):
-  '''Call /files/list_folder for the given user ID and process any changes.'''
-
   # OAuth token for the user
-  usr = user.find_user_by_dropbox_id(dropbox_user_id) 
-  cursor = None
+  usr = user.find_user_by_dropbox_id(dropbox_user_id)
+  cursor = usr["hook_cursor"]
+
+  app.logger.info("Processing update for user {0}".format(usr["email"]))
 
   dropbox = DropboxApi()
-  results = dropbox.get_files_in_folder(usr.dropbox_access_token)
+  results = dropbox.get_files_in_folder(usr["dropbox_access_token"], cursor)
+  for result in results:
+    app.logger.info("processing changed file {0}, with name: {1}".format(result["path_lower"], result["name"]))
+    content = dropbox.get_file_content(usr["dropbox_access_token"], result["path_lower"])
+    date_str = result["name"][0:-3]
+    entry_metadata = TasksParser(date_str, content).to_dict()
+    models.entries.create_or_update_entry(usr["_id"], result["name"], date_str, entry_metadata)
 
+  app.logger.info("Finished processing update for user {0}".format(usr["email"]))
+  user.save_hook_cursor(usr["_id"], token)

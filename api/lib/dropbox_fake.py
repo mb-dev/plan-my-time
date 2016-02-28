@@ -38,5 +38,5 @@ class DropboxApi(object):
     files[path] = text
     return get_metadata(path)
 
-  def get_files_in_folder(self, access_token):
+  def get_files_in_folder(self, access_token, cursor):
     return [get_metadata(path) for path in files]

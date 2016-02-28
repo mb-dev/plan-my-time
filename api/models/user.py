@@ -17,3 +17,6 @@ def find_user_by_id(id):
 
 def find_user_by_dropbox_id(id):
   return users.find_one({"dropbox_user_id": id})
+
+def save_hook_cursor(user_id, cursor):
+  return users.update_one({"_id": user_id}, {"$set": {"hook_cursor": cursor}})
