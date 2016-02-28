@@ -25,6 +25,7 @@ def webook():
     # actual work in a separate thread. For more robustness, it's a
     # good idea to add the work to a reliable queue and process the queue
     # in a worker process.
+    app.logger.info("starting a thread to process the message: {0}".format(account))
     threading.Thread(target=process_user, args=(account,)).start()
   return ''
 
@@ -32,6 +33,10 @@ def webook():
 def process_user(dropbox_user_id):
   # OAuth token for the user
   usr = user.find_user_by_dropbox_id(dropbox_user_id)
+  if not usr:
+    app.logger.error("User {0] was not found".format(dropbox_user_id))
+    return
+
   cursor = usr["hook_cursor"]
 
   app.logger.info("Processing update for user {0}".format(usr["email"]))
