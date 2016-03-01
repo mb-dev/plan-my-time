@@ -49,8 +49,9 @@ def process_user(dropbox_user_id):
   results = dropbox.get_files_in_folder(usr["dropbox_access_token"], cursor)
   for result in results:
     app.logger.info("processing changed file {0}, with name: {1}".format(result["path_lower"], result["name"]))
-    content = dropbox.get_file_content(usr["dropbox_access_token"], result["path_lower"])
-    date_str = result["name"][0:-3]
+    response = dropbox.get_file_content(usr["dropbox_access_token"], result["path_lower"])
+    content = response["content"]
+    date_str = result["name"][1:-3]
     entry_metadata = TasksParser(date_str, content).to_dict()
     models.entries.create_or_update_entry(usr["_id"], result["name"], date_str, entry_metadata)
 
