@@ -35,7 +35,7 @@ def webook():
 def process_user(dropbox_user_id):
   # OAuth token for the user
 
-  user = user.find_user_by_dropbox_id(str(dropbox_user_id))
+  user = models.user.find_user_by_dropbox_id(str(dropbox_user_id))
   if not user:
     app.logger.error("User {0} was not found".format(dropbox_user_id))
     return
