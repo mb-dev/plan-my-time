@@ -24,3 +24,6 @@ export function getYearMonth(date) {
 export function isToday(date) {
   return getYearMonthDate(date) == getYearMonthDate(new Date());
 }
+export function parseDate(datestr) {
+  return moment(datestr).toDate();
+}

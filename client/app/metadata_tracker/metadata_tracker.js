@@ -47,7 +47,7 @@ export default class MetadataTracker {
 
     let len = metadata.length;
     for (var i=len - 1; i >= 0; --i) {
-      let startDate = new Date(metadata[i].start_time);
+      let startDate = formatters.parseDate(metadata[i].start_time);
       if (startDate <= timeNow.getTime()) {
         if (currentTask != metadata[i]) {
           actions.updateCurrentTask(metadata[i]);
