@@ -5,7 +5,7 @@ import hmac
 import threading
 import json
 import models.entries
-import models.users
+import models.user
 from lib.dropbox          import DropboxApi
 from parsers.tasks_parser import TasksParser
 
