@@ -5,6 +5,7 @@ import hmac
 import threading
 import json
 import models.entries
+import models.users
 from lib.dropbox          import DropboxApi
 from parsers.tasks_parser import TasksParser
 
@@ -34,26 +35,26 @@ def webook():
 def process_user(dropbox_user_id):
   # OAuth token for the user
 
-  usr = user.find_user_by_dropbox_id(str(dropbox_user_id))
-  if not usr:
+  user = user.find_user_by_dropbox_id(str(dropbox_user_id))
+  if not user:
     app.logger.error("User {0} was not found".format(dropbox_user_id))
     return
 
   cursor = None
-  if "hook_cursor" in usr:
-    cursor = usr["hook_cursor"]
+  if "hook_cursor" in user:
+    cursor = user["hook_cursor"]
 
-  app.logger.info("Processing update for user {0}".format(usr["email"]))
+  app.logger.info("Processing update for user {0}".format(user["email"]))
 
   dropbox = DropboxApi()
-  results = dropbox.get_files_in_folder(usr["dropbox_access_token"], cursor)
+  results = dropbox.get_files_in_folder(user["dropbox_access_token"], cursor)
   for result in results:
     app.logger.info("processing changed file {0}, with name: {1}".format(result["path_lower"], result["name"]))
-    response = dropbox.get_file_content(usr["dropbox_access_token"], result["path_lower"])
+    response = dropbox.get_file_content(user["dropbox_access_token"], result["path_lower"])
     content = response["content"]
     date_str = result["name"][1:-3]
     entry_metadata = TasksParser(date_str, content).to_dict()
-    models.entries.create_or_update_entry(usr["_id"], result["name"], date_str, entry_metadata)
+    models.entries.create_or_update_entry(user["_id"], result["name"], date_str, entry_metadata)
 
-  app.logger.info("Finished processing update for user {0}".format(usr["email"]))
-  user.save_hook_cursor(usr["_id"], cursor)
+  app.logger.info("Finished processing update for user {0}".format(user["email"]))
+  models.user.save_hook_cursor(user["_id"], cursor)
