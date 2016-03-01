@@ -120,4 +120,4 @@ class DropboxApi(object):
       files += [convert_metadata(metadata) for metadata in result.entries]
       cursor = result.cursor
       has_more = result.has_more
-    return files
+    return files, cursor

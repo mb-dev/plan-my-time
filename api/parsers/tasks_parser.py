@@ -65,7 +65,7 @@ class TasksParser:
 
       # check if the current date is before the previous date
       if last_date and time < last_date:
-        raise("Invalid file, date is going backwards")
+        raise(ValueError("Invalid file, date is going backwards"))
 
       duration = None
       if last_date is None:

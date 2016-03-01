@@ -47,7 +47,7 @@ def process_user(dropbox_user_id):
   app.logger.info("Processing update for user {0}".format(user["email"]))
 
   dropbox = DropboxApi()
-  results = dropbox.get_files_in_folder(user["dropbox_access_token"], cursor)
+  results, cursor = dropbox.get_files_in_folder(user["dropbox_access_token"], cursor)
   for result in results:
     app.logger.info("processing changed file {0}, with name: {1}".format(result["path_lower"], result["name"]))
     response = dropbox.get_file_content(user["dropbox_access_token"], result["path_lower"])
