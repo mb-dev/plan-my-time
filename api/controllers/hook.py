@@ -4,7 +4,7 @@ from hashlib import sha256
 import hmac
 import threading
 import json
-from models import user, entries
+import models.entries
 from lib.dropbox          import DropboxApi
 from parsers.tasks_parser import TasksParser
 
