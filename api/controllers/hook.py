@@ -8,6 +8,7 @@ import models.entries
 import models.user
 from lib.dropbox          import DropboxApi
 from parsers.tasks_parser import TasksParser
+import lib.date_helpers   as     date_helpers
 
 @app.route('/api/dropbox/hook', methods= ['GET'])
 def webhook():
@@ -52,9 +53,11 @@ def process_user(dropbox_user_id):
     app.logger.info("processing changed file {0}, with name: {1}".format(result["path_lower"], result["name"]))
     response = dropbox.get_file_content(user["dropbox_access_token"], result["path_lower"])
     content = response["content"]
-    date_str = result["name"][1:-3]
+    date_str = result["name"][:-3]
+    filename = result["name"]
+    date = date_helpers.parse_date_str(date_str)
     entry_metadata = TasksParser(date_str, content).to_dict()
-    models.entries.create_or_update_entry(user["_id"], result["name"], date_str, entry_metadata)
+    models.entries.create_or_update_entry(user["_id"], filename, date, entry_metadata)
 
   app.logger.info("Finished processing update for user {0}".format(user["email"]))
   models.user.save_hook_cursor(user["_id"], cursor)
