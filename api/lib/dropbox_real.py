@@ -116,7 +116,10 @@ class DropboxApi(object):
     dbx = dropbox.Dropbox(access_token)
     has_more = True
     while has_more:
-      result = dbx.files_list_folder('', cursor)
+      if cursor is None:
+        result = dbx.files_list_folder('')
+      else:
+        result = dbx.files_list_folder_continue(cursor) 
       files += [convert_metadata(metadata) for metadata in result.entries]
       cursor = result.cursor
       has_more = result.has_more
