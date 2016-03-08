@@ -4,9 +4,10 @@ from dropbox.client import DropboxClient
 from dropbox.files import WriteMode, GetMetadataError, DownloadError, LookupError
 from dropbox.exceptions import ApiError
 import lib.errors
+import lib.date_helpers as date_helpers
 
 def convert_metadata(metadata):
-  return {"name": metadata.name, "path_lower": metadata.path_lower, "last_modified": metadata.server_modified, "rev": metadata.rev}
+  return {"name": metadata.name, "path_lower": metadata.path_lower, "last_modified": date_helpers.to_datetime_str(metadata.server_modified), "rev": metadata.rev}
 
 class DropboxApi(object):
   # session[csrf_token_session_key] will be stored

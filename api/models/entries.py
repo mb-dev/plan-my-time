@@ -11,7 +11,7 @@ entries.ensure_index([('user_id',pymongo.ASCENDING), ('name',pymongo.ASCENDING)]
 # name "2015-01-01"
 # date datetime.datetime(2015, 1, 1)
 # metadata {}
-def create_or_update_entry(user_id, name, date, metadata):
+def create_or_update_entry(user_id, name, date, metadata, file_metadata):
   assert user_id is not None
   assert len(name) > 0
   assert date is not None
@@ -20,6 +20,7 @@ def create_or_update_entry(user_id, name, date, metadata):
   entry = entries.find_one({"user_id": ObjectId(user_id), "name": name})
   if entry:
     entry["metadata"] = metadata
+    entry["file_metadata"] = file_metadata
     entry["updatedAt"] = datetime.datetime.utcnow()
     entries.replace_one({"_id": entry["_id"]}, entry)
     return entry["_id"]
@@ -30,3 +31,6 @@ def find_for_user_and_month(user_id, date):
   from_date = date_helpers.beginning_of_the_month(date)
   end_date = date_helpers.end_of_month(date)
   return list(entries.find({"user_id": user_id, "date": {"$gte": from_date, "$lte":end_date}}))
+
+def find_for_user_and_date(user_id, date):
+  return entries.find({"user_id": user_id, date: date})

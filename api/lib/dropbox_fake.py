@@ -1,11 +1,12 @@
 import datetime
 from app import app
+import lib.date_helpers as date_helpers
 
 def template(path):
   return path + "\n\n- 7:00am #wakeup\n- 8:30am #breakfast\n- 9am #persona-project"
 
 def get_metadata(path):
-  return {"name": path, "last_modified": datetime.datetime.utcnow(), "rev": 1}
+  return {"name": path, "last_modified": date_helpers.to_datetime_str(datetime.datetime.utcnow()), "rev": 1}
 
 files = {}
 

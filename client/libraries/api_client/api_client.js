@@ -30,6 +30,10 @@ class ApiClient {
     };
     request('POST', '/journal', req, true, success);
   }
+  checkForUpdate(date, lastModified, success) {
+    params = {data: {last_modified: lastModified, date: date}}
+    request('GET', '/journal/poll', params, true, succcess)
+  }
 }
 
 var apiClient = new ApiClient();

@@ -49,6 +49,19 @@ class Actions {
   switchDate(date) {
     this.getJournal(date);
   }
+  checkForUpdate() {
+    apiClient.checkForUpdate(store.state.date, store.state.lastUpdated).then(function(data) {
+      if (data.updated && data.content) {
+        dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified, newDate: date});
+        dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data.metadata});
+      }
+    });
+    $.ajax({
+      url: 'poll_changes'
+    }, function(data) {
+      store.state.lastUpdated
+    });
+  }
 }
 
 var actions = new Actions;

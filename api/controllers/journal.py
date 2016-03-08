@@ -53,5 +53,15 @@ def updateJournal():
   entry_metadata = {}
   if len(content) > 0:
     entry_metadata = TasksParser(date_str, content).to_dict()
-  models.entries.create_or_update_entry(g.user["_id"], filename, date, entry_metadata)
+  models.entries.create_or_update_entry(g.user["_id"], filename, date, entry_metadata, file_metadata)
   return jsonify({"success": True, **file_metadata})
+
+@app.route('/api/journal/poll', methods=['GET'])
+@auth.auth_required
+def pollChanges():
+  last_modified = request.args.get('last_modified')
+  date_str = request.form['date']
+  date = date_helpers.parse_date_str(date_str)
+
+  metadata = models.entries.find_for_user_and_date(g.user["_id"], date)
+  if metadata["file_metadata"]["last_modified"]
