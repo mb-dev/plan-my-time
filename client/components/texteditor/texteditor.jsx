@@ -30,9 +30,9 @@ export default class TextEditor extends React.Component {
   lineCount() {
     let matches = this.mainTextArea.value.match(/\n/g);
     if (!matches) {
-      return 1;
+      return 10;
     }
-    return matches.length + 1;
+    return Math.max(10, matches.length + 1);
   }
   onChange(e) {
     this.setState({lineCount: this.lineCount()});
