@@ -24,6 +24,7 @@ export default class TextEditor extends React.Component {
     if (this.state.lastTextName != props.textName) {
       this.state.lastTextName = props.textName;
       this.mainTextArea.value = props.text;
+      this.setState({lineCount: this.lineCount()});
     }
   }
   lineCount() {
