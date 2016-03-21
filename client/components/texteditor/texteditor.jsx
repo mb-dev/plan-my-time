@@ -28,11 +28,12 @@ export default class TextEditor extends React.Component {
     }
   }
   lineCount() {
+    const minLines = 10;
     let matches = this.mainTextArea.value.match(/\n/g);
     if (!matches) {
-      return 10;
+      return minLines;
     }
-    return Math.max(10, matches.length + 1);
+    return Math.max(minLines, matches.length + 2);
   }
   onChange(e) {
     this.setState({lineCount: this.lineCount()});

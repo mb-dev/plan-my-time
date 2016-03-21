@@ -27,6 +27,7 @@ class Store extends EventEmitter {
         this.emitChange();
         break;
       case ActionType.TASKS.TEXT_UPDATE_SUCCESS:
+        this.state.serverError = null;
         this.state.text = payload.newText;
         this.state.lastUpdated = new Date(payload.lastUpdated);
         this.emitChange();
@@ -49,6 +50,10 @@ class Store extends EventEmitter {
         break;
       case ActionType.TASKS.NEXT_TASK_CHANGED:
         this.state.nextTask = payload.newTask;
+        this.emitChange();
+        break;
+      case ActionType.TASKS.SERVER_ERROR:
+        this.state.serverError = payload.message;
         this.emitChange();
         break;
     }

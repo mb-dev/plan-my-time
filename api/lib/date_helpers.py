@@ -13,6 +13,9 @@ def is_same_day(date1, date2):
 def parse_datetime_str(datetime_str):
   return datetime.datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
 
+def to_datetime_str(dt):
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
+
 def parse_date_str(date_str):
   year,month,day = [int(part) for part in date_str.split('-')]
   return datetime.datetime(year, month, day)

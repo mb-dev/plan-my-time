@@ -10,6 +10,11 @@ from lib.dropbox          import DropboxApi
 from parsers.tasks_parser import TasksParser
 import lib.date_helpers   as     date_helpers
 
+def dict_without(d, key):
+    new_d = d.copy()
+    new_d.pop(key)
+    return new_d
+
 @app.route('/api/dropbox/hook', methods= ['GET'])
 def webhook():
   return request.args.get('challenge')
@@ -55,9 +60,12 @@ def process_user(dropbox_user_id):
     content = response["content"]
     date_str = result["name"][:-3]
     filename = result["name"]
-    date = date_helpers.parse_date_str(date_str)
+    try:
+      date = date_helpers.parse_date_str(date_str)
+    except ValueError as e:
+      continue
     entry_metadata = TasksParser(date_str, content).to_dict()
-    models.entries.create_or_update_entry(user["_id"], filename, date, entry_metadata)
+    models.entries.create_or_update_entry(user["_id"], filename, date, entry_metadata, dict_without(response, "content"))
 
   app.logger.info("Finished processing update for user {0}".format(user["email"]))
   models.user.save_hook_cursor(user["_id"], cursor)
