@@ -25,7 +25,7 @@ export default function makeRequest(type, url, req, addToken, success) {
     if (type == 'GET') {
       fullurl += '?' + $.param(req.data);
     } else {
-      data.body = new FormData(req.data);
+      data.body = new FormData();
       for ( var key in req.data ) {
           data.body.append(key, req.data[key]);
       }
