@@ -16,6 +16,7 @@ export default class Home extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.onStoreChanged = this.onStoreChanged.bind(this);
+    this.onClickTag = this.onClickTag.bind(this);
     this.hourMarker = new HourMarker();
     this.metadataTracker = new MetadataTracker();
     this.pollChanges = new PollChanges();
@@ -54,6 +55,9 @@ export default class Home extends React.Component {
   onChangeDate(date) {
     actions.switchDate(date);
   }
+  onClickTag(key) {
+    this.refs.textEditor.addTag(key);
+  }
   render() {
     let percentLeft = this.state.percent * 100;
     return (
@@ -71,16 +75,15 @@ export default class Home extends React.Component {
         <div>Next Task: {this.state.nextTask && this.state.nextTask.line}</div>
         <section className="main-pane">
         { this.state.text !== undefined &&
-          <TextEditor text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>
+          <TextEditor ref="textEditor" text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>
           }
           <div className="break-notifications">
             <input type="checkbox" defaultChecked="true"/> Enable Break Notifications
           </div>
         </section>
         <section className="right-pane">
-          <h2>Tags:</h2>
+          <SummaryPane summary={this.state.summary} onClickTag={this.onClickTag}></SummaryPane>
         </section>
-        <SummaryPane summary={this.state.summary}></SummaryPane>
       </div>
     );
   }

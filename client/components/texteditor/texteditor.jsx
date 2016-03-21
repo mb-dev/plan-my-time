@@ -39,7 +39,9 @@ export default class TextEditor extends React.Component {
     this.setState({lineCount: this.lineCount()});
     this.debounceOnUpdate();
   }
-
+  addTag(tag) {
+    this.mainTextArea.value += "#" + tag;
+  }
   render() {
     return (
       <div className="text-editor">

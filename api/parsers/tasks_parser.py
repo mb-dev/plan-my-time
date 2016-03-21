@@ -115,6 +115,8 @@ class TasksParser:
   def summerize(metadata_arr, date):
     tag_summary = {}
     for metadata in metadata_arr:
+      if not "tasks" in metadata:
+        continue
       for task in metadata["tasks"]:
         if task["duration"] is None:
           continue
