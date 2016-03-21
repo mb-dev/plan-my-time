@@ -24,7 +24,14 @@ def create_or_update_entry(user_id, name, date, metadata, file_metadata):
     entry["updatedAt"] = datetime.datetime.utcnow()
     entries.replace_one({"_id": entry["_id"]}, entry)
     return entry["_id"]
-  entry = {"user_id": ObjectId(user_id), "name": name, "date": date, "metadata": metadata, "updatedAt": datetime.datetime.utcnow()}
+  entry = {
+    "user_id": ObjectId(user_id), 
+    "name": name, 
+    "date": date, 
+    "metadata": metadata, 
+    "updatedAt": datetime.datetime.utcnow(),
+    "file_metadata": file_metadata
+  }
   return entries.insert_one(entry).inserted_id
 
 def find_for_user_and_month(user_id, date):
@@ -33,4 +40,4 @@ def find_for_user_and_month(user_id, date):
   return list(entries.find({"user_id": user_id, "date": {"$gte": from_date, "$lte":end_date}}))
 
 def find_for_user_and_date(user_id, date):
-  return entries.find({"user_id": user_id, date: date})
+  return entries.find_one({"user_id": user_id, "date": date})

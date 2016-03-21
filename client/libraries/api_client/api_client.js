@@ -5,20 +5,20 @@ import * as formatters from '../formatters/formatters';
 
 class ApiClient {
   // auth
-  getDropboxAuthUrl(success) {
-    $.get(config.apiServer + '/authorize/url', success);
+  getDropboxAuthUrl() {
+    return request('GET', '/authorize/url');
   }
-  finalizeDropboxAuth(state, code, csrf, success) {
-    $.post(config.apiServer + '/authorize/finalize', {csrf_token: csrf, state: state, code: code}, success);
+  finalizeDropboxAuth(state, code, csrf) {
+    return request('POST', '/authorize/finalize', {data: {csrf_token: csrf, state: state, code: code}});
   }
   // journals
-  getJournal(date, success) {
+  getJournal(date) {
     let dateStr = formatters.getYearMonthDate(date);
-    request('GET', '/journal', {data: {date: dateStr}}, true, success);
+    return request('GET', '/journal', {data: {date: dateStr}}, true);
   }
-  getMetadata(date, success) {
+  getMetadata(date) {
     let dateStr = formatters.getYearMonthDate(date);
-    request('GET', '/journal/metadata', {data: {date: dateStr}}, true, success);
+    return request('GET', '/journal/metadata', {data: {date: dateStr}}, true);
   }
   updateJournal(date, text, success) {
     let dateStr = formatters.getYearMonthDate(date);
@@ -28,11 +28,14 @@ class ApiClient {
         date: dateStr
       }
     };
-    request('POST', '/journal', req, true, success);
+    return request('POST', '/journal', req, true);
   }
-  checkForUpdate(date, lastModified, success) {
-    params = {data: {last_modified: lastModified, date: date}}
-    request('GET', '/journal/poll', params, true, succcess)
+  checkForUpdate(date, lastModified) {
+    let params = {data: {
+      last_modified: formatters.getYearMonthDateTime(lastModified),
+      date: formatters.getYearMonthDate(date)
+    }}
+    return request('GET', '/journal/poll', params, true);
   }
 }
 

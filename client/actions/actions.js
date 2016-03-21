@@ -7,13 +7,17 @@ import { browserHistory } from 'react-router';
 class Actions {
   // auth
   authorizeWithDropbox() {
-    apiClient.getDropboxAuthUrl(function(data) {
+    apiClient.getDropboxAuthUrl().then((response) => {
+      return response.json();
+    }).then((data) => {
       storage.setDropboxCsrf(data.csrf_token);
       window.location.href = data.url;
     });
   }
   finalizeDropboxAuth(state, code) {
-    apiClient.finalizeDropboxAuth(state, code, storage.getDropboxCsrf(), function(data) {
+    apiClient.finalizeDropboxAuth(state, code, storage.getDropboxCsrf()).then((response) => {
+      return response.json();
+    }).then((data) => {
       storage.setBearerToken(data.token);
       browserHistory.push('/');
     });
@@ -21,20 +25,32 @@ class Actions {
   // journal
   getJournal(date) {
     if (!storage.getBearerToken()) { return; }
-    apiClient.getJournal(date, function(data) {
+    apiClient.getJournal(date).then((response) => {
+      return response.json();
+    }).then((data) => {
       dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified, newDate: date});
     });
   }
   getMetadata(date) {
     if (!storage.getBearerToken()) { return; }
-    apiClient.getMetadata(date, function(data) {
+    apiClient.getMetadata(date).then((response) => {
+      return response.json();
+    }).then((data) => {
       dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data});
     });
   }
   updateJournal(date, text) {
-    apiClient.updateJournal(date, text, (data) => {
-      dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_UPDATE_SUCCESS, newText: text, lastUpdated: data.last_modified});
-      this.getMetadata(date);
+    apiClient.updateJournal(date, text).then((response) => {
+      if (!response.ok) {
+        response.json().then((err) => {
+           dispatcher.dispatch({actionType: ActionType.TASKS.SERVER_ERROR, message: err.message});
+        });
+        return;
+      }
+      return response.json().then((data) => {
+        dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_UPDATE_SUCCESS, newText: text, lastUpdated: data.last_modified});
+        this.getMetadata(date);
+      });
     });
   }
   updateCurrentTask(task) {
@@ -49,17 +65,12 @@ class Actions {
   switchDate(date) {
     this.getJournal(date);
   }
-  checkForUpdate() {
-    apiClient.checkForUpdate(store.state.date, store.state.lastUpdated).then(function(data) {
-      if (data.updated && data.content) {
-        dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified, newDate: date});
-        dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data.metadata});
+  checkForUpdate(date, lastUpdated) {
+    apiClient.checkForUpdate(date, lastUpdated).then((response) => {
+      if (response.status == 200) {
+         this.getJournal(date);
+         this.getMetadata(date);
       }
-    });
-    $.ajax({
-      url: 'poll_changes'
-    }, function(data) {
-      store.state.lastUpdated
     });
   }
 }

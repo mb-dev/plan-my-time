@@ -3,7 +3,7 @@ import datetime
 import models.entries
 import lib.date_helpers   as     date_helpers
 from app                  import app
-from flask                import jsonify, request, g
+from flask                import jsonify, request, g, make_response
 from lib                  import auth
 from parsers.tasks_parser import TasksParser
 from lib.dropbox          import DropboxApi
@@ -14,7 +14,7 @@ def to_date_str(filename):
 def today():
   return datetime.datetime.today().replace(hour=0, minute=0, second=0)
 
-@app.route('/api/journal', methods= ['GET'])
+@app.route('/api/journal', methods=['GET'])
 @auth.auth_required
 def getJournal():
   date_str = request.args.get('date')
@@ -25,7 +25,7 @@ def getJournal():
   content_and_metadata = dropbox.get_file_or_create(g.user["dropbox_access_token"], "/" + filename)
   return jsonify(content_and_metadata)
 
-@app.route('/api/journal/metadata', methods= ['GET'])
+@app.route('/api/journal/metadata', methods=['GET'])
 @auth.auth_required
 def getMetadata():
   date_str = request.args.get('date')
@@ -37,7 +37,21 @@ def getMetadata():
   summary = TasksParser.summerize(entry_metadata_arr, date)
   return jsonify(metadata=entry_metadata_arr, summary=summary)
 
-@app.route('/api/journal', methods= ['POST'])
+@app.route('/api/journal/poll', methods=['GET'])
+@auth.auth_required
+def pollChanges():
+  last_modified = request.args.get('last_modified')
+  date_str = request.args.get('date')
+  date = date_helpers.parse_date_str(date_str)
+  not_modified = 304
+
+  metadata = models.entries.find_for_user_and_date(g.user["_id"], date)
+  if metadata["file_metadata"]["last_modified"] <= last_modified:
+      return make_response("", not_modified)
+
+  return make_response("", 200)
+
+@app.route('/api/journal', methods=['POST'])
 @auth.auth_required
 def updateJournal():
   date_str = request.form['date']
@@ -55,13 +69,3 @@ def updateJournal():
     entry_metadata = TasksParser(date_str, content).to_dict()
   models.entries.create_or_update_entry(g.user["_id"], filename, date, entry_metadata, file_metadata)
   return jsonify({"success": True, **file_metadata})
-
-@app.route('/api/journal/poll', methods=['GET'])
-@auth.auth_required
-def pollChanges():
-  last_modified = request.args.get('last_modified')
-  date_str = request.form['date']
-  date = date_helpers.parse_date_str(date_str)
-
-  metadata = models.entries.find_for_user_and_date(g.user["_id"], date)
-  if metadata["file_metadata"]["last_modified"]

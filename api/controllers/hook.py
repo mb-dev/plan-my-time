@@ -60,7 +60,10 @@ def process_user(dropbox_user_id):
     content = response["content"]
     date_str = result["name"][:-3]
     filename = result["name"]
-    date = date_helpers.parse_date_str(date_str)
+    try:
+      date = date_helpers.parse_date_str(date_str)
+    except ValueError as e:
+      continue
     entry_metadata = TasksParser(date_str, content).to_dict()
     models.entries.create_or_update_entry(user["_id"], filename, date, entry_metadata, dict_without(response, "content"))
 

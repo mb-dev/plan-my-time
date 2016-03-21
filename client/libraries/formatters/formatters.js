@@ -15,6 +15,9 @@ export function getDateByDiff(date, diff) {
 export function getDayOfWeek(date) {
   return moment(date).format('ddd');
 }
+export function getYearMonthDateTime(date) {
+  return moment(date).format('YYYY-MM-DD hh:mm:ss');
+}
 export function getYearMonthDate(date) {
   return moment(date).format('YYYY-MM-DD');
 }
