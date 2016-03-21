@@ -2,12 +2,17 @@ import timeTracker from '../time_tracker/time_tracker'
 import actions from '../../actions/actions';
 import store from '../../stores/store';
 
+let featureEnabled = false;
+
 export default class PollChanges {
   constructor() {
     timeTracker.add(this.onTick);
   }
   onTick() {
     if (store.state.serverError) {
+      return;
+    }
+    if (!featureEnabled) {
       return;
     }
     let seconds = new Date().getSeconds();
