@@ -22,6 +22,13 @@ class Actions {
       browserHistory.push('/');
     });
   }
+  getUserInfo() {
+    apiClient.getUserInfo().then((response) => {
+      return response.json();
+    }).then((data) => {
+      dispatcher.dispatch({actionType: ActionType.USER.INFO, info: data});
+    });
+  }
   // journal
   getJournal(date) {
     if (!storage.getBearerToken()) { return; }

@@ -1,7 +1,8 @@
 from app import app
 from lib.dropbox import DropboxApi
+from lib                  import auth
 import models.user as user
-from flask import jsonify, request
+from flask                import jsonify, request, g, make_response
 import jwt
 
 @app.route('/api/authorize/url', methods = ['GET'])
@@ -23,3 +24,11 @@ def finalize():
   user_id = user.create_or_find_user({"dropbox_access_token": access_token, "dropbox_user_id": user_id, **user_info})
   encoded = jwt.encode({"user_id": str(user_id)}, app.config["TOKEN_SECRET"], algorithm='HS256')
   return jsonify(token=encoded.decode('utf-8'))
+
+@app.route('/api/authorize/info', methods=['GET'])
+@auth.auth_required
+def get_user_info():
+  return jsonify({
+    "name": g.user["first_name"] + " " + g.user["last_name"],
+    "email": g.user["email"]
+  })

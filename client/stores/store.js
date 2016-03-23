@@ -1,13 +1,21 @@
 import {EventEmitter} from 'events';
 import dispatcher from '../dispatcher/dispatcher';
 import ActionType from './action_types';
-
+import storage    from '../libraries/storage/storage';
 var CHANGE_EVENT = 'change';
 
 class Store extends EventEmitter {
   constructor() {
     super();
-    this.state = {date: new Date()};
+    this.state = {
+      currentUser: null,
+      hasToken: !!storage.getBearerToken(),
+      date: new Date(),
+      text: null,
+      lastUpdated: null,
+      serverError: null,
+      metadata: null
+    };
   }
   emitChange() {
     this.emit(CHANGE_EVENT);
@@ -54,6 +62,10 @@ class Store extends EventEmitter {
         break;
       case ActionType.TASKS.SERVER_ERROR:
         this.state.serverError = payload.message;
+        this.emitChange();
+        break;
+      case ActionType.USER.INFO:
+        this.state.currentUser = payload.info;
         this.emitChange();
         break;
     }

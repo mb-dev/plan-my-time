@@ -3,25 +3,34 @@ import {Link} from 'react-router';
 import classNames from 'classnames';
 
 import store from '../../stores/store'
+import storage from '../../libraries/storage/storage'
 import actions from '../../actions/actions';
 
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {currentUser: null, saveSuccessfully: true};
+    this.state = {};
     this.onStoreChange = this.onStoreChange.bind(this);
   }
   handleLogin() {
     actions.authorizeWithDropbox();
   }
   onStoreChange() {
-
+    this.updateState(this.props);
   }
   componentDidMount() {
+    if (!store.state.currentUser && storage.getBearerToken()) {
+      actions.getUserInfo();
+    }
     store.addChangeListener(this.onStoreChange);
   }
   componentWillUnmount() {
     store.removeChangeListener(this.onStoreChange);
+  }
+  updateState(props) {
+    this.setState({
+      currentUser: store.state.currentUser
+    });
   }
   render() {
     var userSection;

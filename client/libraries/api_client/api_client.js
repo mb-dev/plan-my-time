@@ -11,6 +11,9 @@ class ApiClient {
   finalizeDropboxAuth(state, code, csrf) {
     return request('POST', '/authorize/finalize', {data: {csrf_token: csrf, state: state, code: code}});
   }
+  getUserInfo() {
+    return request('GET', '/authorize/info', {}, true);
+  }
   // journals
   getJournal(date) {
     let dateStr = formatters.getYearMonthDate(date);

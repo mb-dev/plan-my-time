@@ -45,6 +45,7 @@ export default class Home extends React.Component {
       date: store.state.date,
       text: store.state.text,
       serverError: store.state.serverError,
+      hasToken: store.state.hasToken,
       currentTask: store.state.currentTask,
       percent: store.state.currentPercent || 0,
       nextTask: store.state.nextTask,
@@ -60,6 +61,11 @@ export default class Home extends React.Component {
   }
   render() {
     let percentLeft = this.state.percent * 100;
+    if (!this.state.hasToken) {
+      return (
+        <div className="not-logged-in">Welcome! Please login with Dropbox to begin editing your daily journal.</div>
+      );
+    }
     return (
       <div className="home-page container">
         <DateNavigation date={this.state.date} onUpdate={this.onChangeDate.bind(this)}></DateNavigation>
@@ -74,7 +80,7 @@ export default class Home extends React.Component {
         <div>Current Task: {this.state.currentTask && this.state.currentTask.line}</div>
         <div>Next Task: {this.state.nextTask && this.state.nextTask.line}</div>
         <section className="main-pane">
-        { this.state.text !== undefined &&
+        { this.state.text !== null &&
           <TextEditor ref="textEditor" text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>
           }
           <div className="break-notifications">
