@@ -1,9 +1,9 @@
 import React from 'react';
-import {Link} from 'react-router'
+import actions         from '../../actions/actions';
 
 export default class Logout extends React.Component {
   componentDidMount() {
-    
+    actions.logout();
   }
   render() {
     return (
@@ -12,8 +12,4 @@ export default class Logout extends React.Component {
       </div>
     )
   }
-}
-
-Logout.contextTypes = {
-  router: React.PropTypes.func.isRequired
 }

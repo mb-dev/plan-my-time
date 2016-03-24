@@ -18,6 +18,7 @@ class Storage {
   }
   clearAll() {
     Cookies.expire('token');
+    Cookies.expire('dropboxCsrf');
   }
 }
 

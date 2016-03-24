@@ -10,7 +10,8 @@ var ActionType = {
     SERVER_ERROR: 'SERVER_ERROR'
   },
   USER: {
-    INFO: 'INFO'
+    INFO: 'INFO',
+    LOGOUT: 'LOGOUT'
   }
 }
 

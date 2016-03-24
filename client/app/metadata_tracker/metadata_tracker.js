@@ -16,7 +16,7 @@ export default class MetadataTracker {
     timeTracker.add(this.onTick);
   }
   unsubscribe() {
-    timeTracker.delete(this.onTick);
+    timeTracker.remove(this.onTick);
   }
   onTick() {
     if (!store.state.metadata) {

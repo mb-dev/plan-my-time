@@ -19,11 +19,17 @@ class Actions {
       return response.json();
     }).then((data) => {
       storage.setBearerToken(data.token);
-      browserHistory.push('/');
+      this.getUserInfo().then(function() {
+        browserHistory.push('/');
+      });
     });
   }
+  logout() {
+    dispatcher.dispatch({actionType: ActionType.USER.LOGOUT});
+    browserHistory.push('/');
+  }
   getUserInfo() {
-    apiClient.getUserInfo().then((response) => {
+    return apiClient.getUserInfo().then((response) => {
       return response.json();
     }).then((data) => {
       dispatcher.dispatch({actionType: ActionType.USER.INFO, info: data});

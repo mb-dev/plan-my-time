@@ -66,6 +66,13 @@ class Store extends EventEmitter {
         break;
       case ActionType.USER.INFO:
         this.state.currentUser = payload.info;
+        this.state.hasToken = true;
+        this.emitChange();
+        break;
+      case ActionType.USER.LOGOUT:
+        this.state.currentUser = null;
+        this.state.hasToken = false;
+        storage.clearAll();
         this.emitChange();
         break;
     }
