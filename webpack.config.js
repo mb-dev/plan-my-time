@@ -7,7 +7,7 @@ module.exports = {
 
   entry: {
     index: __dirname + '/client/index.jsx',
-    vendor: ['react', 'flux', 'react-router', 'moment', 'lodash', 'cookies-js']
+    vendor: ['react', 'flux', 'react-router', 'moment', 'lodash', 'cookies-js', 'd3']
   },
 
   module: {
