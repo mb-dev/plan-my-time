@@ -80,8 +80,8 @@ export default class Home extends React.Component {
         <div>Current Task: {this.state.currentTask && this.state.currentTask.line}</div>
         <div>Next Task: {this.state.nextTask && this.state.nextTask.line}</div>
         <section className="main-pane">
-        { this.state.text !== null &&
-          <TextEditor ref="textEditor" text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>
+          { this.state.text !== null &&
+            <TextEditor ref="textEditor" text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>
           }
           <div className="break-notifications">
             <input type="checkbox" defaultChecked="true"/> Enable Break Notifications

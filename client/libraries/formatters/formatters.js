@@ -24,6 +24,14 @@ export function getYearMonthDate(date) {
 export function getYearMonth(date) {
   return moment(date).format('YYYY-MM');
 }
+export function displayDateMonth(date) {
+  return moment(date).format('MM/DD');
+}
+export function displayTimeAsNumber(date) {
+  let hour = date.getHours();
+  let minute = date.getMinutes();
+  return hour + (minute / 60);
+}
 export function isToday(date) {
   return getYearMonthDate(date) == getYearMonthDate(new Date());
 }

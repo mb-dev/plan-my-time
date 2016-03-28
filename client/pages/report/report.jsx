@@ -4,16 +4,53 @@ import store           from '../../stores/store';
 import actions         from '../../actions/actions';
 import d3              from 'd3';
 import dimple          from 'dimple';
+import * as formatters from '../../libraries/formatters/formatters';
+
 require('./report.less');
 
 export default class Report extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.onStoreChanged = this.onStoreChanged.bind(this);
+  }
   componentDidMount() {
-    var data = [
-      {date: '2/11', time: '8', name: 'wakeup'},
-      {date: '2/11', time: '22', name: 'sleep'},
-      {date: '2/12', time: '9', name: 'wakeup'},
-      {date: '2/12', time: '23', name: 'sleep'}
-    ];
+    actions.getMetadata(this.state.date);
+    store.addChangeListener(this.onStoreChanged);
+    this.renderChart();
+  }
+  componentWillMount() {
+    this.updateState(this.props);
+  }
+  componentWillUnmount() {
+    store.removeChangeListener(this.onStoreChanged);
+  }
+  onStoreChanged() {
+    this.updateState(this.props);
+  }
+  componentDidUpdate() {
+    this.renderChart();
+  }
+  renderChart() {
+    if (this.state.metadata === undefined) {
+      return;
+    }
+
+    let data = [];
+    this.state.selectedTags.forEach((tag) =>  {
+      this.state.metadata.forEach((dayMetadata) => {
+        dayMetadata.tasks.forEach((task) => {
+          let startDate = formatters.parseDate(task.start_time);
+          if (task.tags.indexOf(tag) >= 0) {
+            data.push({
+              date: formatters.displayDateMonth(startDate),
+              time: formatters.displayTimeAsNumber(startDate),
+              name: tag
+            });
+          }
+        });
+      });
+    });
+    this.refs.chartContainer.innerHTML = "";
     var svg = dimple.newSvg("#chartContainer", 590, 400);
     var myChart = new dimple.chart(svg, data);
     myChart.setBounds(60, 30, 500, 330)
@@ -24,10 +61,27 @@ export default class Report extends React.Component {
     myChart.addLegend(200, 10, 360, 20, "right");
     myChart.draw();
   }
+  updateState(props) {
+    this.setState({
+      date: store.state.date,
+      selectedTags: ['wakeup', 'sleep'],
+      metadata: store.state.metadata ? store.state.metadata.metadata : undefined,
+      summary: store.state.metadata ? store.state.metadata.summary : undefined
+    });
+  }
   render() {
 
     return (
-      <div id="chartContainer">
+      <div className="report-page">
+        <div id="chartContainer" ref="chartContainer">
+        </div>
+        { this.state.summary !== undefined &&
+          <ul id="hashtags">
+            { Object.keys(this.state.summary).map((tag) => { return (
+              <li key={tag}>{tag}</li>
+            )})}
+          </ul>
+        }
       </div>
     );
   }

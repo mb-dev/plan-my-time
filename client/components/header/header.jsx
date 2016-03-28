@@ -33,13 +33,12 @@ export default class Header extends React.Component {
     });
   }
   render() {
-    var userSection;
-    const saveButtonClass = classNames({
-      'btn': true,
-      'navbar-btn': true,
-      'btn-primary': this.state.saveSuccessfully,
-      'btn-danger': !this.state.saveSuccessfully
-    });
+    var userSection = '';
+
+    const links = [
+      {name: 'Home', link: '/', className: window.location.pathname.length <= 1 ? 'active' : ''},
+      {name: 'Report', link: '/report', className: window.location.pathname.indexOf('/report') >= 0 ? 'active' : ''}
+    ];
 
     if (this.state.currentUser) {
       userSection = <div className="navbar-text">
@@ -66,7 +65,11 @@ export default class Header extends React.Component {
           </div>
           <div className="collapse navbar-collapse">
             <ul className="nav navbar-nav">
-              <li className="active"><Link to="home">Home <span className="sr-only">(current)</span></Link></li>
+              { links.map((link) => { return (
+                <li className={link.className} key={link.name}>
+                  <Link to={link.link}>{link.name}</Link>
+                </li>
+              )})}
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <li>
