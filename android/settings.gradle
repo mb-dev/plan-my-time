@@ -1,3 +1,3 @@
-rootProject.name = 'PlanMyTime'
+rootProject.name = 'plan-my-time'
 
 include ':app'

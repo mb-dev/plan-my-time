@@ -32,9 +32,6 @@ class PlanMyTime extends Component {
         <TextInput>
 
         </TextInput>
-        <Button>
-          Start!
-        </Button>
       </View>
     );
   }
