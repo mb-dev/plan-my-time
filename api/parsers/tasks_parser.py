@@ -137,4 +137,6 @@ class TasksParser:
           summerize_task_item(task, metadata_date, 'tags', tag)
         for person in task["people"]:
           summerize_task_item(task, metadata_date, 'people', person)
+        for location in task["locations"]:
+          summerize_task_item(task, metadata_date, 'locations', location)
     return summary

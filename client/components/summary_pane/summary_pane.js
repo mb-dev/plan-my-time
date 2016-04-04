@@ -11,22 +11,17 @@ export default class SummaryPane extends React.Component {
       return (<section className="summary-pane"></section>);
     }
     return (<section className="summary-pane">
-      <ul>
-        { Object.keys(this.props.summary['tags']).map((key) => { return (
-          <li key={key}>
-            <a href="#" onClick={this.onClickKey.bind(this, key)}>{key}</a>:{' '}
-            {formatters.displayDuration(this.props.summary['tags'][key]['day'])}
-          </li>
-        )}) }
-      </ul>
-      <ul>
-        { Object.keys(this.props.summary['people']).map((key) => { return (
-          <li key={key}>
-            <a href="#" onClick={this.onClickKey.bind(this, key)}>{key}</a>:{' '}
-            {formatters.displayDuration(this.props.summary['people'][key]['day'])}
-          </li>
-        )}) }
-      </ul>
+      { ['tags', 'people', 'locations'].map((section) => {
+        <ul>
+          { Object.keys(this.props.summary[section]).map((key) => { return (
+            <li key={key}>
+              <a href="#" onClick={this.onClickKey.bind(this, key)}>{key}</a>:{' '}
+              {formatters.displayDuration(this.props.summary[section][key]['day'])}
+            </li>
+          )}) }
+        </ul>
+      });
+    }
     </section>);
   }
 }
