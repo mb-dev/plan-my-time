@@ -14,6 +14,19 @@ import React, {
 import Button from 'react-native-button'
 
 class PlanMyTime extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentTask: null,
+      nextTask: null,
+    }
+  }
+  async fetchTaskData() {
+
+  }
+  componentDidMount() {
+
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -56,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('PlanMyTime', () => PlanMyTime);
+AppRegistry.registerComponent('plan-my-time', () => PlanMyTime);
