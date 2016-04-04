@@ -16,6 +16,12 @@ class Storage {
   setDropboxCsrf(csrf) {
     Cookies.set('dropboxCsrf', csrf);
   }
+  extendBearerToken() {
+    let bearer = this.getBearerToken();
+    if (bearer) {
+      this.setBearerToken(bearer);
+    }
+  }
   clearAll() {
     Cookies.expire('token');
     Cookies.expire('dropboxCsrf');

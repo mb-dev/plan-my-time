@@ -4,7 +4,8 @@ import React, { PropTypes } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router';
 
-import dispather   from './dispatcher/dispatcher.js';
+import dispather   from './dispatcher/dispatcher';
+import storage     from './libraries/storage/storage';
 
 import App             from './pages/app/app';
 import Logout          from './pages/logout/logout';
@@ -22,3 +23,6 @@ render((
     </Route>
   </Router>
 ), document.getElementById('app'));
+
+// save cookie
+storage.extendBearerToken();
