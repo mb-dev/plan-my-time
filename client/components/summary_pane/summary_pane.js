@@ -7,18 +7,26 @@ export default class SummaryPane extends React.Component {
     this.props.onClickTag && this.props.onClickTag(key);
   }
   render() {
+    if (this.props.summary === undefined) {
+      return (<section className="summary-pane"></section>);
+    }
     return (<section className="summary-pane">
-      <h2>Summary</h2>
-      { this.props.summary !== undefined &&
-        <ul>
-          { Object.keys(this.props.summary).map((key) => { return (
-            <li key={key}>
-              <a href="#" onClick={this.onClickKey.bind(this, key)}>{key}</a>: 
-              {formatters.displayDuration(this.props.summary[key]['day'])}
-            </li>
-          )}) }
-        </ul>
-      }
+      <ul>
+        { Object.keys(this.props.summary['tags']).map((key) => { return (
+          <li key={key}>
+            <a href="#" onClick={this.onClickKey.bind(this, key)}>{key}</a>:{' '}
+            {formatters.displayDuration(this.props.summary['tags'][key]['day'])}
+          </li>
+        )}) }
+      </ul>
+      <ul>
+        { Object.keys(this.props.summary['people']).map((key) => { return (
+          <li key={key}>
+            <a href="#" onClick={this.onClickKey.bind(this, key)}>{key}</a>:{' '}
+            {formatters.displayDuration(this.props.summary['people'][key]['day'])}
+          </li>
+        )}) }
+      </ul>
     </section>);
   }
 }
