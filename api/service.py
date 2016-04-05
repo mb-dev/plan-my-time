@@ -3,7 +3,6 @@ import controllers
 import logging
 
 if not app.config["APP_DEBUG"]:
-  print("logging")
   app.logger.setLevel(logging.INFO)
   formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
   handler = logging.StreamHandler()

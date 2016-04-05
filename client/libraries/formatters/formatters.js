@@ -38,3 +38,12 @@ export function isToday(date) {
 export function parseDate(datestr) {
   return moment(datestr).toDate();
 }
+export function getFirstVisualDay(date) {
+  return moment(date).startOf('month').day(-1).toDate();
+}
+export function getLastVisualDay(date) {
+  return moment(date).endOf('month').day(1).toDate();
+}
+export function getWeeksInAMonth(date) {
+  return moment(moment(date).endOf('month') - moment(date).startOf('month')).weeks();
+}

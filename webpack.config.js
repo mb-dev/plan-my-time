@@ -15,8 +15,11 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|env)/,
-        loader: 'babel-loader',
-        include: path.join(__dirname, 'client')
+        loader: 'babel',
+        include: path.join(__dirname, 'client'),
+        query: {
+          presets: ['react', 'es2015']
+        }
       },
       { test: /\.less$/, exclude: /node_modules/, loader: 'style!css!less'},
       { test: /\.css$/, exclude: /node_modules/, loader: 'style!css'}

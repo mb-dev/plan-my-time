@@ -61,6 +61,24 @@ export default class Report extends React.Component {
     myChart.addLegend(200, 10, 360, 20, "right");
     myChart.draw();
   }
+  renderCalendar() {
+    let firstDate = formatters.getFirstVisualDay(this.state.date);
+    let lastDate = formatters.getLastVisualDay(this.state.date);
+    let currentDate = firstDate;
+    let weeksInMonth = formatters.getWeeksInAMonth(this.state.date);
+    let rows = _.times(weeksInMonth).map((week) => { return ( 
+        <tr key={week}>
+          {_.times(7).map((day) => { return (
+            <td key={day}>
+              {week} {day}
+              Event 1
+              Event 2
+            </td>
+          )})}
+        </tr>
+    )});
+    return rows;
+  }
   updateState(props) {
     this.setState({
       date: store.state.date,
@@ -70,9 +88,14 @@ export default class Report extends React.Component {
     });
   }
   render() {
-
+    let calendar = this.renderCalendar();
     return (
       <div className="report-page">
+        <table>
+          <tbody>
+            {calendar}
+          </tbody>
+        </table>
         <div id="chartContainer" ref="chartContainer">
         </div>
         { this.state.summary !== undefined &&
