@@ -113,7 +113,7 @@ class TasksParser:
   # metadata should contain only elements that are in the same month as date
   @staticmethod
   def summerize(metadata_arr, date):
-    def summerize_task_item(task, metadata_date, key, val):
+    def summerize_task_item(summary, task, metadata_date, key, val):
       if val not in summary[key]:
         summary[key][val] = {"day": 0, "week": 0, "month": 0}
 
@@ -125,7 +125,7 @@ class TasksParser:
 
       summary[key][val]["month"] += task["duration"]
 
-    summary = {'tags': {}, 'people': {}}
+    summary = {'tags': {}, 'people': {}, 'locations': {}}
     for metadata in metadata_arr:
       if not "tasks" in metadata:
         continue
@@ -134,9 +134,9 @@ class TasksParser:
         if task["duration"] is None:
           continue
         for tag in task["tags"]:
-          summerize_task_item(task, metadata_date, 'tags', tag)
+          summerize_task_item(summary, task, metadata_date, 'tags', tag)
         for person in task["people"]:
-          summerize_task_item(task, metadata_date, 'people', person)
+          summerize_task_item(summary, task, metadata_date, 'people', person)
         for location in task["locations"]:
-          summerize_task_item(task, metadata_date, 'locations', location)
+          summerize_task_item(summary, task, metadata_date, 'locations', location)
     return summary

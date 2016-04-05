@@ -39,9 +39,12 @@ class TestStringMethods(unittest.TestCase):
   def test_summerize(self):
     metadata_arr = [self.parser.to_dict(), self.parser.to_dict()]
     summary = parsers.TasksParser.summerize(metadata_arr, datetime.datetime(2015, 1, 1))
-    self.assertEqual(summary["lunch"]["day"], duration(2, 30))
-    self.assertEqual(summary["lunch"]["week"], duration(2, 30))
-    self.assertEqual(summary["lunch"]["month"], duration(2, 30))
+    self.assertEqual(summary["tags"]["lunch"]["day"], duration(2, 30))
+    self.assertEqual(summary["tags"]["lunch"]["week"], duration(2, 30))
+    self.assertEqual(summary["tags"]["lunch"]["month"], duration(2, 30))
+    self.assertEqual(summary["locations"]["blue-bottle"]["day"], duration(2, 30))
+    self.assertEqual(summary["locations"]["blue-bottle"]["week"], duration(2, 30))
+    self.assertEqual(summary["locations"]["blue-bottle"]["month"], duration(2, 30))
 
   def test_to_file(self):
     lines = self.content.split("\n")
