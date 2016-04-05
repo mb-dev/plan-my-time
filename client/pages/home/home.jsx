@@ -56,8 +56,8 @@ export default class Home extends React.Component {
   onChangeDate(date) {
     actions.switchDate(date);
   }
-  onClickTag(key) {
-    this.refs.textEditor.addTag(key);
+  onClickTag(key, section) {
+    this.refs.textEditor.addTag(key, section);
   }
   render() {
     let percentLeft = this.state.percent * 100;

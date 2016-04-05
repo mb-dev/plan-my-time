@@ -39,8 +39,14 @@ export default class TextEditor extends React.Component {
     this.setState({lineCount: this.lineCount()});
     this.debounceOnUpdate();
   }
-  addTag(tag) {
-    this.mainTextArea.value += "#" + tag;
+  addTag(tag, section) {
+    let prefix = '#';
+    if (section == 'locations') {
+       prefix = '$';
+    } else if (section == 'people') {
+      prefix = '@';
+    }
+    this.mainTextArea.value += prefix + tag;
   }
   render() {
     return (
