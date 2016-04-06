@@ -68,9 +68,9 @@ export default class Report extends React.Component {
     let firstDate = formatters.getFirstVisualDay(this.state.date);
     let lastDate = formatters.getLastVisualDay(this.state.date);
     let currentDate = firstDate;
-    let weeksInMonth = formatters.getWeeksInAMonth(this.state.date);
+    let weeksInMonth = formatters.getWeeksBetweenDates(firstDate, lastDate);
     let events = {};
-    let includeTags = ['project-math-comp-sci'];
+    let includeTags = ['project-math-comp-sci', 'social', 'social-activity', 'date'];
     this.state.metadata.forEach((dayMetadata) => {
       dayMetadata.tasks.forEach((task) => {
         let startDate = formatters.parseDate(task.start_time);
@@ -121,7 +121,7 @@ export default class Report extends React.Component {
     let calendar = this.renderCalendar();
     return (
       <div className="report-page">
-        <table>
+        <table className="calendar">
           <tbody>
             {calendar}
           </tbody>

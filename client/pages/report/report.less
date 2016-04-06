@@ -1,14 +1,48 @@
-#chartContainer {
-  margin-bottom: 20px;
-}
+@calendarGray: #aaa;
+@calendarBorder: #ddd;
+@calendarBlue: #4e87d8;
 
-#hashtags {
-  text-align: center;
-  li {
-    display: inline-block;
-    margin-right: 1em;
+.report-page {
+  .calendar {
+    margin: 20px;
+    td {
+      width: 15%;
+      padding: 10px;
+      border: 1px solid @calendarBorder;
+      vertical-align: top;
+      ul {
+        list-style: none;
+        padding-left: 0;
+        span.time {
+          padding-right: 5px;
+        }
+      }
+    }
+    .date {
+      color: @calendarGray;
+    }
+    .time {
+      color: @calendarBlue;
+      font-weight: bold;
+    }
+    .name {
+      color: @calendarBlue;
+    }
   }
-  li:after {
-    content: ", ";
+
+
+  #chartContainer {
+    margin-bottom: 20px;
+  }
+
+  #hashtags {
+    text-align: center;
+    li {
+      display: inline-block;
+      margin-right: 1em;
+    }
+    li:after {
+      content: ", ";
+    }
   }
 }

@@ -1,5 +1,7 @@
 import moment from 'moment';
 
+moment.updateLocale('en', {week: {dow: 1}});
+
 export function displayTimeAgo(date) {
   return moment(date).fromNow();
 }
@@ -33,7 +35,7 @@ export function displayTimeAsNumber(date) {
   return hour + (minute / 60);
 }
 export function getTimeFormat(date) {
-  return moment(date).format('hh:mma');
+  return moment(date).format('h:mma');
 }
 export function isToday(date) {
   return getYearMonthDate(date) == getYearMonthDate(new Date());
@@ -42,11 +44,14 @@ export function parseDate(datestr) {
   return moment(datestr).toDate();
 }
 export function getFirstVisualDay(date) {
-  return moment(date).startOf('month').day(-1).toDate();
+  return moment(date).startOf('month').startOf('week').toDate();
 }
 export function getLastVisualDay(date) {
-  return moment(date).endOf('month').day(1).toDate();
+  return moment(date).endOf('month').endOf('week').toDate();
 }
 export function getWeeksInAMonth(date) {
   return moment(moment(date).endOf('month') - moment(date).startOf('month')).weeks();
+}
+export function getWeeksBetweenDates(date1, date2) {
+   return Math.ceil(moment.duration(date2.getTime() - date1.getTime()).asWeeks());
 }
