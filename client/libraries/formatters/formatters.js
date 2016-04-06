@@ -32,6 +32,9 @@ export function displayTimeAsNumber(date) {
   let minute = date.getMinutes();
   return hour + (minute / 60);
 }
+export function getTimeFormat(date) {
+  return moment(date).format('hh:mma');
+}
 export function isToday(date) {
   return getYearMonthDate(date) == getYearMonthDate(new Date());
 }

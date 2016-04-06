@@ -62,17 +62,47 @@ export default class Report extends React.Component {
     myChart.draw();
   }
   renderCalendar() {
+    if (this.state.metadata === undefined) {
+      return '';
+    }
     let firstDate = formatters.getFirstVisualDay(this.state.date);
     let lastDate = formatters.getLastVisualDay(this.state.date);
     let currentDate = firstDate;
     let weeksInMonth = formatters.getWeeksInAMonth(this.state.date);
+    let events = {};
+    let includeTags = ['project-math-comp-sci'];
+    this.state.metadata.forEach((dayMetadata) => {
+      dayMetadata.tasks.forEach((task) => {
+        let startDate = formatters.parseDate(task.start_time);
+        let taskDate = startDate.getDate();
+        if (task.tags.length > 0 && _.intersection(task.tags, includeTags).length > 0) {
+          events[taskDate] = events[taskDate] || [];
+          events[taskDate].push({
+            time: formatters.getTimeFormat(startDate),
+            name: task.tags[0]
+          });
+        }
+      });
+    });
     let rows = _.times(weeksInMonth).map((week) => { return ( 
         <tr key={week}>
-          {_.times(7).map((day) => { return (
+          {_.times(7).map((day) => { 
+            let cd = new Date(currentDate.getTime());
+            let cdate = cd.getDate();
+            currentDate.setDate(currentDate.getDate() + 1);
+            return (
             <td key={day}>
-              {week} {day}
-              Event 1
-              Event 2
+              <span className="date">{cdate}</span>
+              { this.state.date.getMonth() == cd.getMonth() && events[cdate] &&
+                <ul>
+                { events[cdate].map((event, index) => { return (
+                  <li key={index}>
+                    <span className="time">{event.time}</span>
+                    <span className="name">{event.name}</span>
+                  </li>
+                )})}
+                </ul>
+              }
             </td>
           )})}
         </tr>
