@@ -3,6 +3,7 @@ import storage from '../libraries/storage/storage';
 import dispatcher from '../dispatcher/dispatcher';
 import ActionType from '../stores/action_types';
 import { browserHistory } from 'react-router';
+import * as formatters from '../libraries/formatters/formatters';
 
 class Actions {
   // auth
@@ -44,12 +45,12 @@ class Actions {
       dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified, newDate: date});
     });
   }
-  getMetadata(date) {
+  getMetadata(date, component) {
     if (!storage.getBearerToken()) { return; }
     apiClient.getMetadata(date).then((response) => {
       return response.json();
     }).then((data) => {
-      dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data});
+      dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data, date: date, component: component});
     });
   }
   updateJournal(date, text) {
@@ -85,6 +86,10 @@ class Actions {
          this.getMetadata(date);
       }
     });
+  }
+  // report page
+  changeReportDate(date) {
+    dispatcher.dispatch({actionType: ActionType.REPORT.CHANGE_DATE, date: newDate});
   }
 }
 

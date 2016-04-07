@@ -9,6 +9,9 @@ var ActionType = {
     CURRENT_TASK_CHANGED: 'CURRENT_TASK_CHANGED',
     SERVER_ERROR: 'SERVER_ERROR'
   },
+  REPORT: {
+    CHANGE_DATE: 'CHANGE_DATE'
+  },
   USER: {
     INFO: 'INFO',
     LOGOUT: 'LOGOUT'

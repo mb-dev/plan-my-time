@@ -14,7 +14,11 @@ class Store extends EventEmitter {
       text: null,
       lastUpdated: null,
       serverError: null,
-      metadata: null
+      metadata: null,
+      report: {
+        metadata: null,
+        date: new Date()
+      }
     };
   }
   emitChange() {
@@ -41,7 +45,15 @@ class Store extends EventEmitter {
         this.emitChange();
         break;
       case ActionType.TASKS.GET_METADATA:
-        this.state.metadata = payload.metadata;
+        if (payload.component) {
+          this.state[payload.component].metadata = payload.metadata;
+          this.state[payload.component].date = payload.date;
+        } else {
+          this.state.metadata = payload.metadata;
+          if (!this.state.report.metadata) {
+            this.state.report.metadata = payload.metadata;
+          }
+        }
         this.emitChange();
         break;
       case ActionType.TASKS.CHANGE_DATE:

@@ -12,9 +12,11 @@ export default class Report extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.onStoreChanged = this.onStoreChanged.bind(this);
+    this.onPrevMonth = this.onPrevMonth.bind(this);
+    this.onNextMonth = this.onNextMonth.bind(this);
   }
   componentDidMount() {
-    actions.getMetadata(this.state.date);
+    actions.getMetadata(this.state.date, 'report');
     store.addChangeListener(this.onStoreChanged);
     this.renderChart();
   }
@@ -29,6 +31,20 @@ export default class Report extends React.Component {
   }
   componentDidUpdate() {
     this.renderChart();
+  }
+  onPrevMonth(e) {
+    e.preventDefault();
+    actions.getMetadata(
+      formatters.getPrevMonth(this.state.date),
+      'report'
+    );
+  }
+  onNextMonth(e) {
+    e.preventDefault();
+    actions.getMetadata(
+      formatters.getNextMonth(this.state.date),
+      'report'
+    );
   }
   renderChart() {
     if (this.state.metadata === undefined) {
@@ -111,16 +127,21 @@ export default class Report extends React.Component {
   }
   updateState(props) {
     this.setState({
-      date: store.state.date,
+      date: store.state.report.date,
       selectedTags: ['wakeup', 'sleep'],
-      metadata: store.state.metadata ? store.state.metadata.metadata : undefined,
-      summary: store.state.metadata ? store.state.metadata.summary : undefined
+      metadata: store.state.report.metadata ? store.state.report.metadata.metadata : undefined,
+      summary: store.state.report.metadata ? store.state.report.metadata.summary : undefined
     });
   }
   render() {
     let calendar = this.renderCalendar();
     return (
       <div className="report-page">
+        <nav className="month-nav">
+          <a href="" className="btn prev-month" onClick={this.onPrevMonth}>&lt; Previous Month</a>
+          { formatters.getYearMonth(this.state.date) }
+          <a href="" className="btn next-month" onClick={this.onNextMonth}>Next Month &gt;</a>
+        </nav>
         <table className="calendar">
           <tbody>
             {calendar}

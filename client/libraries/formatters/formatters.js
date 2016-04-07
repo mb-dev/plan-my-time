@@ -53,5 +53,11 @@ export function getWeeksInAMonth(date) {
   return moment(moment(date).endOf('month') - moment(date).startOf('month')).weeks();
 }
 export function getWeeksBetweenDates(date1, date2) {
-   return Math.ceil(moment.duration(date2.getTime() - date1.getTime()).asWeeks());
+  return Math.ceil(moment.duration(date2.getTime() - date1.getTime()).asWeeks());
+}
+export function getNextMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 1); 
+}
+export function getPrevMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth() - 1, 1);
 }
