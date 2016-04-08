@@ -13,7 +13,7 @@ export default class SummaryPane extends React.Component {
     return (
       <section className="summary-pane">
         { ['tags', 'people', 'locations'].map((section) => { return (
-          <ul>
+          <ul key={section}>
             { Object.keys(this.props.summary[section]).map((key) => { return (
               <li key={key}>
                 <a href="#" onClick={this.onClickKey.bind(this, key, section)}>{key}</a>:{' '}

@@ -9,7 +9,7 @@ export function displayDuration(seconds) {
   return moment.duration(seconds, 'seconds').humanize();
 }
 export function getDaysDifference(date1, date2) {
-  return moment.duration(Math.abs(date1.valueOf() - date2.valueOf())).days();
+  return Math.floor(moment.duration(Math.abs(date1.valueOf() - date2.valueOf())).asDays());
 }
 export function getDateByDiff(date, diff) {
   return moment(date).add(diff, 'days').toDate();

@@ -34,6 +34,13 @@ export default class Home extends React.Component {
     store.removeChangeListener(this.onStoreChanged);
     this.metadataTracker.unsubscribe();
   }
+  componentWillReceiveProps(nextProps) {
+    let { query } = nextProps.location;
+    let queryDate = query.date ? formatters.parseDate(query.date) : null;
+    if (query.date != formatters.getYearMonthDate(this.state.date)) {
+      actions.switchDate(queryDate);
+    } 
+  }
   onStoreChanged() {
     this.updateState(this.props);
   }
@@ -41,8 +48,10 @@ export default class Home extends React.Component {
     actions.updateJournal(this.state.date, text);
   }
   updateState(props) {
+    let { query } = props.location;
+    let queryDate = query.date ? formatters.parseDate(query.date) : null;
     this.setState({
-      date: store.state.date,
+      date: queryDate || store.state.date,
       text: store.state.text,
       serverError: store.state.serverError,
       hasToken: store.state.hasToken,

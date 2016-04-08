@@ -1,4 +1,5 @@
 import React           from 'react';
+import {Link}          from 'react-router';
 import * as formatters from '../../libraries/formatters/formatters';
 
 function getDateRange(date) {
@@ -17,12 +18,6 @@ export default class DateNavigation extends React.Component {
   }
   componentWillReceiveProps(props) {
   }
-  onChangeDate(date, e) {
-    e.preventDefault();
-    if (this.props.onUpdate) {
-      this.props.onUpdate(date);
-    }
-  }
   render() {
     let dateRange = getDateRange(this.props.date);
     return (<nav className="day-nav">
@@ -33,10 +28,10 @@ export default class DateNavigation extends React.Component {
         let todayClass = formatters.isToday(date) ? 'today' : '';
         let className = 'day ' + activeClass + ' ' + todayClass;
         return (
-          <a className={className} key={date} onClick={this.onChangeDate.bind(this, date)} href=''>
+          <Link key={date.getTime()} className={className} to={{pathname: '/', query: {date: formatters.getYearMonthDate(date)}}}>
             <span className="date">{date.getDate()}</span>
             <span className="day">{formatters.getDayOfWeek(date)}</span>
-          </a>
+          </Link>
         )
       })}
     </nav>);

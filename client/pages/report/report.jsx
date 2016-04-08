@@ -1,5 +1,6 @@
 import _               from 'lodash';
 import React           from 'react';
+import {Link}          from 'react-router';
 import store           from '../../stores/store';
 import actions         from '../../actions/actions';
 import d3              from 'd3';
@@ -108,7 +109,7 @@ export default class Report extends React.Component {
             currentDate.setDate(currentDate.getDate() + 1);
             return (
             <td key={day}>
-              <span className="date">{cdate}</span>
+              <Link to={{pathname: '/', query: {date: formatters.getYearMonthDate(cd)}}} className="date">{cdate}</Link>
               { this.state.date.getMonth() == cd.getMonth() && events[cdate] &&
                 <ul>
                 { events[cdate].map((event, index) => { return (
