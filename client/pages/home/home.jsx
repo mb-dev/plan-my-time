@@ -36,7 +36,7 @@ export default class Home extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     let { query } = nextProps.location;
-    let queryDate = query.date ? formatters.parseDate(query.date) : null;
+    let queryDate = query.date ? formatters.parseDate(query.date);
     if (query.date != formatters.getYearMonthDate(this.state.date)) {
       actions.switchDate(queryDate);
     } 

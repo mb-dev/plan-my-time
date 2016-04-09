@@ -12,25 +12,20 @@ from bson.code import Code
 from bson.son  import SON
 import lib.mongo as mongo
 
-mapper = Code("""
-              function() {
-                this.metadata.tags.forEach(function(tag) {
-                  emit({type: 'tag', value: tag}, 1);
-                });
-              }
-              """)
+def mapper(results, entry):
+    for tag in entry["metadata"]["tags"]:
+        results[tag] = 'tag'
+    for location in entry["metadata"]["locations"]:
+        results[location] = 'location'
+    for person in entry["metadata"]["people"]:
+        results[person] = 'person'
 
-reducer = Code("""
-               function(key, values) {
-                 return 1;
-               }
-               """)
+mongo.db.tags.delete_many({}) 
+for user in mongo.db.users.find():
+    results = {}
+    for entry in mongo.db.entries.find({"user_id": user["_id"]}):
+        mapper(results, entry)
 
-finalizer = Code("""
-                 function(key, reducedValue) {
-                    reducedValue._id = ObjectId();
-                 }
-                 """)
+    tags = [{"user_id": user["_id"], "tag": tag, "type": type} for tag,type in results.items()]
 
-
-mongo.db.entries.map_reduce(mapper, reducer, out=SON([("replace", "tags"), ("finalize", finalizer)]))
+    mongo.db.tags.insert_many(tags)

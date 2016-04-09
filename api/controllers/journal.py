@@ -1,6 +1,7 @@
 import time
 import datetime
 import models.entries
+import models.tags
 import lib.date_helpers   as     date_helpers
 from app                  import app
 from flask                import jsonify, request, g, make_response
@@ -36,6 +37,12 @@ def getMetadata():
   entry_metadata_arr = [entry["metadata"] for entry in entries]
   summary = TasksParser.summerize(entry_metadata_arr, date)
   return jsonify(metadata=entry_metadata_arr, summary=summary)
+
+@app.route('/api/journal/tags', methods=['GET'])
+@auth.auth_required
+def getTags():
+    tags = tags.get_all_tags(g.user["_id"])
+    return jsonify(tags)
 
 @app.route('/api/journal/poll', methods=['GET'])
 @auth.auth_required
