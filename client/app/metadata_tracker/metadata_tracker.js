@@ -51,12 +51,10 @@ export default class MetadataTracker {
       if (startDate <= timeNow.getTime()) {
         if (currentTask != metadata[i]) {
           actions.updateCurrentTask(metadata[i]);
-          console.log('updated current task');
         }
         if (i+1 < metadata.length && nextTask != metadata[i+1]) {
           actions.updateNextTask(metadata[i+1]);
           nextTask = metadata[i+1];
-          console.log('updated next task');
         }
         if (!nextTask) {
           break;
@@ -70,7 +68,6 @@ export default class MetadataTracker {
         percent = +percent.toFixed(2);
         if (currentPercent != percent) {
           actions.updateCurrentPercent(percent);
-          console.log('updated percent');
         }
         break;
       }

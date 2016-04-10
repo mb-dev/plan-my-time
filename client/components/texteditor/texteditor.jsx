@@ -8,24 +8,32 @@ export default class TextEditor extends React.Component {
     super(props);
     this.timer = null;
     this.state = {text: props.text};
+    this.onChange = this.onChange.bind(this);
     this.debounceOnUpdate = _.debounce(() => {
       this.state.text = this.mainTextArea.value;
       this.props.onUpdate(this.mainTextArea.value);
-    }, 5000, {maxWait: 10000});
+    }, 5000);
+  }
+  componentWillMount() {
+
   }
   componentDidMount() {
     this.mainTextArea.focus();
     this.setState({lineCount: this.lineCount()});
   }
-  componentWillUnmount() {
-    clearTimeout(this.timer);
-  }
   componentWillReceiveProps(props) {
-    if (this.state.lastTextName != props.textName) {
+    if (this.state.lastTextName !== props.textName) {
       this.state.lastTextName = props.textName;
       this.mainTextArea.value = props.text;
       this.setState({lineCount: this.lineCount()});
     }
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+  onChange() {
+    this.debounceOnUpdate();
+    this.setState({lineCount: this.lineCount()});
   }
   lineCount() {
     const minLines = 10;
@@ -35,15 +43,11 @@ export default class TextEditor extends React.Component {
     }
     return Math.max(minLines, matches.length + 2);
   }
-  onChange(e) {
-    this.setState({lineCount: this.lineCount()});
-    this.debounceOnUpdate();
-  }
   addTag(tag, section) {
     let prefix = '#';
-    if (section == 'locations') {
-       prefix = '$';
-    } else if (section == 'people') {
+    if (section === 'locations') {
+      prefix = '$';
+    } else if (section === 'people') {
       prefix = '@';
     }
     this.mainTextArea.value += prefix + tag;
@@ -51,7 +55,7 @@ export default class TextEditor extends React.Component {
   render() {
     return (
       <div className="text-editor">
-        <textarea ref={(c) => this.mainTextArea = c} defaultValue={this.state.text} onChange={this.onChange.bind(this)} rows={this.state.lineCount}></textarea>
+        <textarea ref={(c) => this.mainTextArea = c} defaultValue={this.state.text} onChange={this.onChange} rows={this.state.lineCount}></textarea>
       </div>
     );
   }
