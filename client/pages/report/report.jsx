@@ -5,7 +5,7 @@ import store           from '../../stores/store';
 import actions         from '../../actions/actions';
 import d3              from 'd3';
 import dimple          from 'dimple';
-import * as formatters from '../../libraries/formatters/formatters';
+import * as formatters from '../../../shared/client/formatters/formatters';
 
 require('./report.less');
 

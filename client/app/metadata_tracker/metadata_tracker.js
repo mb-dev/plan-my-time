@@ -1,7 +1,7 @@
 import timeTracker from '../time_tracker/time_tracker';
 import store from '../../stores/store';
 import actions from '../../actions/actions';
-import * as formatters from '../../libraries/formatters/formatters';
+import * as formatters from '../../../shared/client/formatters/formatters';
 
 function getSeconds(date) {
   return date.getTime() / 1000;

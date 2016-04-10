@@ -1,4 +1,3 @@
-import _               from 'lodash';
 import React           from 'react';
 import store           from '../../stores/store';
 import actions         from '../../actions/actions';
@@ -6,7 +5,7 @@ import DateNavigation  from '../../components/date_navigation/date_navigation';
 import ProgressBar     from '../../components/progress_bar/progress_bar';
 import TextEditor      from '../../components/texteditor/texteditor';
 import SummaryPane     from '../../components/summary_pane/summary_pane';
-import * as formatters from '../../libraries/formatters/formatters';
+import * as formatters from '../../../shared/client/formatters/formatters';
 import HourMarker      from '../../app/time_tracker/hour_marker';
 import MetadataTracker from '../../app/metadata_tracker/metadata_tracker';
 import PollChanges     from '../../app/poll_changes/poll_changes';

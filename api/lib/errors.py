@@ -8,9 +8,11 @@ DROPBOX_EMAIL_NOT_VERIFIED = {"code": 5,   "msg": "Dropbox email needs to be ver
 
 # App errors
 AUTH_REQUIRED              = {"code": 100, "msg": "Bearer Token Missing                    ", "httpCode": 403};
+KEY_NOT_FOUND              = {"code": 101, "msg": "API Key not found                       ", "httpCode": 404};
+
 
 class AppException(Exception):
-  def __init__(self, appException):
-    Exception.__init__(self, appException["msg"])
-    self.httpCode = appException["httpCode"]
-    self.msg = appException["msg"]
+    def __init__(self, appException):
+        Exception.__init__(self, appException["msg"])
+        self.httpCode = appException["httpCode"]
+        self.msg = appException["msg"]

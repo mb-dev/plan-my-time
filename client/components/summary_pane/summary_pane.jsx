@@ -1,6 +1,6 @@
 import React      from 'react';
 import actions         from '../../actions/actions';
-import * as formatters from '../../libraries/formatters/formatters';
+import * as formatters from '../../../shared/client/formatters/formatters';
 
 export default class SummaryPane extends React.Component {
   onClickKey(key, section, e) {

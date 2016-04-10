@@ -1,15 +1,9 @@
 import $       from 'jquery'
-import config  from '../../config/config'
-import storage from '../storage/storage'
 
-export default function makeRequest(type, url, req, addToken, success) {
+export default function makeRequest(type, url, req, config, success) {
   let headers = new Headers();
-  if (addToken) {
-    let bearerToken = storage.getBearerToken();
-    if (!bearerToken) {
-      return null;
-    }
-    headers.append('Authorization', bearerToken);
+  if (config.token) {
+    headers.append('Authorization', config.token);
   }
   // query = '';
   // if (req.query) {

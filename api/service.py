@@ -9,5 +9,5 @@ if not app.config["APP_DEBUG"]:
   handler.setFormatter(formatter)
   app.logger.addHandler(handler)
 
-app.run(debug = app.config["APP_DEBUG"], port = app.config["PORT"])
+app.run(host='0.0.0.0', debug=app.config["APP_DEBUG"], port = app.config["PORT"])
 

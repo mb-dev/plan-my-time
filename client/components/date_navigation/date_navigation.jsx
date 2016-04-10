@@ -1,6 +1,6 @@
 import React           from 'react';
 import {Link}          from 'react-router';
-import * as formatters from '../../libraries/formatters/formatters';
+import * as formatters from '../../../shared/client/formatters/formatters';
 
 function getDateRange(date) {
   let diffFromToday = formatters.getDaysDifference(date, new Date());
@@ -19,7 +19,7 @@ export default class DateNavigation extends React.Component {
   componentWillReceiveProps(props) {
   }
   render() {
-    let dateRange = getDateRange(this.props.date);
+    const dateRange = getDateRange(this.props.date);
     return (<nav className="day-nav">
       { dateRange.map((diffDate) => {
         let diff = diffDate[0];

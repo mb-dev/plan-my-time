@@ -16,10 +16,13 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /(node_modules|env)/,
         loader: 'babel',
-        include: path.join(__dirname, 'client'),
+        include: [
+          path.join(__dirname, 'client'),
+          path.join(__dirname, 'shared')
+        ],
         query: {
-          presets: ['react', 'es2015']
-        }
+          presets: ['react', 'es2015'],
+        },
       },
       { test: /\.less$/, exclude: /node_modules/, loader: 'style!css!less'},
       { test: /\.css$/, exclude: /node_modules/, loader: 'style!css'}
@@ -28,11 +31,11 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: path.join(__dirname, '/static/js'),
-    publicPath: '/js/'
+    publicPath: '/js/',
   },
   plugins: [
     new webpack.NoErrorsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' })
+    new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' }),
   ],
 
   resolve: {

@@ -1,13 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- */
-'use strict';
+import { AppRegistry } from 'react-native';
 
-import React, {
-  AppRegistry,
-} from 'react-native';
+import Index from './android/client/pages/index/index';
 
-import PlanMyTime from './android/client/pages/index/index'
-
-AppRegistry.registerComponent('plan-my-time', () => PlanMyTime);
+AppRegistry.registerComponent('plan-my-time', () => Index);

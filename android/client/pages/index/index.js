@@ -3,24 +3,31 @@ import React, {
   Component,
 } from 'react-native';
 
-import Home from '../home/home'
+import Home from '../home/home';
+import TagSelector from '../tag_selector/tag_selector';
+import Settings from '../settings/settings';
 
-class PlanMyTime extends Component {
+export default class Index extends Component {
   renderScene(route, navigator) {
-    if (route.name == 'Home') {
-      return <Home navigator={navigator} />
+    console.log("Render scene", route.name);
+    if (route.name === 'home') {
+      return <Home navigator={navigator} />;
     }
-    if (route.name == 'Settings') {
-      return <Settings navigator={navigator} />
+    if (route.name === 'select-tag') {
+      return <TagSelector navigator={navigator} />;
     }
+    if (route.name === 'settings') {
+      return <Settings navigator={navigator} />;
+    }
+    return null;
   }
   render() {
     return (
       <Navigator
         style={{ flex: 1 }}
-        initialRoute={{name: 'Home'}}
-        renderScene={ this.renderScene }>
-      </Navigator>
+        initialRoute={ { name: 'home', index: 0 } }
+        renderScene={ this.renderScene }
+      />
     );
   }
 }

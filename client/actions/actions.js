@@ -1,16 +1,20 @@
-import apiClient from '../libraries/api_client/api_client';
+import apiClient from '../../shared/client/api_client/api_client';
 import storage from '../libraries/storage/storage';
+import config from '../config/config';
 import dispatcher from '../dispatcher/dispatcher';
 import ActionType from '../stores/action_types';
 import { browserHistory } from 'react-router';
-import * as formatters from '../libraries/formatters/formatters';
+
+function getConfig() {
+  return { apiServer: config.apiServer, token: storage.getBearerToken() }
+}
 
 class Actions {
   // auth
   authorizeWithDropbox() {
-    apiClient.getDropboxAuthUrl().then((response) => {
-      return response.json();
-    }).then((data) => {
+    apiClient.getDropboxAuthUrl().then(response => (
+      response.json()
+    )).then((data) => {
       storage.setDropboxCsrf(data.csrf_token);
       window.location.href = data.url;
     });
@@ -30,7 +34,9 @@ class Actions {
     browserHistory.push('/');
   }
   getUserInfo() {
-    return apiClient.getUserInfo().then((response) => {
+    let config = getConfig();
+    if (!config.token) { return; }
+    return apiClient.getUserInfo(config).then((response) => {
       return response.json();
     }).then((data) => {
       dispatcher.dispatch({actionType: ActionType.USER.INFO, info: data});
@@ -38,23 +44,27 @@ class Actions {
   }
   // journal
   getJournal(date) {
-    if (!storage.getBearerToken()) { return; }
-    apiClient.getJournal(date).then((response) => {
+    let config = getConfig();
+    if (!config.token) { return; }
+    apiClient.getJournal(config, date).then((response) => {
       return response.json();
     }).then((data) => {
       dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified, newDate: date});
     });
   }
   getMetadata(date, component) {
-    if (!storage.getBearerToken()) { return; }
-    apiClient.getMetadata(date).then((response) => {
+    let config = getConfig();
+    if (!config.token) { return; }
+    apiClient.getMetadata(config, date).then((response) => {
       return response.json();
     }).then((data) => {
       dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data, date: date, component: component});
     });
   }
   updateJournal(date, text) {
-    apiClient.updateJournal(date, text).then((response) => {
+    let config = getConfig();
+    if (!config.token) { return; }
+    apiClient.updateJournal(config, date, text).then((response) => {
       if (!response.ok) {
         response.json().then((err) => {
            dispatcher.dispatch({actionType: ActionType.TASKS.SERVER_ERROR, message: err.message});
@@ -80,18 +90,20 @@ class Actions {
     this.getJournal(date);
   }
   checkForUpdate(date, lastUpdated) {
-    apiClient.checkForUpdate(date, lastUpdated).then((response) => {
-      if (response.status == 200) {
-         this.getJournal(date);
-         this.getMetadata(date);
+    let config = getConfig();
+    if (!config.token) { return; }
+    apiClient.checkForUpdate(config, date, lastUpdated).then((response) => {
+      if (response.status === 200) {
+        this.getJournal(date);
+        this.getMetadata(date);
       }
     });
   }
   // report page
   changeReportDate(date) {
-    dispatcher.dispatch({actionType: ActionType.REPORT.CHANGE_DATE, date: newDate});
+    dispatcher.dispatch({actionType: ActionType.REPORT.CHANGE_DATE, date: date});
   }
 }
 
-var actions = new Actions;
+const actions = new Actions;
 export default actions;

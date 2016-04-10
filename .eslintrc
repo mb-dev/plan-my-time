@@ -1,3 +1,19 @@
 {
-  "extends": "airbnb/base"
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "object-shorthand": ["error", "methods"],
+    "object-curly-spacing": ["error", "never"],
+    "no-multi-spaces": [2, { "exceptions": { "VariableDeclarator": true, "ImportDeclaration": true } }],
+    "max-len": 0,
+  }
 }

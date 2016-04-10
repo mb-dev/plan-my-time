@@ -2,34 +2,13 @@ import React, {
   Component,
   StyleSheet,
   Text,
-  TextInput,
-  View
+  TouchableHighlight,
+  View,
+  ListView,
 } from 'react-native';
-import Button from 'react-native-button'
-
-class PlanMyTime extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Plan My Time
-        </Text>
-        <Text style={styles.instructions}>
-          Current Task: ???
-        </Text>
-        <Text style={styles.instructions}>
-          Next Task: ???
-        </Text>
-        <Text style={styles.instructions}>
-          Add a new task:
-        </Text>
-        <TextInput>
-
-        </TextInput>
-      </View>
-    );
-  }
-}
+import Button from 'react-native-button';
+import store from '../../stores/store';
+import actions from '../../actions/actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,4 +28,56 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+
+export default class Home extends Component {
+  constructor() {
+    super();
+    this.onStoreChanged = this.onStoreChanged.bind(this);
+  }
+  componentWillMount() {
+    this.updateState(this.props);
+  }
+  componentDidMount() {
+    console.log("Did mount", store.state.currentUser);
+    if (store.state.currentUser === null) {
+      this.props.navigator.push({name: 'settings', index: 1});
+    } else {
+      actions.getEntries();
+    }
+  }
+  onStoreChanged() {
+    this.updateState(this.props);
+  }
+  onDidFocus() {
+    console.log("entered home");
+  }
+  renderRow(entry) {
+    return (
+      <View>
+        <TouchableHighlight>
+          {entry.line}
+        </TouchableHighlight>
+      </View>
+    );
+  }
+  updateState(props) {
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.line !== r2.line});
+    this.setState({
+      entries: ds.cloneWithRows(store.state.entries),
+    });
+  }
+  render() {
+    return (
+      <View style={styles.container}>
+        <Button>Add Task</Button>
+        <Text style={styles.welcome}>
+          Plan My Time
+        </Text>
+        <ListView dataSource={this.state.entries}
+                  renderRow={this.renderRow}
+        />
+      </View>
+    );
+  }
+}
 
