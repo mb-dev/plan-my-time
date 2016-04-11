@@ -89,7 +89,7 @@ class Store extends EventEmitter {
         this.emitChange();
         break;
       case ActionType.TASKS.TAGS:
-        this.state.tags = payload.tags;
+        this.state.tags = _.sortBy(payload.tags, 'tag');
         this.emitChange();
         break;
     }

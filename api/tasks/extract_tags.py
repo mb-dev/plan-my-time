@@ -21,9 +21,9 @@ def mapper(results, entry):
     for tag in entry["metadata"]["tags"]:
         entry_mapper(results, "tag", "#" + tag, entry)
     for location in entry["metadata"]["locations"]:
-        entry_mapper(results, "location", "$" + tag, entry)
+        entry_mapper(results, "location", "$" + location, entry)
     for person in entry["metadata"]["people"]:
-        entry_mapper(results, "person", "@" + tag, entry)
+        entry_mapper(results, "person", "@" + person, entry)
 
 def run():
     app.logger.info("starting extract_tags task")
