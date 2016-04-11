@@ -5,10 +5,7 @@ module.exports = {
   devtool: 'source-map',
   watch: true,
 
-  entry: {
-    index: __dirname + '/client/index.jsx',
-    vendor: ['react', 'flux', 'react-router', 'moment', 'lodash', 'cookies-js', 'd3']
-  },
+  entry: ['babel-polyfill', __dirname + '/client/index.jsx'],
 
   module: {
     loaders: [
@@ -18,10 +15,10 @@ module.exports = {
         loader: 'babel',
         include: [
           path.join(__dirname, 'client'),
-          path.join(__dirname, 'shared')
+          path.join(__dirname, 'shared'),
         ],
         query: {
-          presets: ['react', 'es2015'],
+          presets: ['react'],
         },
       },
       { test: /\.less$/, exclude: /node_modules/, loader: 'style!css!less'},
@@ -35,7 +32,6 @@ module.exports = {
   },
   plugins: [
     new webpack.NoErrorsPlugin(),
-    new webpack.optimize.CommonsChunkPlugin({ name: 'vendor', filename: 'vendor.bundle.js' }),
   ],
 
   resolve: {

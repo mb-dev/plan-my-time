@@ -1,11 +1,12 @@
-import pymongo
-import datetime
-from bson.objectid import ObjectId
 import lib.mongo as mongo
-import lib.date_helpers as date_helpers
 
-tags = mongo.db['tags']
+tags_table = mongo.db['tags']
+
 
 def get_all_tags(user_id):
     assert user_id is not None
-    list(tags.find({"user_id": user_id}))
+    tags = list(tags_table.find({"user_id": user_id}))
+    for tag in tags:
+        del tag['_id']
+        del tag['user_id']
+    return tags

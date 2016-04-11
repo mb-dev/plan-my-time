@@ -34,11 +34,11 @@ export default class Home extends React.Component {
     this.metadataTracker.unsubscribe();
   }
   componentWillReceiveProps(nextProps) {
-    let { query } = nextProps.location;
-    let queryDate = query.date ? formatters.parseDate(query.date) : null;
+    const {query} = nextProps.location;
+    const queryDate = query.date ? formatters.parseDate(query.date) : null;
     if (query.date !== formatters.getYearMonthDate(this.state.date)) {
       actions.switchDate(queryDate);
-    } 
+    }
   }
   onStoreChanged() {
     this.updateState(this.props);
@@ -47,8 +47,8 @@ export default class Home extends React.Component {
     actions.updateJournal(this.state.date, text);
   }
   updateState(props) {
-    let { query } = props.location;
-    let queryDate = query.date ? formatters.parseDate(query.date) : null;
+    const {query} = props.location;
+    const queryDate = query.date ? formatters.parseDate(query.date) : null;
     this.setState({
       date: queryDate || store.state.date,
       text: store.state.text,
@@ -58,7 +58,7 @@ export default class Home extends React.Component {
       percent: store.state.currentPercent || 0,
       nextTask: store.state.nextTask,
       lastUpdated: store.state.lastUpdated ? store.state.lastUpdated.toString() : undefined,
-      summary: store.state.metadata ? store.state.metadata.summary : undefined
+      summary: store.state.metadata ? store.state.metadata.summary : undefined,
     });
   }
   onChangeDate(date) {

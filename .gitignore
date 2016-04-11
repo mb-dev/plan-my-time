@@ -1,8 +1,6 @@
 node_modules
-static/js/index.bundle.js
-static/js/index.bundle.js.map
-static/js/vendor.bundle.js
-static/js/vendor.bundle.js.map
+static/js/main.bundle.js
+static/js/main.bundle.js.map
 static/icons
 static/images
 static/sounds

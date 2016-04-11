@@ -15,10 +15,11 @@ class Store extends EventEmitter {
       lastUpdated: null,
       serverError: null,
       metadata: null,
+      tags: [],
       report: {
         metadata: null,
-        date: new Date()
-      }
+        date: new Date(),
+      },
     };
   }
   emitChange() {
@@ -87,11 +88,15 @@ class Store extends EventEmitter {
         storage.clearAll();
         this.emitChange();
         break;
+      case ActionType.TASKS.TAGS:
+        this.state.tags = payload.tags;
+        this.emitChange();
+        break;
     }
   }
 }
 
-var store = new Store();
+const store = new Store();
 dispatcher.register(store.handleDispatch.bind(store));
 
 export default store;

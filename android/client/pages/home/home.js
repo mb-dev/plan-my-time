@@ -39,11 +39,13 @@ export default class Home extends Component {
   }
   componentDidMount() {
     console.log("Did mount", store.state.currentUser);
-    if (store.state.currentUser === null) {
-      this.props.navigator.push({name: 'settings', index: 1});
-    } else {
-      actions.getEntries();
-    }
+    actions.getUserInfo().then(() => {
+      if (store.state.currentUser === null) {
+        this.props.navigator.push({name: 'settings', index: 1});
+      } else {
+        actions.getEntries();
+      }
+    });
   }
   onStoreChanged() {
     this.updateState(this.props);
@@ -51,20 +53,18 @@ export default class Home extends Component {
   onDidFocus() {
     console.log("entered home");
   }
-  renderRow(entry) {
-    return (
-      <View>
-        <TouchableHighlight>
-          {entry.line}
-        </TouchableHighlight>
-      </View>
-    );
-  }
   updateState(props) {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.line !== r2.line});
     this.setState({
       entries: ds.cloneWithRows(store.state.entries),
     });
+  }
+  renderRow(entry) {
+    return (
+      <TouchableHighlight>
+        {entry.line}
+      </TouchableHighlight>
+    );
   }
   render() {
     return (

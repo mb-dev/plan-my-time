@@ -3,10 +3,10 @@ import storage from '../libraries/storage/storage';
 import config from '../config/config';
 import dispatcher from '../dispatcher/dispatcher';
 import ActionType from '../stores/action_types';
-import { browserHistory } from 'react-router';
+import {browserHistory} from 'react-router';
 
 function getConfig() {
-  return { apiServer: config.apiServer, token: storage.getBearerToken() }
+  return {apiServer: config.apiServer, token: storage.getBearerToken()}
 }
 
 class Actions {
@@ -98,6 +98,13 @@ class Actions {
         this.getMetadata(date);
       }
     });
+  }
+  async getAllTags() {
+    let config = getConfig();
+    if (!config.token) { return; }
+    const response = await apiClient.getTags(config);
+    const data = await response.json();
+    dispatcher.dispatch({actionType: ActionType.TASKS.TAGS, tags: data.tags});
   }
   // report page
   changeReportDate(date) {
