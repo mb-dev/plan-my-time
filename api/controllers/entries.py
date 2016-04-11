@@ -15,8 +15,8 @@ def getEntries():
     if not date_str:
         return "missing date", 400
     date = date_helpers.parse_date_str(date_str)
-    metadata = models.entires.find_for_user_and_date(g.user["_id"], date)
+    metadata = models.entries.find_for_user_and_date(g.user["_id"], date)
     if metadata is None:
         # for now it needs to exist
         return "not found", 404
-    return jsonify(metadata["metadata"]["tasks"])
+    return jsonify(entries=metadata["metadata"]["tasks"])

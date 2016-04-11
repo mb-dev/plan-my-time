@@ -39,6 +39,7 @@ def authByKey():
     if user_info is None:
         raise errors.AppException(errors.KEY_NOT_FOUND)
     encoded = jwt.encode({"user_id": str(user_info["_id"])}, app.config["TOKEN_SECRET"], algorithm='HS256')
+    print(encoded.decode('utf-8'))
     return jsonify(token=encoded.decode('utf-8'))
 
 

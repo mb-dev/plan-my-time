@@ -38,7 +38,7 @@ export default class Home extends Component {
     this.updateState(this.props);
   }
   componentDidMount() {
-    console.log("Did mount", store.state.currentUser);
+    store.addChangeListener(this.onStoreChanged);
     actions.getUserInfo().then(() => {
       if (store.state.currentUser === null) {
         this.props.navigator.push({name: 'settings', index: 1});
@@ -46,6 +46,9 @@ export default class Home extends Component {
         actions.getEntries();
       }
     });
+  }
+  componentWillUnmount() {
+    store.removeChangeListener(this.onStoreChanged);
   }
   onStoreChanged() {
     this.updateState(this.props);
@@ -62,7 +65,7 @@ export default class Home extends Component {
   renderRow(entry) {
     return (
       <TouchableHighlight>
-        {entry.line}
+        <Text>{entry.line}</Text>
       </TouchableHighlight>
     );
   }

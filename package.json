@@ -51,12 +51,10 @@
     "lodash": "^4.9.0",
     "moment": "^2.12.0",
     "nvd3": "^1.8.1",
-    "object-assign": "^4.0.1",
-    "react": "^15.0.1",
+    "react": "^0.14.8",
     "react-bootstrap": "^0.28.4",
-    "react-dom": "^15.0.0",
-    "react-hot-loader": "^1.3.0",
-    "react-native": "^0.23.1",
+    "react-dom": "^0.14.8",
+    "react-native": "0.24.0-rc3",
     "react-native-button": "^1.4.2",
     "react-router": "^2.0.1"
   }

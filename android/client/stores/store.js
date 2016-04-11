@@ -36,6 +36,7 @@ class Store extends EventEmitter {
         break;
       case ActionType.ENTRIES.LIST:
         this.state.entries = payload.entries;
+        console.log('setting store', payload.entries);
         this.emitChange();
         break;
       default:

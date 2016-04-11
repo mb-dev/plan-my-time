@@ -42,7 +42,7 @@ class ApiClient {
     return request('GET', '/journal/poll', params, config);
   }
   getTags(config) {
-    return request('GET', '/journal/tags', {}, config); 
+    return request('GET', '/journal/tags', {}, config);
   }
   // entries
   getEntries(config, date) {

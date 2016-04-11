@@ -37,7 +37,7 @@ class Actions {
     if (!config.token) { return; }
     const response = await apiClient.getEntries(config);
     const data = await response.json();
-    dispatcher.dispatch({actionType: ActionType.ENTRIES.LIST, entries: data});
+    dispatcher.dispatch({actionType: ActionType.ENTRIES.LIST, entries: data.entries});
   }
 }
 
