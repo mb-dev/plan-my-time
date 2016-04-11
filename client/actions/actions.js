@@ -1,18 +1,19 @@
 import apiClient from '../../shared/client/api_client/api_client';
 import storage from '../libraries/storage/storage';
-import config from '../config/config';
+import configStore from '../config/config';
 import dispatcher from '../dispatcher/dispatcher';
 import ActionType from '../stores/action_types';
 import {browserHistory} from 'react-router';
 
 function getConfig() {
-  return {apiServer: config.apiServer, token: storage.getBearerToken()}
+  return {apiServer: configStore.apiServer, token: storage.getBearerToken()};
 }
 
 class Actions {
   // auth
   authorizeWithDropbox() {
-    apiClient.getDropboxAuthUrl().then(response => (
+    let config = getConfig();
+    apiClient.getDropboxAuthUrl(config).then(response => (
       response.json()
     )).then((data) => {
       storage.setDropboxCsrf(data.csrf_token);
@@ -20,7 +21,9 @@ class Actions {
     });
   }
   finalizeDropboxAuth(state, code) {
-    apiClient.finalizeDropboxAuth(state, code, storage.getDropboxCsrf()).then((response) => {
+    const config = getConfig();
+    const csrf = storage.getDropboxCsrf();
+    apiClient.finalizeDropboxAuth(config, csrf, state, code).then((response) => {
       return response.json();
     }).then((data) => {
       storage.setBearerToken(data.token);

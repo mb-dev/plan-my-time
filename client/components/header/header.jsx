@@ -29,15 +29,16 @@ export default class Header extends React.Component {
   }
   updateState(props) {
     this.setState({
-      currentUser: store.state.currentUser
+      currentUser: store.state.currentUser,
     });
   }
   render() {
-    var userSection = '';
+    let userSection = '';
 
     const links = [
       {name: 'Home', link: '/', className: window.location.pathname.length <= 1 ? 'active' : ''},
-      {name: 'Report', link: '/report', className: window.location.pathname.indexOf('/report') >= 0 ? 'active' : ''}
+      {name: 'Report', link: '/report', className: window.location.pathname.indexOf('/report') >= 0 ? 'active' : ''},
+      {name: 'Tags', link: '/tags', className: window.location.pathname.indexOf('/tags') >= 0 ? 'active' : ''},
     ];
 
     if (this.state.currentUser) {
@@ -65,11 +66,11 @@ export default class Header extends React.Component {
           </div>
           <div className="collapse navbar-collapse">
             <ul className="nav navbar-nav">
-              { links.map((link) => { return (
+              { links.map((link) => (
                 <li className={link.className} key={link.name}>
                   <Link to={link.link}>{link.name}</Link>
                 </li>
-              )})}
+              ))}
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <li>

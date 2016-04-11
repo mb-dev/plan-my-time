@@ -8,7 +8,7 @@ class Storage {
     var sevenDays = 60 * 60 * 24 * 7;
     Cookies.set('token', token, { expires: sevenDays });
   }
-  getDropboxCsrf(csrf) {
+  getDropboxCsrf() {
     var csrf = Cookies.get('dropboxCsrf');
     Cookies.expire('dropboxCsrf');
     return csrf;

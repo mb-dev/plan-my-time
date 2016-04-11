@@ -3,11 +3,11 @@ import * as formatters from '../formatters/formatters';
 
 class ApiClient {
   // auth
-  getDropboxAuthUrl() {
-    return request('GET', '/authorize/url');
+  getDropboxAuthUrl(config) {
+    return request('GET', '/authorize/url', {}, config);
   }
-  finalizeDropboxAuth(state, code, csrf) {
-    return request('POST', '/authorize/finalize', {data: {csrf_config: csrf, state: state, code: code}});
+  finalizeDropboxAuth(config, csrf, state, code) {
+    return request('POST', '/authorize/finalize', {data: {csrf_token: csrf, state: state, code: code}}, config);
   }
   getUserInfo(config) {
     return request('GET', '/authorize/info', {}, config);
