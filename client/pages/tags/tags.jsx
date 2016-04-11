@@ -3,6 +3,8 @@ import React           from 'react';
 import store           from '../../stores/store';
 import actions         from '../../actions/actions';
 
+require('./tags.less');
+
 export default class TagsPage extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -36,7 +38,11 @@ export default class TagsPage extends React.Component {
           <ul key={type}>
             <li><b>{type}</b></li>
             { this.state.tags[type].map((tag) => (
-              <li key={tag.tag}>{tag.tag}</li>
+              <li key={tag.tag}>
+                <span>{tag.tag}</span>{' '}
+                <span className="count">{tag.count}</span>{' '}
+                <span className="last_date">{tag.last_date}</span>
+              </li>
             ))}
           </ul>
         ))}
