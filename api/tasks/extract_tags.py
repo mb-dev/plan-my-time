@@ -26,8 +26,8 @@ def run():
             mapper(results, entry)
 
         tags = [{"user_id": user["_id"], "tag": tag, "type": type} for tag, type in results.items()]
-
-        mongo.db.tags.insert_many(tags)
+        if len(tags) > 0:
+            mongo.db.tags.insert_many(tags)
 
 if __name__ == "__main__":
     run()
