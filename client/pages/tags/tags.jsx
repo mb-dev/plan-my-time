@@ -46,7 +46,7 @@ export default class TagsPage extends React.Component {
           </ul>
         </div>
         {['tags', 'people', 'locations'].map((type) => (
-          <ul key={type}>
+          <ul className="tag-list" key={type}>
             <li><b>{type}</b></li>
             { _.sortBy(this.state.tags[type], this.state.sortBy).map((tag) => (
               <li key={tag.tag}>
