@@ -9,7 +9,7 @@ export default class TagsPage extends React.Component {
   constructor(props, context) {
     super(props, context);
     this.onStoreChanged = this.onStoreChanged.bind(this);
-    this.state = {tags: {tags: [], locations: [], people: []}};
+    this.state = {sortBy: 'name', tags: {tags: [], locations: [], people: []}};
   }
   componentWillMount() {
     this.updateState(this.props);
@@ -20,6 +20,10 @@ export default class TagsPage extends React.Component {
   }
   onStoreChanged() {
     this.updateState(this.props);
+  }
+  onChangeSort(sortBy, e) {
+    e.preventDefault();
+    this.setState({sortBy: sortBy});
   }
   updateState(props) {
     const tagByType = _.groupBy(store.state.tags, 'type');
@@ -34,10 +38,17 @@ export default class TagsPage extends React.Component {
   render() {
     return (
       <div className="tags-page">
+        <div className="sort-bar">
+          <ul>
+            <li><a href="" onClick={this.onChangeSort.bind(this, 'name')}>Sort By Name</a></li>
+            <li><a href="" onClick={this.onChangeSort.bind(this, 'count')}>Sort By Count</a></li>
+            <li><a href="" onClick={this.onChangeSort.bind(this, 'last_date')}>Sort By Last Date</a></li>
+          </ul>
+        </div>
         {['tags', 'people', 'locations'].map((type) => (
           <ul key={type}>
             <li><b>{type}</b></li>
-            { this.state.tags[type].map((tag) => (
+            { _.sortBy(this.state.tags[type], this.state.sortBy).map((tag) => (
               <li key={tag.tag}>
                 <span>{tag.tag}</span>{' '}
                 <span className="count">{tag.count}</span>{' '}
