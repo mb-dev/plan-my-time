@@ -10,6 +10,9 @@ const ActionType = {
     SERVER_ERROR: 'SERVER_ERROR',
     TAGS: 'TAGS',
   },
+  DETAILS_PAGE: {
+    ENTRIES: 'ENTRIES',
+  },
   REPORT: {
     CHANGE_DATE: 'CHANGE_DATE',
   },

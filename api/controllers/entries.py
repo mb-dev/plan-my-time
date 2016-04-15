@@ -1,16 +1,12 @@
-import time
-import datetime
 import models.entries
 import lib.date_helpers   as     date_helpers
 from app                  import app
-from flask                import jsonify, request, g, make_response
+from flask                import jsonify, request, g
 from lib                  import auth
-from parsers.tasks_parser import TasksParser
-from lib.dropbox          import DropboxApi
 
-@app.route('/api/entries', methods=['GET'])
+@app.route('/api/entries/:date', methods=['GET'])
 @auth.auth_required
-def getEntries():
+def getEntriesForDate():
     date_str = request.args.get('date')
     if not date_str:
         return "missing date", 400
@@ -20,3 +16,18 @@ def getEntries():
         # for now it needs to exist
         return "not found", 404
     return jsonify(entries=metadata["metadata"]["tasks"])
+
+@app.route('/api/entries', methods=['GET'])
+@auth.auth_required
+def getEntries():
+    query = {}
+    tag = request.args.get('tag')
+    date = request.args.get('date')
+    if tag:
+        query["tag"] = tag
+    if date:
+        query["date"] = tag
+    if len(query) == 0:
+        return "missing query parameters", 400
+    entries = models.entries.find_for_user(g.user["_id"], query)
+    return jsonify(entries=entries)

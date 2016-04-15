@@ -12,7 +12,7 @@ function getConfig() {
 class Actions {
   // auth
   authorizeWithDropbox() {
-    let config = getConfig();
+    const config = getConfig();
     apiClient.getDropboxAuthUrl(config).then(response => (
       response.json()
     )).then((data) => {
@@ -37,7 +37,7 @@ class Actions {
     browserHistory.push('/');
   }
   getUserInfo() {
-    let config = getConfig();
+    const config = getConfig();
     if (!config.token) { return; }
     return apiClient.getUserInfo(config).then((response) => {
       return response.json();
@@ -47,7 +47,7 @@ class Actions {
   }
   // journal
   getJournal(date) {
-    let config = getConfig();
+    const config = getConfig();
     if (!config.token) { return; }
     apiClient.getJournal(config, date).then((response) => {
       return response.json();
@@ -108,6 +108,14 @@ class Actions {
     const response = await apiClient.getTags(config);
     const data = await response.json();
     dispatcher.dispatch({actionType: ActionType.TASKS.TAGS, tags: data.tags});
+  }
+  // entries
+  async getEntriesByTag(tag) {
+    const config = getConfig();
+    if (!config.token) { return; }
+    const response = await apiClient.getEntries(config, {tag: tag});
+    const data = await response.json();
+    dispatcher.dispatch({actionType: ActionType.DETAILS_PAGE.ENTRIES, entries: data.entries});
   }
   // report page
   changeReportDate(date) {

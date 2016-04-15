@@ -12,12 +12,14 @@ import DropboxCallback from './pages/dropbox_callback/dropbox_callback';
 import Home            from './pages/home/home';
 import Report          from './pages/report/report';
 import TagsPage        from './pages/tags/tags';
+import TagDetailsPage from './pages/tag_details/tag_details';
 
 render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <Route path="logout" component={Logout} />
       <Route path="report" component={Report} />
+      <Route path="tags/:tagId" component={TagDetailsPage} />
       <Route path="tags" component={TagsPage} />
       <Route path="auth/dropbox/callback" component={DropboxCallback} />
       <IndexRoute component={Home} />

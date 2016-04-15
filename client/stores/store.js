@@ -1,8 +1,9 @@
 import {EventEmitter} from 'events';
+import _ from 'lodash';
 import dispatcher from '../dispatcher/dispatcher';
 import ActionType from './action_types';
 import storage    from '../libraries/storage/storage';
-var CHANGE_EVENT = 'change';
+const CHANGE_EVENT = 'change';
 
 class Store extends EventEmitter {
   constructor() {
@@ -19,6 +20,9 @@ class Store extends EventEmitter {
       report: {
         metadata: null,
         date: new Date(),
+      },
+      tag_details: {
+        entries: [],
       },
     };
   }
@@ -92,6 +96,12 @@ class Store extends EventEmitter {
         this.state.tags = _.sortBy(payload.tags, 'tag');
         this.emitChange();
         break;
+      case ActionType.DETAILS_PAGE.ENTRIES:
+        this.state.tag_details.entries = payload.entries;
+        this.emitChange();
+        break;
+      default:
+        console.log('invalid action', payload);
     }
   }
 }

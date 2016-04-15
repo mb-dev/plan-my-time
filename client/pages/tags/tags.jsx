@@ -21,9 +21,9 @@ export default class TagsPage extends React.Component {
   onStoreChanged() {
     this.updateState(this.props);
   }
-  onChangeSort(sortBy, e) {
+  onChangeSort(sortBy, dir, e) {
     e.preventDefault();
-    this.setState({sortBy: sortBy});
+    this.setState({sortBy: sortBy, sortDir: dir});
   }
   updateState(props) {
     const tagByType = _.groupBy(store.state.tags, 'type');
@@ -36,19 +36,27 @@ export default class TagsPage extends React.Component {
     });
   }
   render() {
+    const tagTypes = ['tags', 'people', 'locations'];
+    const sortedTags = {};
+    tagTypes.forEach((tagType) => {
+      sortedTags[tagType] = _.sortBy(this.state.tags[tagType], this.state.sortBy);
+      if (this.state.sortDir === 'desc') {
+         sortedTags[tagType] = sortedTags[tagType].reverse();
+      }
+    });
     return (
       <div className="tags-page">
         <div className="sort-bar">
           <ul>
-            <li><a href="" onClick={this.onChangeSort.bind(this, 'name')}>Sort By Name</a></li>
-            <li><a href="" onClick={this.onChangeSort.bind(this, 'count')}>Sort By Count</a></li>
-            <li><a href="" onClick={this.onChangeSort.bind(this, 'last_date')}>Sort By Last Date</a></li>
+            <li><a href="" onClick={this.onChangeSort.bind(this, 'name', 'asc')}>Sort By Name</a></li>
+            <li><a href="" onClick={this.onChangeSort.bind(this, 'count', 'asc')}>Sort By Count</a></li>
+            <li><a href="" onClick={this.onChangeSort.bind(this, 'last_date', 'desc')}>Sort By Last Date</a></li>
           </ul>
         </div>
-        {['tags', 'people', 'locations'].map((type) => (
+        {tagTypes.map((type) => (
           <ul className="tag-list" key={type}>
             <li><b>{type}</b></li>
-            { _.sortBy(this.state.tags[type], this.state.sortBy).map((tag) => (
+            { sortedTags[type].map((tag) => (
               <li key={tag.tag}>
                 <span>{tag.tag}</span>{' '}
                 <span className="count">{tag.count}</span>{' '}

@@ -45,9 +45,11 @@ class ApiClient {
     return request('GET', '/journal/tags', {}, config);
   }
   // entries
-  getEntries(config, date) {
-    const dateStr = formatters.getYearMonthDate(date);
-    return request('GET', '/entries', {data: {date: dateStr}}, config);
+  getEntries(config, query) {
+    if (query.date) {
+      query.date = formatters.getYearMonthDate(query.date);
+    }
+    return request('GET', '/entries', {data: query}, config);
   }
 }
 
