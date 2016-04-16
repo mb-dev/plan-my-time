@@ -2,6 +2,7 @@ import _               from 'lodash';
 import React           from 'react';
 import store           from '../../stores/store';
 import actions         from '../../actions/actions';
+import {Link} from 'react-router';
 
 require('./tag_details.less');
 
@@ -18,6 +19,9 @@ export default class TagDetailsPage extends React.Component {
     store.addChangeListener(this.onStoreChanged);
     actions.getEntriesByTag(this.props.params.tagId);
   }
+  componentWillUnmount() {
+    store.removeChangeListener(this.onStoreChanged);
+  }
   onStoreChanged() {
     this.updateState(this.props);
   }
@@ -31,7 +35,7 @@ export default class TagDetailsPage extends React.Component {
       <div className="tag-details-page">
         {this.state.entries.map((entry) => (
           <ul className="tag-list" key={entry.date}>
-            <li><b>{entry.date}</b></li>
+            <li><Link to={`/?date=${entry.date}`}><b>{entry.date}</b></Link></li>
             { entry.tasks.map((task) => (
               <li key={task.line}>
                 {task.line}

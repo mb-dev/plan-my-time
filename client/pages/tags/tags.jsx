@@ -19,6 +19,9 @@ export default class TagsPage extends React.Component {
     store.addChangeListener(this.onStoreChanged);
     actions.getAllTags();
   }
+  componentWillUnmount() {
+    store.removeChangeListener(this.onStoreChanged);
+  }
   onStoreChanged() {
     this.updateState(this.props);
   }
