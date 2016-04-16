@@ -53,10 +53,8 @@ def find_for_user(user_id, query):
     if query["tag"]:
         type_pl = tag_to_tag_type(query["tag"])
         key = "metadata.tasks.{0}".format(type_pl)
-        print(key)
         results = list(entries.find({"user_id": user_id, key: query['tag'][1:]}, {"_id": 0, "metadata.date": 1, "metadata.tasks.$": 1}))
     elif query["date"]:
         results = list(entries.find({"user_id": user_id, "date": query["date"]}))
     results = [{"date": entry["metadata"]["date"], "tasks": entry["metadata"]["tasks"]} for entry in results]
-    print(results)
     return results

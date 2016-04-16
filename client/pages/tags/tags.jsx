@@ -2,6 +2,7 @@ import _               from 'lodash';
 import React           from 'react';
 import store           from '../../stores/store';
 import actions         from '../../actions/actions';
+import {Link} from 'react-router';
 
 require('./tags.less');
 
@@ -37,11 +38,17 @@ export default class TagsPage extends React.Component {
   }
   render() {
     const tagTypes = ['tags', 'people', 'locations'];
+    const toFullTag = function (type, tag) {
+      if (type === 'tags') return `#${tag}`;
+      if (type === 'people') return `@${tag}`;
+      if (type === 'locations') return `\$${tag}`;
+      return '';
+    };
     const sortedTags = {};
     tagTypes.forEach((tagType) => {
       sortedTags[tagType] = _.sortBy(this.state.tags[tagType], this.state.sortBy);
       if (this.state.sortDir === 'desc') {
-         sortedTags[tagType] = sortedTags[tagType].reverse();
+        sortedTags[tagType] = sortedTags[tagType].reverse();
       }
     });
     return (
@@ -58,7 +65,7 @@ export default class TagsPage extends React.Component {
             <li><b>{type}</b></li>
             { sortedTags[type].map((tag) => (
               <li key={tag.tag}>
-                <span>{tag.tag}</span>{' '}
+                <span><Link to={"/tags/" + encodeURIComponent(toFullTag(type, tag.tag))}>{tag.tag}</Link></span>{' '}
                 <span className="count">{tag.count}</span>{' '}
                 <span className="last_date">{tag.last_date}</span>
               </li>
