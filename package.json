@@ -48,7 +48,7 @@
     "dimple": "PMSI-AlignAlytics/dimple",
     "express": "^4.13.3",
     "less": "^2.6.1",
-    "lodash": "^4.9.0",
+    "lodash": "^4.11.1",
     "moment": "^2.12.0",
     "nvd3": "^1.8.1",
     "react": "^0.14.8",

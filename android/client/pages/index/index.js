@@ -6,6 +6,7 @@ import React, {
 import Home from '../home/home';
 import TagSelector from '../tag_selector/tag_selector';
 import Settings from '../settings/settings';
+import ManageEntryPage from '../manage_entry/manage_entry';
 
 export default class Index extends Component {
   renderScene(route, navigator) {
@@ -18,6 +19,9 @@ export default class Index extends Component {
     }
     if (route.name === 'settings') {
       return <Settings navigator={navigator} />;
+    }
+    if (route.name === 'ManageEntryPage') {
+      return <ManageEntryPage navigator={navigator} />;
     }
     return null;
   }

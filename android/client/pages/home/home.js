@@ -33,6 +33,7 @@ export default class Home extends Component {
   constructor() {
     super();
     this.onStoreChanged = this.onStoreChanged.bind(this);
+    this.onAddTask = this.onAddTask.bind(this);
   }
   componentWillMount() {
     this.updateState(this.props);
@@ -56,6 +57,9 @@ export default class Home extends Component {
   onDidFocus() {
     console.log("entered home");
   }
+  onAddTask() {
+    this.props.navigator.push({name: 'manage_task', index: 1});
+  }
   updateState(props) {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.line !== r2.line});
     this.setState({
@@ -72,7 +76,7 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button>Add Task</Button>
+        <Button onClick={this.onAddTask}>Add Task</Button>
         <Text style={styles.welcome}>
           Plan My Time
         </Text>
