@@ -51,6 +51,14 @@ class ApiClient {
     }
     return request('GET', '/entries', {data: query}, config);
   }
+  addEntry(config, date, line) {
+    const dateStr = formatters.getYearMonthDate(date);
+    return request('POST', '/entries', {data: {date: dateStr, line: line}}, config);
+  }
+  editEntry(config, date, prevLine, newLine) {
+    const dateStr = formatters.getYearMonthDate(date);
+    return request('POST', '/entries', {data: {date: dateStr, prev_line: prevLine, new_line: newLine}}, config);
+  }
 }
 
 const apiClient = new ApiClient();

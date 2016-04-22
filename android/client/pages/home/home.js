@@ -44,7 +44,7 @@ export default class Home extends Component {
       if (store.state.currentUser === null) {
         this.props.navigator.push({name: 'settings', index: 1});
       } else {
-        actions.getEntries();
+        actions.getEntries(this.state.date);
       }
     });
   }
@@ -58,12 +58,13 @@ export default class Home extends Component {
     console.log("entered home");
   }
   onAddTask() {
-    this.props.navigator.push({name: 'manage_task', index: 1});
+    this.props.navigator.push({name: 'manage-task', index: 1});
   }
   updateState(props) {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.line !== r2.line});
     this.setState({
       entries: ds.cloneWithRows(store.state.entries),
+      date: store.state.date,
     });
   }
   renderRow(entry) {
@@ -76,7 +77,7 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Button onClick={this.onAddTask}>Add Task</Button>
+        <Button onPress={this.onAddTask}>Add Task</Button>
         <Text style={styles.welcome}>
           Plan My Time
         </Text>

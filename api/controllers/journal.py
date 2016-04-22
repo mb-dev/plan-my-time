@@ -29,7 +29,6 @@ def getJournal():
     content_and_metadata = dropbox.get_file_or_create(g.user["dropbox_access_token"], "/" + filename)
     return jsonify(content_and_metadata)
 
-
 @app.route('/api/journal/metadata', methods=['GET'])
 @auth.auth_required
 def getMetadata():
@@ -42,13 +41,11 @@ def getMetadata():
     summary = TasksParser.summerize(entry_metadata_arr, date)
     return jsonify(metadata=entry_metadata_arr, summary=summary)
 
-
 @app.route('/api/journal/tags', methods=['GET'])
 @auth.auth_required
 def getTags():
     tags = models.tags.get_all_tags(g.user["_id"])
     return jsonify(tags=tags)
-
 
 @app.route('/api/journal/poll', methods=['GET'])
 @auth.auth_required

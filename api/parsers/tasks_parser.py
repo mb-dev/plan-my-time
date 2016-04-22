@@ -87,15 +87,15 @@ class TasksParser:
             self.tasks.append(new_task)
         update_durations(self.tasks)
 
-    def add_line(self, time, line):
+    def add_line(self, line):
         pos = len(self.tasks)
+        time, new_task = convert_line_to_task(self.date_str, line)
         for idx, task in enumerate(self.tasks):
             task_date = date_helpers.parse_datetime_str(task["start_time"])
             if task_date > time:
                 pos = idx
                 break
-        line = "- " + date_helpers.time_aprox(time) + ' ' + line
-        self.tasks.insert(pos, convert_time_line_to_task(time, line))
+        self.tasks.insert(pos, new_task)
         update_durations(self.tasks)
 
     def edit_line(self, prev_line, new_line):
@@ -113,13 +113,21 @@ class TasksParser:
             content += task["comment"]
         return content
 
+    def from_dict(self, metadata):
+        self.tasks = metadata["tasks"]
+        self.people = metadata["people"]
+        self.locations = metadata["locations"]
+        self.tags = metadata["tags"]
+        self.header = metadata["header"]
+
     def to_dict(self):
         return {
             "date": self.date_str,
             "people": self.people,
             "tags": self.tags,
             "locations": self.locations,
-            "tasks": self.tasks
+            "tasks": self.tasks,
+            "header": self.header
         }
 
     # summerize the metadata relative to date.

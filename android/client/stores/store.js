@@ -8,6 +8,7 @@ class Store extends EventEmitter {
     super();
     this.state = {
       currentUser: null,
+      date: new Date(),
       tags: {},
       entries: [],
       settings: {

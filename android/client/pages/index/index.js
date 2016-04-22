@@ -20,7 +20,7 @@ export default class Index extends Component {
     if (route.name === 'settings') {
       return <Settings navigator={navigator} />;
     }
-    if (route.name === 'ManageEntryPage') {
+    if (route.name === 'manage-task') {
       return <ManageEntryPage navigator={navigator} />;
     }
     return null;
@@ -28,8 +28,8 @@ export default class Index extends Component {
   render() {
     return (
       <Navigator
-        style={{ flex: 1 }}
-        initialRoute={ { name: 'home', index: 0 } }
+        style={{flex: 1}}
+        initialRoute={ {name: 'home', index: 0} }
         renderScene={ this.renderScene }
       />
     );

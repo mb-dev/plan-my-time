@@ -54,7 +54,7 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(new_file_content.strip(), content_without_last_two_lines)
 
     def test_add_line(self):
-        self.parser.add_line(datetime.datetime(2015, 1, 1, 15, 0, 0), '#yoga')
+        self.parser.add_line("- 3pm #yoga")
         self.assertEqual(self.parser.tasks[3]['line'], '- 3pm #yoga')
         # ensure previous task now has correct duration
         self.assertEqual(self.parser.tasks[2]['duration'], duration(0, 45))

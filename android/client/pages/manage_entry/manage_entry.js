@@ -10,12 +10,15 @@ import * as formatters from '../../../../shared/client/formatters/formatters';
 
 export default class Entry extends Component {
   constructor() {
+    super();
     this.state = {
       entry: {tags: []},
       textValue: '',
     };
     const currentDate = new Date();
-    this.state.textValue = formatters.getTimeEntry(currentDate) + ' ';
+    this.state.textValue = formatters.getTimeFormat(currentDate) + ' ';
+    this.onAddTag = this.onAddTag.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
   componentDidMount() {
 
@@ -23,11 +26,15 @@ export default class Entry extends Component {
   onAddTag() {
     this.props.navigator.push({name: 'select-tag'});
   }
+  onSubmit() {
+
+  }
   render() {
     return (
       <View>
-        <TextInput defaultValue={this.state.initialText} />
-        <Button onClick={this.onAddTag}>Add Tag</Button>
+        <TextInput defaultValue={this.state.textValue} />
+        <Button onPress={this.onAddTag}>Add Tag</Button>
+        <Button onPress={this.onSubmit}>Submit</Button>
       </View>
     );
   }
