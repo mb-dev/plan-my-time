@@ -9,6 +9,10 @@ import React, {
 import actions from '../../actions/actions';
 
 export default class TagSelector extends Component {
+  constructor() {
+    super();
+    this.state = {tags: []};
+  }
   onClickTag(tag) {
     actions.addTag(tag);
     this.props.navigator.pop();

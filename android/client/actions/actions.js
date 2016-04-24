@@ -6,7 +6,6 @@ import configStore from '../config/config';
 
 async function getConfig() {
   const token = await storage.getBearerToken();
-  console.log('config is:', configStore.apiServer);
   return {apiServer: configStore.apiServer, token};
 }
 
@@ -46,14 +45,24 @@ class Actions {
   async addEntry(date, line) {
     const config = await getConfig();
     if (!config.token) { return; }
-    const response = await apiClient.addEntry(config, line);
+    const response = await apiClient.addEntry(config, date, line);
     const data = await response.json();
+    let entries = [];
+    if (data.entries.length > 0) {
+      entries = data.entries[0].tasks;
+    }
+    dispatcher.dispatch({actionType: ActionType.ENTRIES.LIST, entries: entries});
   }
   async editEntry(date, prevLine, newLine) {
     const config = await getConfig();
     if (!config.token) { return; }
-    const response = await apiClient.editEntry(config, prevLine, newLine);
+    const response = await apiClient.editEntry(config, date, prevLine, newLine);
     const data = await response.json();
+    let entries = [];
+    if (data.entries.length > 0) {
+      entries = data.entries[0].tasks;
+    }
+    dispatcher.dispatch({actionType: ActionType.ENTRIES.LIST, entries: entries});
   }
 }
 

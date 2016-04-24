@@ -58,7 +58,7 @@ export default class Home extends Component {
     console.log("entered home");
   }
   onAddTask() {
-    this.props.navigator.push({name: 'manage-task', index: 1});
+    this.props.navigator.push({name: 'manage-task', index: 1, date: this.state.date});
   }
   updateState(props) {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.line !== r2.line});
