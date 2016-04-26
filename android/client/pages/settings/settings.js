@@ -1,6 +1,7 @@
 import React, {
   Component,
   Text,
+  Switch,
   TextInput,
   View,
 } from 'react-native';
@@ -13,27 +14,29 @@ export default class Settings extends Component {
     super();
     this.onStoreChanged = this.onStoreChanged.bind(this);
     this.onSaveSettings = this.onSaveSettings.bind(this);
-    this.state = { key: '' };
+    this.state = {apiKey: '', developMode: false};
   }
   componentWillMount() {
-    this.updateState(this.props);
   }
   componentDidMount() {
     store.addChangeListener(this.onStoreChanged);
+    actions.loadSettings();
   }
   onStoreChanged() {
     this.updateState(this.props);
   }
-  onSaveSettings() {
-    actions.setApiKey(this.state.key).then(() => {
-      this.props.navigator.pop();
-    }).catch(() => {
-      // do nothing
-    });
+  async onSaveSettings() {
+    if (store.state.settings.apiKey !== this.state.apiKey) {
+      await actions.setApiKey(this.state.apiKey);
+    }
+    await actions.setDevelopMode(this.state.developMode);
+    this.props.navigator.pop();
   }
   updateState(props) {
     this.setState({
       notFoundError: store.state.settings.notFound,
+      apiKey: store.state.settings.apiKey,
+      developMode: store.state.settings.developMode,
     });
   }
   render() {
@@ -43,7 +46,15 @@ export default class Settings extends Component {
           <Text>API Key not found</Text>
         }
         <Text>API Key:</Text>
-        <TextInput onChangeText={(text) => this.setState({ key: text })} />
+        <TextInput defaultValue={this.state.apiKey} onChangeText={(text) => this.setState({apiKey: text})} />
+        <View>
+          <Switch
+            onValueChange={(value) => this.setState({developMode: value})}
+            style={{marginBottom: 10}}
+            value={this.state.developMode}
+          />
+          <Text>Develop Mode</Text>
+        </View>
         <Button onPress={this.onSaveSettings}>Save</Button>
       </View>
     );

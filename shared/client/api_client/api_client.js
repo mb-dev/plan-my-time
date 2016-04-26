@@ -57,7 +57,7 @@ class ApiClient {
   }
   editEntry(config, date, prevLine, newLine) {
     const dateStr = formatters.getYearMonthDate(date);
-    return request('POST', '/entries', {data: {date: dateStr, prev_line: prevLine, new_line: newLine}}, config);
+    return request('PUT', '/entries', {data: {date: dateStr, prev_line: prevLine, new_line: newLine}}, config);
   }
 }
 

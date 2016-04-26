@@ -34,6 +34,8 @@ export default class Home extends Component {
     super();
     this.onStoreChanged = this.onStoreChanged.bind(this);
     this.onAddTask = this.onAddTask.bind(this);
+    this.renderRow = this.renderRow.bind(this);
+    this.onSettings = this.onSettings.bind(this);
   }
   componentWillMount() {
     this.updateState(this.props);
@@ -60,6 +62,12 @@ export default class Home extends Component {
   onAddTask() {
     this.props.navigator.push({name: 'manage-task', index: 1, date: this.state.date});
   }
+  onEditTask(entry) {
+    this.props.navigator.push({name: 'manage-task', index: 1, date: this.state.date, line: entry.line});
+  }
+  onSettings() {
+    this.props.navigator.push({name: 'settings', index: 1});
+  }
   updateState(props) {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.line !== r2.line});
     this.setState({
@@ -69,7 +77,7 @@ export default class Home extends Component {
   }
   renderRow(entry) {
     return (
-      <TouchableHighlight>
+      <TouchableHighlight onPress={this.onEditTask.bind(this, entry)}>
         <Text>{entry.line}</Text>
       </TouchableHighlight>
     );
@@ -78,6 +86,7 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <Button onPress={this.onAddTask}>Add Task</Button>
+        <Button onPress={this.onSettings}>Settings</Button>
         <Text style={styles.welcome}>
           Plan My Time
         </Text>

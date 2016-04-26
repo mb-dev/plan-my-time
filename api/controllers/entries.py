@@ -50,7 +50,7 @@ def addEntry():
     entries = models.entries.find_for_user(g.user["_id"], {"date": date})
     return jsonify(entries=entries)
 
-@app.route('/api/entries/:id', methods=['PUT'])
+@app.route('/api/entries', methods=['PUT'])
 @auth.auth_required
 def editEntry():
     prev_line = request.form['prev_line']

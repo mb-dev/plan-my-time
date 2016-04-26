@@ -33,8 +33,8 @@ def finalize():
 @app.route('/api/authorize/key', methods=['POST'])
 def authByKey():
     key = request.form['key']
-    if re.match("^[A-Za-z]+$", key) is None or len(key) > 40:
-        raise errors.AppException(KEY_NOT_FOUND)
+    if re.match("^[A-Za-z-]+$", key) is None or len(key) > 40:
+        raise errors.AppException(errors.KEY_NOT_FOUND)
     user_info = user.find_user_by_api_key(key)
     if user_info is None:
         raise errors.AppException(errors.KEY_NOT_FOUND)

@@ -21,7 +21,7 @@ export default class Index extends Component {
       return <Settings navigator={navigator} />;
     }
     if (route.name === 'manage-task') {
-      return <ManageEntryPage navigator={navigator} />;
+      return <ManageEntryPage navigator={navigator} date={route.date} line={route.line} />;
     }
     return null;
   }

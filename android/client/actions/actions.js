@@ -6,10 +6,24 @@ import configStore from '../config/config';
 
 async function getConfig() {
   const token = await storage.getBearerToken();
-  return {apiServer: configStore.apiServer, token};
+  const developMode = await storage.getDevelopMode();
+  let apiServer = configStore.production.apiServer;
+  if (developMode) {
+    apiServer = configStore.develop.apiServer;
+  }
+  return {apiServer: apiServer, token};
 }
 
 class Actions {
+  async loadSettings() {
+    const apiKey = await storage.getApiKey();
+    const developMode = await storage.getDevelopMode();
+    console.log('loaded', apiKey);
+    dispatcher.dispatch({actionType: ActionType.SETTINGS.LOADED, apiKey: apiKey, developMode: developMode});
+  }
+  async setDevelopMode(value) {
+    await storage.setDevelopMode(value);
+  }
   async setApiKey(key) {
     const config = await getConfig();
     storage.setApiKey(config, key);
