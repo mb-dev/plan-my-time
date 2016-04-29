@@ -1,17 +1,15 @@
 import {AsyncStorage} from 'react-native';
 
 class Storage {
-  async getApiKey() {
-    return await AsyncStorage.getItem('api-key');
+  async getSettings() {
+    return {
+      apiKey: await AsyncStorage.getItem('apiKey'),
+      developMode: (await AsyncStorage.getItem('developMode')) === 'true',
+    };
   }
-  async setApiKey(key) {
-    await AsyncStorage.setItem('api-key', key);
-  }
-  async getDevelopMode() {
-    return await AsyncStorage.getItem('develop-mode');
-  }
-  async setDevelopMode(value) {
-    await AsyncStorage.setItem('develop-mode', value);
+  async setSettings(settings) {
+    await AsyncStorage.setItem('apiKey', settings.apiKey);
+    await AsyncStorage.setItem('developMode', settings.developMode.toString());
   }
   async setBearerToken(token) {
     await AsyncStorage.setItem('bearer-token', token);

@@ -13,8 +13,6 @@ class Store extends EventEmitter {
       entries: [],
       settings: {
         notFound: false,
-        developMode: false,
-        apiKey: '',
       },
     };
   }
@@ -40,11 +38,6 @@ class Store extends EventEmitter {
       case ActionType.ENTRIES.LIST:
         this.state.entries = payload.entries;
         console.log('setting store', payload.entries);
-        this.emitChange();
-        break;
-      case ActionType.SETTINGS.LOADED:
-        this.state.settings.developMode = payload.developMode;
-        this.state.settings.apiKey = payload.apiKey;
         this.emitChange();
         break;
       default:

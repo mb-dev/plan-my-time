@@ -8,6 +8,7 @@ import React, {
 import Button from 'react-native-button';
 import store from '../../stores/store';
 import actions from '../../actions/actions';
+import storage from '../../libraries/storage/storage';
 
 export default class Settings extends Component {
   constructor() {
@@ -20,23 +21,28 @@ export default class Settings extends Component {
   }
   componentDidMount() {
     store.addChangeListener(this.onStoreChanged);
-    actions.loadSettings();
+    (async () => {
+      const settings = await storage.getSettings();
+      this.setState({
+        originalApiKey: settings.apiKey || '',
+        apiKey: settings.apiKey || '',
+        developMode: settings.developMode || false,
+      });
+    })();
   }
   onStoreChanged() {
     this.updateState(this.props);
   }
   async onSaveSettings() {
-    if (store.state.settings.apiKey !== this.state.apiKey) {
+    if (this.state.originalApiKey !== this.state.apiKey) {
       await actions.setApiKey(this.state.apiKey);
     }
-    await actions.setDevelopMode(this.state.developMode);
+    await storage.setSettings({apiKey: this.state.apiKey, developMode: this.state.developMode});
     this.props.navigator.pop();
   }
   updateState(props) {
     this.setState({
       notFoundError: store.state.settings.notFound,
-      apiKey: store.state.settings.apiKey,
-      developMode: store.state.settings.developMode,
     });
   }
   render() {
