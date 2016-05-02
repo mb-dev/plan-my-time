@@ -20,9 +20,11 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flexDirection: 'row',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   refreshBtn: {
-    width: 100,
   },
   toolbarButton: {
     width: 100,
