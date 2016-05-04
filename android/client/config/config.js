@@ -5,7 +5,7 @@ const config = {
     soundLocation: 'https://s3-us-west-1.amazonaws.com/plan-my-time/sounds/',
   },
   develop: {
-    apiServer: 'http://192.168.1.173:5000/api',
+    apiServer: 'http://192.168.1.172:5000/api',
     iconServer: '/',
     soundLocation: 'http://localhost:8000/sounds/',
   },

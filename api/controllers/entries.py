@@ -25,7 +25,8 @@ def getEntries():
 def perform_update(date_str, date, action, params):
     metadata = models.entries.find_one_for_user_and_date(g.user["_id"], date)
     parser = TasksParser(date_str, "")
-    parser.from_dict(metadata["metadata"])
+    if metadata:
+        parser.from_dict(metadata["metadata"])
     if action == 'add_line':
         parser.add_line(params["line"])
     elif action == 'edit_line':
@@ -43,7 +44,6 @@ def perform_update(date_str, date, action, params):
 @auth.auth_required
 def addEntry():
     line = request.form['line']
-    print(line)
     date_str = request.form['date']
     date = date_helpers.parse_date_str(date_str)
     perform_update(date_str, date, 'add_line', {"line": line})

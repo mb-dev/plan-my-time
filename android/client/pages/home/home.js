@@ -12,6 +12,7 @@ import React, {
 import Button from 'react-native-button';
 import store from '../../stores/store';
 import actions from '../../actions/actions';
+import * as formatters from '../../../../shared/client/formatters/formatters';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,6 +43,9 @@ const styles = StyleSheet.create({
 });
 
 export default class Home extends Component {
+  static propTypes = {
+    navigator: React.PropTypes.object,
+  };
   constructor() {
     super();
     this.onStoreChanged = this.onStoreChanged.bind(this);
@@ -51,6 +55,7 @@ export default class Home extends Component {
     this.onPrevDay = this.onPrevDay.bind(this);
     this.onNextDay = this.onNextDay.bind(this);
     this.onRefresh = this.onRefresh.bind(this);
+    this.state = {date: new Date()};
   }
   componentWillMount() {
     this.updateState(this.props);
@@ -84,19 +89,22 @@ export default class Home extends Component {
     this.props.navigator.push({name: 'settings', index: 1});
   }
   onPrevDay() {
-
+    const prevDate = formatters.getDateByDiff(this.state.date, -1);
+    this.setState({date: prevDate});
+    actions.getEntries(prevDate);
   }
   onNextDay() {
-     
+    const nextDate = formatters.getDateByDiff(this.state.date, 1);
+    this.setState({date: nextDate});
+    actions.getEntries(nextDate);
   }
   onRefresh() {
-    
+    actions.getEntries(this.state.date);
   }
   updateState(props) {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.line !== r2.line});
     this.setState({
       entries: ds.cloneWithRows(store.state.entries),
-      date: store.state.date,
     });
   }
   renderRow(entry) {
@@ -117,8 +125,9 @@ export default class Home extends Component {
         <View style={styles.innerContainer}>
           <Button style={styles.toolbarButton} onPress={this.onPrevDay}>Prev Day</Button>
           <Button style={styles.refreshBtn}onPress={this.onRefresh}>Refresh</Button>
-          <Button style={styles.toolbarButton} onPress={this.nextDay}>Next Day</Button>
+          <Button style={styles.toolbarButton} onPress={this.onNextDay}>Next Day</Button>
         </View>
+        <Text>{formatters.getYearMonthDate(this.state.date)}</Text>
         <ListView dataSource={this.state.entries}
                   renderRow={this.renderRow}
         />

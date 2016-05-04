@@ -11,10 +11,14 @@ import actions from '../../actions/actions';
 import storage from '../../libraries/storage/storage';
 
 export default class Settings extends Component {
+  static propTypes = {
+    navigator: React.PropTypes.object,
+  };
   constructor() {
     super();
     this.onStoreChanged = this.onStoreChanged.bind(this);
     this.onSaveSettings = this.onSaveSettings.bind(this);
+    this.onRefreshToken = this.onRefreshToken.bind(this);
     this.state = {apiKey: '', developMode: false};
   }
   componentWillMount() {
@@ -40,6 +44,9 @@ export default class Settings extends Component {
     await storage.setSettings({apiKey: this.state.apiKey, developMode: this.state.developMode});
     this.props.navigator.pop();
   }
+  async onRefreshToken() {
+    await actions.setApiKey(this.state.apiKey);
+  }
   updateState(props) {
     this.setState({
       notFoundError: store.state.settings.notFound,
@@ -61,6 +68,7 @@ export default class Settings extends Component {
           />
           <Text>Develop Mode</Text>
         </View>
+        <Button onPress={this.onRefreshToken}>Refresh Token</Button>
         <Button onPress={this.onSaveSettings}>Save</Button>
       </View>
     );

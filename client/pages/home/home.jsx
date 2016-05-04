@@ -16,6 +16,7 @@ export default class Home extends React.Component {
     super(props, context);
     this.onStoreChanged = this.onStoreChanged.bind(this);
     this.onClickTag = this.onClickTag.bind(this);
+    this.onTextUpdated = this.onTextUpdated.bind(this);
     this.hourMarker = new HourMarker();
     this.metadataTracker = new MetadataTracker();
     this.pollChanges = new PollChanges();
@@ -36,7 +37,7 @@ export default class Home extends React.Component {
   componentWillReceiveProps(nextProps) {
     const {query} = nextProps.location;
     const queryDate = query.date ? formatters.parseDate(query.date) : null;
-    if (query.date !== formatters.getYearMonthDate(this.state.date)) {
+    if (query.date && query.date !== formatters.getYearMonthDate(this.state.date)) {
       actions.switchDate(queryDate);
     }
   }
@@ -49,8 +50,9 @@ export default class Home extends React.Component {
   updateState(props) {
     const {query} = props.location;
     const queryDate = query.date ? formatters.parseDate(query.date) : null;
+    const date = queryDate || store.state.date;
     this.setState({
-      date: queryDate || store.state.date,
+      date: date,
       text: store.state.text,
       serverError: store.state.serverError,
       hasToken: store.state.hasToken,
@@ -89,7 +91,7 @@ export default class Home extends React.Component {
         <div>Next Task: {this.state.nextTask && this.state.nextTask.line}</div>
         <section className="main-pane">
           { this.state.text !== null &&
-            <TextEditor ref="textEditor" text={this.state.text} onUpdate={this.onTextUpdated.bind(this)} textName={this.state.date.toString()}/>
+            <TextEditor ref="textEditor" text={this.state.text} onUpdate={this.onTextUpdated} textName={this.state.date.toString()} />
           }
           <div className="break-notifications">
             <input type="checkbox" defaultChecked="true"/> Enable Break Notifications

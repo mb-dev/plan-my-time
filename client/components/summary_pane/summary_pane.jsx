@@ -4,6 +4,7 @@ import * as formatters from '../../../shared/client/formatters/formatters';
 
 export default class SummaryPane extends React.Component {
   onClickKey(key, section, e) {
+    e.preventDefault();
     this.props.onClickTag && this.props.onClickTag(key, section);
   }
   render() {
