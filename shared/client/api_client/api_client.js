@@ -41,8 +41,12 @@ class ApiClient {
     }};
     return request('GET', '/journal/poll', params, config);
   }
-  getTags(config) {
-    return request('GET', '/journal/tags', {}, config);
+  getTags(config, query) {
+    query = query || {};
+    if (query.date) {
+      query.date = formatters.getYearMonthDate(query.date);
+    }
+    return request('GET', '/journal/tags', {data: query}, config);
   }
   // entries
   getEntries(config, query) {

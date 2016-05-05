@@ -44,7 +44,18 @@ def getMetadata():
 @app.route('/api/journal/tags', methods=['GET'])
 @auth.auth_required
 def getTags():
-    tags = models.tags.get_all_tags(g.user["_id"])
+    date_str = request.args.get('date')
+    tags = []
+    if date_str is not None:
+        date = date_helpers.parse_date_str(date_str)
+        entry = models.entries.find_one_for_user_and_date(g.user["_id"], date)
+        if entry is not None:
+            summary = TasksParser.summerize([entry['metadata']], date)
+            tags.extend([{"type": "tag", "tag": tag} for tag in summary["tags"]])
+            tags.extend([{"type": "person", "tag": tag} for tag in summary["people"]])
+            tags.extend([{"type": "location", "tag": tag} for tag in summary["locations"]])
+    else:
+        tags = models.tags.get_all_tags(g.user["_id"])
     return jsonify(tags=tags)
 
 @app.route('/api/journal/poll', methods=['GET'])

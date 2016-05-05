@@ -2,6 +2,9 @@ const ActionType = {
   ENTRIES: {
     LIST: 'LIST',
   },
+  MANAGE: {
+    TAGS: 'TAGS',
+  },
   AUTH: {
     KEY_NOT_FOUND: 'KEY_NOT_FOUND',
     KEY_SET: 'KEY_SET',

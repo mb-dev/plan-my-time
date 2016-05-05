@@ -34,6 +34,13 @@ class Actions {
     const data = await response.json();
     dispatcher.dispatch({actionType: ActionType.USER.INFO, info: data});
   }
+  async getTags(query) {
+    const config = await getConfig();
+    if (!config.token) { return; }
+    const response = await apiClient.getTags(config, query);
+    const data = await response.json();
+    dispatcher.dispatch({actionType: ActionType.MANAGE.TAGS, tags: data.tags});
+  }
   async getEntries(date) {
     const config = await getConfig();
     if (!config.token) { return; }
