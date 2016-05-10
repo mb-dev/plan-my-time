@@ -1,23 +1,24 @@
-[![Build Status](https://travis-ci.org/mb-dev/plan-my-time.svg?branch=master)](https://travis-ci.org/mb-dev/plan-my-time/)
+[ ![Codeship Status for mb-dev/plan-my-time](https://codeship.com/projects/ca5bd430-a3a3-0133-00d6-3641d785a31d/status?branch=master)](https://codeship.com/projects/129305)
 
 # About Plan My Time
-Plan My Time is a is an open-source time management app built in React/Python. Just like Mint manages money, with this app you record time spent per category and get a report at the end of the period.
+Plan My Time is a is an open-source time management app built in React/Python. 
+Just like Mint manages money, this app allows recording time spent per category and get a monthly report of where time was spent.
 
 ## Architecture
 
 React Client <-> Python API Server       <-> Dropbox
 Browser      <-> Node.JS Static Server   <-> MongoDB
 
-The main data source is a daily activity journal written in Markdown, and stored at Dropbox. They look like this:
+The main data source is a **daily activity journal** written in Markdown stored in Dropbox. Daily journal looks like this:
 ```markdown
 - 7am #wakeup
 - 1pm #lunch with @steve-lee at $blue-bottle
 - 2:15pm #yoga
 - 11pm #sleep
 ```
-In Dropbox each day is stored in a file [date].md, like: 2016-03-20.md. 
 
-Metadata parsed from the journal files are stored in MongoDB. The json representation contain #tags, $locations and @people as a list.
+- Each day journal is stored in a file [date].md, Example: 2016-03-20.md. 
+- Metadata parsed from the journal files are stored in MongoDB. The json representation contain #tags, $locations and @people as a list.
 
 ## Metrics
 Task tags are counted on a monthly basis.
@@ -28,7 +29,8 @@ Task tags are counted on a monthly basis.
 ```
 
 ## Break notification
-Version 1 allows turning on break notifications at predefined interval. There will be notification every 10 minutes and then every :50 minutes a special "take a break notification"
+Version 1 allows turning on break notifications at predefined interval. 
+There will be notification every 10 minutes and then every :50 minutes a special "take a break notification"
 
 ## API
 
