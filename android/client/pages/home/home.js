@@ -1,6 +1,5 @@
 import React, {
   Component,
-  StyleSheet,
   Text,
   ToolbarAndroid,
   TouchableHighlight,
@@ -13,34 +12,7 @@ import Button from 'react-native-button';
 import store from '../../stores/store';
 import actions from '../../actions/actions';
 import * as formatters from '../../../../shared/client/formatters/formatters';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5FCFF',
-  },
-  innerContainer: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  refreshBtn: {
-  },
-  toolbarButton: {
-    width: 100,
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+import styles from './home.style';
 
 export default class Home extends Component {
   static propTypes = {

@@ -72,10 +72,10 @@ export default class Entry extends Component {
   }
   onAddTag(tag) {
     this.setState({
-      line: this.state.line + ' #' + tag.tag,
+      line: (this.state.line + ' #' + tag.tag).replace(/\s\s+/g, ' '),
     });
   }
-  updateState(props) {
+  updateState() {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.tag !== r2.tag});
     this.setState({
       tags: ds.cloneWithRows(_.sortBy(store.state.manage.tags, 'tag')),
@@ -101,9 +101,7 @@ export default class Entry extends Component {
         <TextInput defaultValue={this.state.line} onChangeText={this.onLineChanged} />
         <Button onPress={this.onAddTag}>Add Tag</Button>
         <Button onPress={this.onSubmit}>Submit</Button>
-        <ListView dataSource={this.state.tags}
-                  renderRow={this.renderRow}
-        />
+        <ListView dataSource={this.state.tags} renderRow={this.renderRow} />
       </View>
     );
   }
