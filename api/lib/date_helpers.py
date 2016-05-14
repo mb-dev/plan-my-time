@@ -43,4 +43,4 @@ def next_day(dt):
     return dt + datetime.timedelta(days=1)
 
 def next_day_str(dt):
-    return next_day(dt).strftime("%Y-m-%d")
+    return next_day(dt).strftime("%Y-%m-%d")

@@ -9,14 +9,11 @@ from lib                  import auth
 from parsers.tasks_parser import TasksParser
 from lib.dropbox          import DropboxApi
 
-
 def to_date_str(filename):
     return filename[:-3]
 
-
 def today():
     return datetime.datetime.today().replace(hour=0, minute=0, second=0)
-
 
 @app.route('/api/journal', methods=['GET'])
 @auth.auth_required
@@ -71,7 +68,6 @@ def pollChanges():
         return make_response("", not_modified)
 
     return make_response("", 200)
-
 
 @app.route('/api/journal', methods=['POST'])
 @auth.auth_required
