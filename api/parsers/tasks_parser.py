@@ -107,15 +107,12 @@ class TasksParser:
         self.tasks.insert(pos, new_task)
         update_durations(self.tasks)
 
-    def edit_line(self, prev_line, new_line):
+    def edit_line(self, prev_line, new_line, is_after_midnight):
         for idx, task in enumerate(self.tasks):
             if task["line"] == prev_line:
-                last_date = None
-                if idx > 0:
-                    last_date = date_helpers.parse_datetime_str(self.tasks[idx - 1]["start_time"])
-                time, new_task = convert_line_to_task(last_date, self.date_str, new_line)
-                self.tasks[idx] = new_task
+                del self.tasks[idx]
                 break
+        self.add_line(new_line, is_after_midnight)
         update_durations(self.tasks)
 
     def to_tasks_file(self):

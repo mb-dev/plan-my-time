@@ -42,26 +42,32 @@ class ApiClient {
     return request('GET', '/journal/poll', params, config);
   }
   getTags(config, query) {
-    query = query || {};
+    const queryParam = query || {};
     if (query.date) {
-      query.date = formatters.getYearMonthDate(query.date);
+      queryParam.date = formatters.getYearMonthDate(queryParam.date);
     }
-    return request('GET', '/journal/tags', {data: query}, config);
+    return request('GET', '/journal/tags', {data: queryParam}, config);
   }
   // entries
   getEntries(config, query) {
-    if (query.date) {
-      query.date = formatters.getYearMonthDate(query.date);
+    const queryParam = query;
+    if (queryParam.date) {
+      queryParam.date = formatters.getYearMonthDate(queryParam.date);
     }
-    return request('GET', '/entries', {data: query}, config);
+    return request('GET', '/entries', {data: queryParam}, config);
   }
-  addEntry(config, date, line) {
+  addEntry(config, date, line, isAfterMidnight) {
     const dateStr = formatters.getYearMonthDate(date);
-    return request('POST', '/entries', {data: {date: dateStr, line: line}}, config);
+    return request('POST', '/entries', {data: {date: dateStr, line: line, is_after_midnight: !!isAfterMidnight}}, config);
   }
-  editEntry(config, date, prevLine, newLine) {
+  editEntry(config, date, prevLine, newLine, isAfterMidnight) {
     const dateStr = formatters.getYearMonthDate(date);
-    return request('PUT', '/entries', {data: {date: dateStr, prev_line: prevLine, new_line: newLine}}, config);
+    return request('PUT', '/entries', {data: {
+      date: dateStr,
+      prev_line: prevLine,
+      new_line: newLine,
+      is_after_midnight: !!isAfterMidnight},
+    }, config);
   }
 }
 

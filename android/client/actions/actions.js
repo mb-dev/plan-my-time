@@ -52,10 +52,10 @@ class Actions {
     }
     dispatcher.dispatch({actionType: ActionType.ENTRIES.LIST, entries: entries});
   }
-  async addEntry(date, line) {
+  async addEntry(date, line, isAfterMidnight) {
     const config = await getConfig();
     if (!config.token) { return; }
-    const response = await apiClient.addEntry(config, date, line);
+    const response = await apiClient.addEntry(config, date, line, isAfterMidnight);
     const data = await response.json();
     let entries = [];
     if (data.entries.length > 0) {
@@ -63,10 +63,10 @@ class Actions {
     }
     dispatcher.dispatch({actionType: ActionType.ENTRIES.LIST, entries: entries});
   }
-  async editEntry(date, prevLine, newLine) {
+  async editEntry(date, prevLine, newLine, isAfterMidnight) {
     const config = await getConfig();
     if (!config.token) { return; }
-    const response = await apiClient.editEntry(config, date, prevLine, newLine);
+    const response = await apiClient.editEntry(config, date, prevLine, newLine, isAfterMidnight);
     const data = await response.json();
     let entries = [];
     if (data.entries.length > 0) {

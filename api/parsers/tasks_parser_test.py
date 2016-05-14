@@ -63,7 +63,7 @@ class TestStringMethods(unittest.TestCase):
 
     def test_edit_line(self):
         self.assertEqual(self.parser.tasks[0]['duration'], duration(6, 0))
-        self.parser.edit_line("- 7am #wakeup", "- 8am #wakeup")
+        self.parser.edit_line("- 7am #wakeup", "- 8am #wakeup", False)
         self.assertEqual(self.parser.tasks[0]['duration'], duration(5, 0))
 
 if __name__ == '__main__':

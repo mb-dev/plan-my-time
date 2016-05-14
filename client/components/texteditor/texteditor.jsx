@@ -26,6 +26,7 @@ export default class TextEditor extends React.Component {
     this.refs.mainTextArea.focus();
     Mousetrap.bindGlobal(['ctrl+s', 'command+s'], () => {
       actions.updateJournal(store.state.date, store.state.text);
+      this.debounceOnUpdate.cancel();
       return false;
     });
   }

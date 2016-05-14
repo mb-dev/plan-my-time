@@ -2,6 +2,7 @@ import React, {
   Component,
   Text,
   TextInput,
+  Switch,
   TouchableHighlight,
   View,
   ListView,
@@ -24,6 +25,7 @@ export default class Entry extends Component {
     this.state = {
       entry: {tags: []},
       textValue: '',
+      afterMidnight: false,
     };
     const currentDate = new Date();
     if (props.line) {
@@ -64,9 +66,9 @@ export default class Entry extends Component {
     const newLine = this.state.line.replace(/\r/g, '');
     let promise = null;
     if (this.props.line) {
-      promise = actions.editEntry(this.props.date, this.props.line, newLine);
+      promise = actions.editEntry(this.props.date, this.props.line, newLine, this.state.afterMidnight);
     } else {
-      promise = actions.addEntry(this.props.date, newLine);
+      promise = actions.addEntry(this.props.date, newLine, this.state.afterMidnight);
     }
     promise.then(() => this.props.navigator.pop());
   }
@@ -99,6 +101,13 @@ export default class Entry extends Component {
       <View>
         <Text>{title}</Text>
         <TextInput defaultValue={this.state.line} onChangeText={this.onLineChanged} />
+        <View style={styles.toggleContainer}>
+          <Switch
+            onValueChange={(value) => this.setState({afterMidnight: value})}
+            value={this.state.afterMidnight}
+          />
+          <Text style={styles.switchText}>After midnight</Text>
+        </View>
         <Button onPress={this.onAddTag}>Add Tag</Button>
         <Button onPress={this.onSubmit}>Submit</Button>
         <ListView dataSource={this.state.tags} renderRow={this.renderRow} />
