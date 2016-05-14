@@ -3,6 +3,4 @@
 - 2:15pm #yoga
 Description
 - 11pm #party
-- no time in line
-- 45am bad example
 - 1am #sleep

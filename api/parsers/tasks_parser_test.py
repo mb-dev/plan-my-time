@@ -11,9 +11,11 @@ class TestStringMethods(unittest.TestCase):
         with open(test.path('fixtures/tasksSample.md')) as f:
             self.content = f.read()
             self.parser = parsers.TasksParser('2015-01-01', self.content)
+        with open(test.path('fixtures/tasksSampleSaved.md')) as f:
+            self.expectedSavedContent = f.read()
 
     def test_tags(self):
-        self.assertEqual(self.parser.tags, ['wakeup', 'lunch', 'yoga', 'sleep'])
+        self.assertEqual(self.parser.tags, ['wakeup', 'lunch', 'yoga', 'party', 'sleep'])
 
     def test_people(self):
         self.assertEqual(self.parser.people, ['steve-lee'])
@@ -25,10 +27,11 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(self.parser.tasks[0]["duration"], duration(6))
         self.assertEqual(self.parser.tasks[1]["duration"], duration(1, 15))
         self.assertEqual(self.parser.tasks[2]["duration"], duration(8, 45))
-        self.assertEqual(self.parser.tasks[3]["duration"], None)
+        self.assertEqual(self.parser.tasks[3]["duration"], duration(2))
+        self.assertEqual(self.parser.tasks[4]["duration"], None)
 
     def test_tasks(self):
-        self.assertEqual(len(self.parser.tasks), 4)
+        self.assertEqual(len(self.parser.tasks), 5)
         self.assertEqual(self.parser.tasks[0]["start_time"], '2015-01-01 07:00:00')
         self.assertEqual(self.parser.tasks[0]["tags"], ["wakeup"])
         self.assertEqual(self.parser.tasks[1]["people"], ["steve-lee"])
@@ -47,17 +50,16 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(summary["locations"]["blue-bottle"]["month"], duration(2, 30))
 
     def test_to_file(self):
-        lines = self.content.split("\n")
-        n = len(lines)
-        content_without_last_two_lines = "\n".join(lines[:n - 3])
         new_file_content = self.parser.to_tasks_file()
-        self.assertEqual(new_file_content.strip(), content_without_last_two_lines)
+        self.assertEqual(self.expectedSavedContent.strip(), new_file_content.strip())
 
     def test_add_line(self):
-        self.parser.add_line("- 3pm #yoga")
+        self.parser.add_line("- 3pm #yoga", False)
         self.assertEqual(self.parser.tasks[3]['line'], '- 3pm #yoga')
         # ensure previous task now has correct duration
         self.assertEqual(self.parser.tasks[2]['duration'], duration(0, 45))
+        self.parser.add_line("- 12:30am #meditation", True)
+        self.assertEqual(self.parser.tasks[5]['line'], '- 12:30am #meditation')
 
     def test_edit_line(self):
         self.assertEqual(self.parser.tasks[0]['duration'], duration(6, 0))

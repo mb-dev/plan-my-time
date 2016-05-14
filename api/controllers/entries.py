@@ -28,7 +28,7 @@ def perform_update(date_str, date, action, params):
     if metadata:
         parser.from_dict(metadata["metadata"])
     if action == 'add_line':
-        parser.add_line(params["line"])
+        parser.add_line(params["line"], params["is_after_midnight"])
     elif action == 'edit_line':
         parser.edit_line(params["prev_line"], params["new_line"])
     content = parser.to_tasks_file()
@@ -45,8 +45,9 @@ def perform_update(date_str, date, action, params):
 def addEntry():
     line = request.form['line']
     date_str = request.form['date']
+    is_after_midnight = request.form['is_after_midnight'] == 'true'
     date = date_helpers.parse_date_str(date_str)
-    perform_update(date_str, date, 'add_line', {"line": line})
+    perform_update(date_str, date, 'add_line', {"line": line, "is_after_midnight": is_after_midnight})
     entries = models.entries.find_for_user(g.user["_id"], {"date": date})
     return jsonify(entries=entries)
 
