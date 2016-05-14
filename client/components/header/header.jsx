@@ -1,9 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router';
-import classNames from 'classnames';
 
-import store from '../../stores/store'
-import storage from '../../libraries/storage/storage'
+import store from '../../stores/store';
+import storage from '../../libraries/storage/storage';
 import actions from '../../actions/actions';
 
 export default class Header extends React.Component {

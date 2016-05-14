@@ -1,43 +1,52 @@
-import _ from 'lodash';
-import React from 'react';
-
+import _               from 'lodash';
+import React           from 'react';
+import Mousetrap       from 'mousetrap';
+import MousetrapGlobal from 'mousetrap/plugins/global-bind/mousetrap-global-bind';
+import actions         from '../../actions/actions';
+import store           from '../../stores/store';
 require('./texteditor.less');
 
 export default class TextEditor extends React.Component {
+  static propTypes = {
+    text: React.PropTypes.string,
+  }
   constructor(props) {
     super(props);
     this.timer = null;
-    this.state = {text: props.text};
+    this.state = {text: props.text, lineCount: this.lineCount(props.text)};
     this.onChange = this.onChange.bind(this);
     this.debounceOnUpdate = _.debounce(() => {
-      this.state.text = this.mainTextArea.value;
-      this.props.onUpdate(this.mainTextArea.value);
+      actions.updateJournal(store.state.date, store.state.text);
     }, 5000);
   }
   componentWillMount() {
 
   }
   componentDidMount() {
-    this.mainTextArea.focus();
-    this.setState({lineCount: this.lineCount()});
+    this.refs.mainTextArea.focus();
+    Mousetrap.bindGlobal(['ctrl+s', 'command+s'], () => {
+      actions.updateJournal(store.state.date, store.state.text);
+      return false;
+    });
   }
   componentWillReceiveProps(props) {
-    if (this.state.lastTextName !== props.textName) {
-      this.state.lastTextName = props.textName;
-      this.mainTextArea.value = props.text;
-      this.setState({lineCount: this.lineCount()});
-    }
+    this.state.lastTextName = props.textName;
+    this.refs.mainTextArea.value = props.text;
+    this.setState({lineCount: this.lineCount(props.text)});
   }
   componentWillUnmount() {
     clearTimeout(this.timer);
+    Mousetrap.unbind(['ctrl+s'], ['command+s']);
   }
   onChange() {
+    const text = this.refs.mainTextArea.value;
     this.debounceOnUpdate();
-    this.setState({lineCount: this.lineCount()});
+    this.setState({lineCount: this.lineCount(text)});
+    actions.textUpdated(text);
   }
-  lineCount() {
+  lineCount(text) {
     const minLines = 10;
-    let matches = this.mainTextArea.value.match(/\n/g);
+    const matches = text.match(/\n/g);
     if (!matches) {
       return minLines;
     }
@@ -50,12 +59,12 @@ export default class TextEditor extends React.Component {
     } else if (section === 'people') {
       prefix = '@';
     }
-    this.mainTextArea.value += prefix + tag;
+    this.refs.mainTextArea.value += prefix + tag;
   }
   render() {
     return (
       <div className="text-editor">
-        <textarea ref={(c) => this.mainTextArea = c} defaultValue={this.state.text} onChange={this.onChange} rows={this.state.lineCount}></textarea>
+        <textarea ref="mainTextArea" defaultValue={this.props.text} onChange={this.onChange} rows={this.state.lineCount}></textarea>
       </div>
     );
   }

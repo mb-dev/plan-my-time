@@ -12,11 +12,15 @@ class Store extends EventEmitter {
       currentUser: null,
       hasToken: !!storage.getBearerToken(),
       date: new Date(),
-      text: null,
+      text: '',
+      savedText: '',
       lastUpdated: null,
       serverError: null,
       metadata: null,
       tags: [],
+      home: {
+        modified: false,
+      },
       report: {
         metadata: null,
         date: new Date(),
@@ -38,16 +42,29 @@ class Store extends EventEmitter {
   handleDispatch(payload) {
     switch (payload.actionType) {
       case ActionType.TASKS.TEXT_CHANGED_FROM_SERVER:
-        this.state.text = payload.newText;
         this.state.date = payload.newDate;
         this.state.lastUpdated = new Date(payload.lastUpdated);
+        this.state.text = this.state.savedText = payload.newText;
         this.emitChange();
         break;
       case ActionType.TASKS.TEXT_UPDATE_SUCCESS:
         this.state.serverError = null;
-        this.state.text = payload.newText;
         this.state.lastUpdated = new Date(payload.lastUpdated);
+        this.state.savedText = payload.text;
+        this.state.home.modified = this.state.savedText !== this.state.text;
+        this.state.home.updating = false;
         this.emitChange();
+        break;
+      case ActionType.TASKS.TEXT_UPDATING:
+        this.state.home.updating = true;
+        this.emitChange();
+        break;
+      case ActionType.TASKS.TEXT_UPDATED:
+        this.state.text = payload.newText;
+        if (!this.state.modified) {
+          this.state.home.modified = this.state.savedText !== this.state.text;
+          setTimeout(() => this.emitChange());
+        }
         break;
       case ActionType.TASKS.GET_METADATA:
         if (payload.component) {
@@ -79,6 +96,7 @@ class Store extends EventEmitter {
         break;
       case ActionType.TASKS.SERVER_ERROR:
         this.state.serverError = payload.message;
+        this.state.home.updating = false;
         this.emitChange();
         break;
       case ActionType.USER.INFO:

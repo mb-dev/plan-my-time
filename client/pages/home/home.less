@@ -52,6 +52,21 @@
     min-height: 200px;
     margin-top: 10px;
   }
+
+  .indicator {
+    height: 38px;
+    float: left;
+    width: 50px;
+    margin-right: 5px;
+    border-radius: 5px;
+    background-color: red;
+    &.saving {
+      background-color: orange;
+    }
+    &.saved {
+      background-color: green;
+    }
+  }
 }
 
 .not-logged-in {

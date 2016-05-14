@@ -36,49 +36,43 @@ class Actions {
     dispatcher.dispatch({actionType: ActionType.USER.LOGOUT});
     browserHistory.push('/');
   }
-  getUserInfo() {
+  async getUserInfo() {
     const config = getConfig();
     if (!config.token) { return; }
-    return apiClient.getUserInfo(config).then((response) => {
-      return response.json();
-    }).then((data) => {
-      dispatcher.dispatch({actionType: ActionType.USER.INFO, info: data});
-    });
+    const response = await apiClient.getUserInfo(config);
+    const data = await response.json();
+    dispatcher.dispatch({actionType: ActionType.USER.INFO, info: data});
   }
   // journal
-  getJournal(date) {
+  async getJournal(date) {
     const config = getConfig();
     if (!config.token) { return; }
-    apiClient.getJournal(config, date).then((response) => {
-      return response.json();
-    }).then((data) => {
-      dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified, newDate: date});
-    });
+    const response = await apiClient.getJournal(config, date);
+    const data = await response.json();
+    dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_CHANGED_FROM_SERVER, newText: data.content, lastUpdated: data.last_modified, newDate: date});
   }
-  getMetadata(date, component) {
-    let config = getConfig();
+  async getMetadata(date, component) {
+    const config = getConfig();
     if (!config.token) { return; }
-    apiClient.getMetadata(config, date).then((response) => {
-      return response.json();
-    }).then((data) => {
-      dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data, date: date, component: component});
-    });
+    const response = await apiClient.getMetadata(config, date);
+    const data = await response.json();
+    dispatcher.dispatch({actionType: ActionType.TASKS.GET_METADATA, metadata: data, date: date, component: component});
   }
-  updateJournal(date, text) {
-    let config = getConfig();
+  async updateJournal(date, text) {
+    const config = getConfig();
     if (!config.token) { return; }
-    apiClient.updateJournal(config, date, text).then((response) => {
-      if (!response.ok) {
-        response.json().then((err) => {
-           dispatcher.dispatch({actionType: ActionType.TASKS.SERVER_ERROR, message: err.message});
-        });
-        return;
-      }
-      return response.json().then((data) => {
-        dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_UPDATE_SUCCESS, newText: text, lastUpdated: data.last_modified});
-        this.getMetadata(date);
-      });
-    });
+    dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_UPDATING});
+    const response = await apiClient.updateJournal(config, date, text);
+    const data = await response.json();
+    if (response.ok) {
+      dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_UPDATE_SUCCESS, text: text, lastUpdated: data.last_modified});
+      this.getMetadata(date);
+    } else {
+      dispatcher.dispatch({actionType: ActionType.TASKS.SERVER_ERROR, message: data.message});
+    }
+  }
+  textUpdated(text) {
+    dispatcher.dispatch({actionType: ActionType.TASKS.TEXT_UPDATED, newText: text});
   }
   updateCurrentTask(task) {
     dispatcher.dispatch({actionType: ActionType.TASKS.CURRENT_TASK_CHANGED, newTask: task});
