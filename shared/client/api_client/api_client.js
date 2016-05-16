@@ -43,7 +43,7 @@ class ApiClient {
   }
   getTags(config, query) {
     const queryParam = query || {};
-    if (query.date) {
+    if (queryParam.date) {
       queryParam.date = formatters.getYearMonthDate(queryParam.date);
     }
     return request('GET', '/journal/tags', {data: queryParam}, config);
