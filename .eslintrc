@@ -15,5 +15,6 @@
     "object-curly-spacing": ["error", "never"],
     "no-multi-spaces": [2, { "exceptions": { "VariableDeclarator": true, "ImportDeclaration": true } }],
     "max-len": 0,
+    "prop-types": [0],
   }
 }
