@@ -1,9 +1,8 @@
 import re
 
-timesRegex = re.compile(r'(\d)+ times')
-freqRegex = re.compile(r'per (\w)+')
-tagRegex = re.compile(r'#([\w-]+)')
-
+timesRegex = re.compile(r'(\d+) times')
+freqRegex = re.compile(r'per (\w+)')
+tagRegex = re.compile(r'(#[\w-]+)')
 
 # How it works
 # Step 1 - parse the file, generate rrule for each line
@@ -14,7 +13,7 @@ tagRegex = re.compile(r'#([\w-]+)')
 class GoalsParser:
     def __init__(self, content):
         lines = content.split('\n')
-        goals = {}
+        goals = []
         for line in lines:
             times = timesRegex.findall(line)
             freq = freqRegex.findall(line)
@@ -24,8 +23,13 @@ class GoalsParser:
                 continue
 
             goal = {
-                "tag": tag,
+                "tag": tag[0],
             }
-            goal[freq + "ly"] = int(times)
+            goal[freq[0]] = int(times[0])
 
             goals.append(goal)
+
+        self.goals = goals
+
+    def to_array(self):
+        return self.goals

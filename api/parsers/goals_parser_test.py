@@ -9,11 +9,8 @@ class GoalsParserTest(unittest.TestCase):
             self.parser = parsers.GoalsParser(self.content)
 
     def test_daily_goals(self):
-        self.assertEqual(self.parser.dailyGoals(), [
-            {"tag": '#meditation', "daily": 2},
-        ])
+        self.assertEqual(self.parser.to_array()[0], {"tag": '#meditation', "day": 2})
         pass
-
 
 if __name__ == '__main__':
     unittest.main()
