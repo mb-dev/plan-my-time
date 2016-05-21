@@ -112,15 +112,15 @@ class DropboxApi(object):
 # }
 
   # returns: array of metadata
-  def get_files_in_folder(self, access_token, cursor = None):
+  def get_files_in_folder(self, folder, access_token, cursor = None):
     files = []
     dbx = dropbox.Dropbox(access_token)
     has_more = True
     while has_more:
       if cursor is None:
-        result = dbx.files_list_folder('')
+        result = dbx.files_list_folder(folder)
       else:
-        result = dbx.files_list_folder_continue(cursor) 
+        result = dbx.files_list_folder_continue(cursor)
       files += [convert_metadata(metadata) for metadata in result.entries]
       cursor = result.cursor
       has_more = result.has_more

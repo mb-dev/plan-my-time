@@ -37,7 +37,7 @@ def perform_update(date_str, date, action, params):
     # update dropbox
     dropbox = DropboxApi()
     filename = date_str + ".md"
-    file_metadata = dropbox.update_file(g.user["dropbox_access_token"], "/" + filename, content)
+    file_metadata = dropbox.update_file(g.user["dropbox_access_token"], "/journal/" + filename, content)
     return models.entries.create_or_update_entry(g.user["_id"], filename, date, entry_metadata, file_metadata)
 
 @app.route('/api/entries', methods=['POST'])
