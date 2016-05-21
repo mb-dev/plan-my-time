@@ -26,7 +26,7 @@ for user in mongo.db.users.find():
     app.logger.info("Processing update for user {0}".format(user["email"]))
 
     mongo.db.entries.delete_many({})
-    results, cursor = dropbox.get_files_in_folder(user["dropbox_access_token"])
+    results, cursor = dropbox.get_files_in_folder("/journal/", user["dropbox_access_token"])
     for result in results:
         app.logger.info("processing file {0}, with name: {1}".format(result["path_lower"], result["name"]))
         response = dropbox.get_file_content(user["dropbox_access_token"], result["path_lower"])

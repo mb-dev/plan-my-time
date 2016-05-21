@@ -23,7 +23,7 @@ def getJournal():
         return "missing date", 400
     dropbox = DropboxApi()
     filename = date_str + ".md"
-    content_and_metadata = dropbox.get_file_or_create(g.user["dropbox_access_token"], "/" + filename)
+    content_and_metadata = dropbox.get_file_or_create(g.user["dropbox_access_token"], "/journal/" + filename)
     return jsonify(content_and_metadata)
 
 @app.route('/api/journal/metadata', methods=['GET'])
@@ -78,7 +78,7 @@ def updateJournal():
     # update dropbox
     dropbox = DropboxApi()
     filename = date_str + ".md"
-    file_metadata = dropbox.update_file(g.user["dropbox_access_token"], "/" + filename, content)
+    file_metadata = dropbox.update_file(g.user["dropbox_access_token"], "/journal/" + filename, content)
 
     # update metadata
     date = date_helpers.parse_date_str(date_str)
