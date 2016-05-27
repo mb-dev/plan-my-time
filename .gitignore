@@ -9,6 +9,7 @@ coverage
 api/env
 api/venv
 __pycache__
+*.pyc
 
 # OSX
 #

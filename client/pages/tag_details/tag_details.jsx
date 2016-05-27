@@ -27,7 +27,7 @@ export default class TagDetailsPage extends React.Component {
   }
   updateState(props) {
     this.setState({
-      entries: store.state.tag_details.entries,
+      entries: store.state.tagDetails.entries,
     });
   }
   render() {
@@ -36,7 +36,7 @@ export default class TagDetailsPage extends React.Component {
         {this.state.entries.map((entry) => (
           <ul className="tag-list" key={entry.date}>
             <li><Link to={`/?date=${entry.date}`}><b>{entry.date}</b></Link></li>
-            { entry.tasks.map((task) => (
+            {entry.tasks.map((task) => (
               <li key={task.line}>
                 {task.line}
               </li>

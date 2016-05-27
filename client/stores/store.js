@@ -20,13 +20,20 @@ class Store extends EventEmitter {
       tags: [],
       home: {
         modified: false,
+        goals: [],
       },
       report: {
         metadata: null,
         date: new Date(),
       },
-      tag_details: {
+      tagDetails: {
         entries: [],
+      },
+      goalsModal: {
+        displayed: false,
+        content: '',
+        saving: false,
+        serverError: false,
       },
     };
   }
@@ -115,7 +122,38 @@ class Store extends EventEmitter {
         this.emitChange();
         break;
       case ActionType.DETAILS_PAGE.ENTRIES:
-        this.state.tag_details.entries = payload.entries;
+        this.state.tagDetails.entries = payload.entries;
+        this.emitChange();
+        break;
+      case ActionType.GOALS.OPEN_GOALS_DIALOG:
+        this.state.goalsModal.displayed = true;
+        this.emitChange();
+        break;
+      case ActionType.GOALS.CLOSE_GOALS_DIALOG:
+        this.state.goalsModal.displayed = false;
+        this.emitChange();
+        break;
+      case ActionType.GOALS.GOALS_RECEIVED:
+        this.state.home.goals = payload.goals;
+        this.emitChange();
+        break;
+      case ActionType.GOALS.GOAL_FILE_RECEIVED:
+        this.state.goalsModal.content = payload.content;
+        this.emitChange();
+        break;
+      case ActionType.GOALS.GOALS_UPDATING:
+        this.state.goalsModal.saving = true;
+        this.state.goalsModal.serverError = false;
+        this.emitChange();
+        break;
+      case ActionType.GOALS.SAVE_GOALS_SUCCESS:
+        this.state.goalsModal.saving = false;
+        this.state.goalsModal.serverError = false;
+        this.emitChange();
+        break;
+      case ActionType.GOALS.SERVER_ERROR:
+        this.state.goalsModal.saving = false;
+        this.state.goalsModal.serverError = true;
         this.emitChange();
         break;
       default:

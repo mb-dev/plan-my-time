@@ -147,13 +147,19 @@ class TasksParser:
     def summerize(metadata_arr, date):
         def summerize_task_item(summary, task, metadata_date, key, val):
             if val not in summary[key]:
-                summary[key][val] = {"day": 0, "week": 0, "month": 0}
+                summary[key][val] = {
+                    "day": 0,
+                    "week": 0,
+                    "month": 0,
+                    "dayTimes": 0,
+                }
 
             if date_helpers.is_same_week(date, metadata_date):
                 summary[key][val]["week"] += task["duration"]
 
             if date_helpers.is_same_day(date, metadata_date):
                 summary[key][val]["day"] += task["duration"]
+                summary[key][val]["dayTimes"] += 1
 
             summary[key][val]["month"] += task["duration"]
 

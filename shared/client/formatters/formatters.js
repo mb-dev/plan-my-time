@@ -30,15 +30,15 @@ export function displayDateMonth(date) {
   return moment(date).format('MM/DD');
 }
 export function displayTimeAsNumber(date) {
-  let hour = date.getHours();
-  let minute = date.getMinutes();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
   return hour + (minute / 60);
 }
 export function getTimeFormat(date) {
   return moment(date).format('h:mma');
 }
 export function isToday(date) {
-  return getYearMonthDate(date) == getYearMonthDate(new Date());
+  return getYearMonthDate(date) === getYearMonthDate(new Date());
 }
 export function parseDate(datestr) {
   return moment(datestr).toDate();
@@ -60,4 +60,12 @@ export function getNextMonth(date) {
 }
 export function getPrevMonth(date) {
   return new Date(date.getFullYear(), date.getMonth() - 1, 1);
+}
+export function getStartQuarterFromDate(date) {
+  const rem = date.getMonth() % 3;
+  return new Date(date.getFullYear(), date.getMonth() - rem, 1);
+}
+export function getEndOfQuarterFromDate(date) {
+  const rem = 2 - date.getMonth() % 3;
+  return moment(new Date(date.getFullYear(), date.getMonth() + rem, 1)).endOf('month').toDate();
 }

@@ -9,6 +9,7 @@ import * as formatters from '../../../shared/client/formatters/formatters';
 import HourMarker      from '../../app/time_tracker/hour_marker';
 import MetadataTracker from '../../app/metadata_tracker/metadata_tracker';
 import PollChanges     from '../../app/poll_changes/poll_changes';
+import EditGoalsModal  from '../../components/edit_goals_modal/edit_goals_modal';
 import classNames from 'classnames';
 require('./home.less');
 
@@ -33,6 +34,7 @@ export default class Home extends React.Component {
     store.addChangeListener(this.onStoreChanged);
     actions.getJournal(this.state.date);
     actions.getMetadata(this.state.date);
+    actions.getGoals(this.state.date);
   }
   componentWillReceiveProps(nextProps) {
     const {query} = nextProps.location;
@@ -70,6 +72,8 @@ export default class Home extends React.Component {
       summary: store.state.metadata ? store.state.metadata.summary : undefined,
       modified: store.state.home.modified,
       saving: store.state.home.updating,
+      goalsModalOpen: store.state.goalsModal.displayed,
+      goals: store.state.home.goals,
     });
   }
   render() {
@@ -88,7 +92,7 @@ export default class Home extends React.Component {
       <div className="home-page container">
         <DateNavigation date={this.state.date} onUpdate={this.onChangeDate} />
         <ProgressBar completed={percentLeft} />
-        { this.state.serverError &&
+        {this.state.serverError &&
           <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span className="sr-only">Error:</span>
@@ -102,7 +106,7 @@ export default class Home extends React.Component {
           <div>Next Task: {this.state.nextTask && this.state.nextTask.line}</div>
         </div>
         <section className="main-pane">
-          { this.state.text !== null &&
+          {this.state.text !== null &&
             <TextEditor ref="textEditor" text={this.state.text} textName={this.state.date.toString()} />
           }
           <div className="break-notifications">
@@ -110,8 +114,15 @@ export default class Home extends React.Component {
           </div>
         </section>
         <section className="right-pane">
-          <SummaryPane summary={this.state.summary} onClickTag={this.onClickTag} />
+          <SummaryPane
+            summary={this.state.summary}
+            onClickTag={this.onClickTag}
+            goals={this.state.goals}
+          />
         </section>
+        {this.state.goalsModalOpen &&
+          <EditGoalsModal date={this.state.date} />
+        }
       </div>
     );
   }

@@ -10,7 +10,7 @@ GOALS.ensure_index([('user_id', pymongo.ASCENDING)], dropDups=True)
 # user_id ObjectId(user)
 # start_date, end_date - inclusive
 def create_or_update_entry(user_id: str, start_date: datetime.datetime, end_date: datetime.datetime,
-                           metadata: dict, file_metadata: dict) -> ObjectId:
+                           metadata: dict, file_metadata: list) -> ObjectId:
     """ Creates or updates a goal """
     assert user_id is not None
     assert start_date is not None
@@ -36,4 +36,4 @@ def create_or_update_entry(user_id: str, start_date: datetime.datetime, end_date
 
 def get_goals(user_id: str, date: datetime.datetime) -> dict:
     """ Get goals list that are active during the given date """
-    return GOALS.find_one({"user_id": user_id, "start_date": {"$gte": date}, "end_date": {"$lte": date}})
+    return GOALS.find_one({"user_id": user_id, "start_date": {"$lte": date}, "end_date": {"$gte": date}})
