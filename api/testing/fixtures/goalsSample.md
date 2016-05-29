@@ -1,0 +1,4 @@
+- #meditation 2 times per day
+- #yoga 2 times per day
+- #hiking 2 times per month
+- #project-plan-my-time 2 times per day

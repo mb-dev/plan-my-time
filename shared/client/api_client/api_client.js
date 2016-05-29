@@ -69,6 +69,28 @@ class ApiClient {
       is_after_midnight: !!isAfterMidnight},
     }, config);
   }
+  // goals
+  getGoals(config, date) {
+    const dateStr = formatters.getYearMonthDate(date);
+    return request('GET', '/goals', {data: {date: dateStr}}, config);
+  }
+  getGoalsFile(config, startDate, endDate) {
+    const startDateStr = formatters.getYearMonthDate(startDate);
+    const endDateStr = formatters.getYearMonthDate(endDate);
+    return request('GET', '/goals/file', {data: {start_date: startDateStr, end_date: endDateStr}}, config);
+  }
+  saveGoalsFile(config, startDate, endDate, content) {
+    const startDateStr = formatters.getYearMonthDate(startDate);
+    const endDateStr = formatters.getYearMonthDate(endDate);
+    const req = {
+      data: {
+        content: content,
+        start_date: startDateStr,
+        end_date: endDateStr,
+      },
+    };
+    return request('POST', '/goals/file', req, config);
+  }
 }
 
 const apiClient = new ApiClient();

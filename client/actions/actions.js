@@ -11,26 +11,21 @@ function getConfig() {
 
 class Actions {
   // auth
-  authorizeWithDropbox() {
+  async authorizeWithDropbox() {
     const config = getConfig();
-    apiClient.getDropboxAuthUrl(config).then(response => (
-      response.json()
-    )).then((data) => {
-      storage.setDropboxCsrf(data.csrf_token);
-      window.location.href = data.url;
-    });
+    const response = await apiClient.getDropboxAuthUrl(config);
+    const data = await response.json();
+    storage.setDropboxCsrf(data.csrf_token);
+    window.location.href = data.url;
   }
-  finalizeDropboxAuth(state, code) {
+  async finalizeDropboxAuth(state, code) {
     const config = getConfig();
     const csrf = storage.getDropboxCsrf();
-    apiClient.finalizeDropboxAuth(config, csrf, state, code).then((response) => {
-      return response.json();
-    }).then((data) => {
-      storage.setBearerToken(data.token);
-      this.getUserInfo().then(function() {
-        browserHistory.push('/');
-      });
-    });
+    const response = await apiClient.finalizeDropboxAuth(config, csrf, state, code);
+    const data = await response.json();
+    storage.setBearerToken(data.token);
+    await this.getUserInfo();
+    browserHistory.push('/');
   }
   logout() {
     dispatcher.dispatch({actionType: ActionType.USER.LOGOUT});
@@ -87,7 +82,7 @@ class Actions {
     this.getJournal(date);
   }
   checkForUpdate(date, lastUpdated) {
-    let config = getConfig();
+    const config = getConfig();
     if (!config.token) { return; }
     apiClient.checkForUpdate(config, date, lastUpdated).then((response) => {
       if (response.status === 200) {
@@ -97,7 +92,7 @@ class Actions {
     });
   }
   async getAllTags() {
-    let config = getConfig();
+    const config = getConfig();
     if (!config.token) { return; }
     const response = await apiClient.getTags(config);
     const data = await response.json();
@@ -114,6 +109,40 @@ class Actions {
   // report page
   changeReportDate(date) {
     dispatcher.dispatch({actionType: ActionType.REPORT.CHANGE_DATE, date: date});
+  }
+  // goals
+  openEditGoalsDialog(date) {
+    dispatcher.dispatch({actionType: ActionType.GOALS.OPEN_GOALS_DIALOG, date: date});
+  }
+  closeEditGoalsDialog() {
+    dispatcher.dispatch({actionType: ActionType.GOALS.CLOSE_GOALS_DIALOG});
+  }
+  async getGoals(date) {
+    const config = getConfig();
+    if (!config.token) { return; }
+    const response = await apiClient.getGoals(config, date);
+    const data = await response.json();
+    dispatcher.dispatch({actionType: ActionType.GOALS.GOALS_RECEIVED, goals: data.goals});
+  }
+  async getGoalsFile(startDate, endDate) {
+    const config = getConfig();
+    if (!config.token) { return; }
+    const response = await apiClient.getGoalsFile(config, startDate, endDate);
+    const data = await response.json();
+    dispatcher.dispatch({actionType: ActionType.GOALS.GOAL_FILE_RECEIVED, content: data.content});
+  }
+  async saveGoalsFile(startDate, endDate, content) {
+    const config = getConfig();
+    if (!config.token) { return; }
+    dispatcher.dispatch({actionType: ActionType.GOALS.GOALS_UPDATING});
+    const response = await apiClient.saveGoalsFile(config, startDate, endDate, content);
+    const data = await response.json();
+    if (response.ok) {
+      dispatcher.dispatch({actionType: ActionType.GOALS.SAVE_GOALS_SUCCESS, lastUpdated: data.last_modified});
+    } else {
+      dispatcher.dispatch({actionType: ActionType.GOALS.SERVER_ERROR, message: data.message});
+      throw new Error('Failed to save goals file');
+    }
   }
 }
 

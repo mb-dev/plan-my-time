@@ -6,7 +6,7 @@ import parsers.tasks_parser as parsers
 def duration(hours, minutes=0, seconds=0):
     return hours * 60 * 60 + minutes * 60 + seconds
 
-class TestStringMethods(unittest.TestCase):
+class TestTasksParser(unittest.TestCase):
     def setUp(self):
         with open(test.path('fixtures/tasksSample.md')) as f:
             self.content = f.read()

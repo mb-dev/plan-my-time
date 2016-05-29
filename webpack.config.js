@@ -21,9 +21,11 @@ module.exports = {
           presets: ['react'],
         },
       },
-      { test: /\.less$/, exclude: /node_modules/, loader: 'style!css!less'},
-      { test: /\.css$/, exclude: /node_modules/, loader: 'style!css'}
-    ]
+      {test: /\.less$/, exclude: /node_modules/, loader: 'style!css!less'},
+      {test: /\.css$/, exclude: /node_modules/, loader: 'style!css'},
+      {test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&minetype=application/font-woff'},
+      {test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader'},
+    ],
   },
   output: {
     filename: '[name].bundle.js',
@@ -35,10 +37,10 @@ module.exports = {
   ],
 
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx'],
   },
 
   devServer: {
-    contentBase: './static'
-  }
-}
+    contentBase: './static',
+  },
+};
