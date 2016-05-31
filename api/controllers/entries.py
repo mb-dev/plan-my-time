@@ -43,9 +43,9 @@ def perform_update(date_str, date, action, params):
 @app.route('/api/entries', methods=['POST'])
 @auth.auth_required
 def addEntry():
-    line = request.form['line']
-    date_str = request.form['date']
-    is_after_midnight = request.form['is_after_midnight'] == 'true'
+    line = request.json['line']
+    date_str = request.json['date']
+    is_after_midnight = request.json['is_after_midnight'] == 'true'
     date = date_helpers.parse_date_str(date_str)
     perform_update(date_str, date, 'add_line', {"line": line, "is_after_midnight": is_after_midnight})
     entries = models.entries.find_for_user(g.user["_id"], {"date": date})
@@ -54,9 +54,9 @@ def addEntry():
 @app.route('/api/entries', methods=['PUT'])
 @auth.auth_required
 def editEntry():
-    prev_line = request.form['prev_line']
-    new_line = request.form['new_line']
-    date_str = request.form['date']
+    prev_line = request.json['prev_line']
+    new_line = request.json['new_line']
+    date_str = request.json['date']
     is_after_midnight = request.form['is_after_midnight'] == 'true'
     date = date_helpers.parse_date_str(date_str)
     perform_update(date_str, date, 'edit_line', {

@@ -43,11 +43,11 @@ export function isToday(date) {
 export function parseDate(datestr) {
   return moment(datestr).toDate();
 }
-export function getFirstVisualDay(date) {
-  return moment(date).startOf('month').startOf('week').toDate();
+export function getFirstVisualDay(year, month) {
+  return moment({year, month, day: 1}).startOf('week').toDate();
 }
-export function getLastVisualDay(date) {
-  return moment(date).endOf('month').endOf('week').toDate();
+export function getLastVisualDay(year, month) {
+  return moment({year, month, day: 1}).endOf('month').endOf('week').toDate();
 }
 export function getWeeksInAMonth(date) {
   return moment(moment(date).endOf('month') - moment(date).startOf('month')).weeks();
@@ -56,7 +56,7 @@ export function getWeeksBetweenDates(date1, date2) {
   return Math.ceil(moment.duration(date2.getTime() - date1.getTime()).asWeeks());
 }
 export function getNextMonth(date) {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 1); 
+  return new Date(date.getFullYear(), date.getMonth() + 1, 1);
 }
 export function getPrevMonth(date) {
   return new Date(date.getFullYear(), date.getMonth() - 1, 1);
@@ -68,4 +68,42 @@ export function getStartQuarterFromDate(date) {
 export function getEndOfQuarterFromDate(date) {
   const rem = 2 - date.getMonth() % 3;
   return moment(new Date(date.getFullYear(), date.getMonth() + rem, 1)).endOf('month').toDate();
+}
+export function getPrevQuarter(year, quarter) {
+  if (quarter === 1) {
+    return {year: year - 1, quarter: 4};
+  }
+  return {year: year, quarter: quarter - 1};
+}
+export function getNextQuarter(year, quarter) {
+  if (quarter === 4) {
+    return {year: year + 1, quarter: 1};
+  }
+  return {year: year, quarter: quarter + 1};
+}
+export function printQuarter(year, quarter) {
+  const firstMonth = (quarter * 3) - 3;
+  const lastMonth = (quarter * 3) - 1;
+  const displayFirstMonth = moment().set('month', firstMonth).format('MMM');
+  const displayLastMonth = moment().set('month', lastMonth).format('MMM');
+  return `${displayFirstMonth} - ${displayLastMonth} ${year}`;
+}
+export function currentQuarter() {
+  return Math.floor(new Date().getMonth() / 3) + 1;
+}
+export function getQuarterDates(year, quarter) {
+  const firstMonth = (quarter * 3) - 3;
+  const dates = [];
+  dates.push(moment().set({year, month: firstMonth, date: 1}).toDate());
+  dates.push(moment().set({year, month: firstMonth + 1, date: 1}).toDate());
+  dates.push(moment().set({year, month: firstMonth + 2, date: 1}).toDate());
+  return dates;
+}
+export function getQuarterMonths(year, quarter) {
+  const firstMonth = (quarter * 3) - 3;
+  return [
+    firstMonth,
+    firstMonth + 1,
+    firstMonth + 2,
+  ];
 }

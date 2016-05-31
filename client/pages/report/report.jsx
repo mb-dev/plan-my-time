@@ -3,26 +3,31 @@ import React           from 'react';
 import {Link}          from 'react-router';
 import store           from '../../stores/store';
 import actions         from '../../actions/actions';
-import d3              from 'd3';
-import dimple          from 'dimple';
 import * as formatters from '../../../shared/client/formatters/formatters';
-
+import Calendar        from '../../components/calendar/calendar';
+import HourOfDayChart  from '../../components/hour_of_day_chart/hour_of_day_chart';
+import FriendsChart    from '../../components/friends_chart/friends_chart';
 require('./report.less');
 
 export default class Report extends React.Component {
+  static propTypes = {
+    location: React.PropTypes.object,
+    year: React.PropTypes.string,
+    quarter: React.PropTypes.string,
+  }
   constructor(props, context) {
     super(props, context);
     this.onStoreChanged = this.onStoreChanged.bind(this);
-    this.onPrevMonth = this.onPrevMonth.bind(this);
-    this.onNextMonth = this.onNextMonth.bind(this);
-  }
-  componentDidMount() {
-    actions.getMetadata(this.state.date, 'report');
-    store.addChangeListener(this.onStoreChanged);
-    this.renderChart();
+    this.state = {};
   }
   componentWillMount() {
     this.updateState(this.props);
+  }
+  componentDidMount() {
+    actions.getReportMetadata(this.state.year, this.state.quarter);
+    store.addChangeListener(this.onStoreChanged);
+  }
+  componentDidUpdate() {
   }
   componentWillUnmount() {
     store.removeChangeListener(this.onStoreChanged);
@@ -30,131 +35,59 @@ export default class Report extends React.Component {
   onStoreChanged() {
     this.updateState(this.props);
   }
-  componentDidUpdate() {
-    this.renderChart();
-  }
-  onPrevMonth(e) {
-    e.preventDefault();
-    actions.getMetadata(
-      formatters.getPrevMonth(this.state.date),
-      'report'
-    );
-  }
-  onNextMonth(e) {
-    e.preventDefault();
-    actions.getMetadata(
-      formatters.getNextMonth(this.state.date),
-      'report'
-    );
-  }
-  renderChart() {
-    if (this.state.metadata === undefined) {
-      return;
-    }
-
-    let data = [];
-    this.state.selectedTags.forEach((tag) =>  {
-      this.state.metadata.forEach((dayMetadata) => {
-        dayMetadata.tasks.forEach((task) => {
-          let startDate = formatters.parseDate(task.start_time);
-          if (task.tags.indexOf(tag) >= 0) {
-            data.push({
-              date: formatters.displayDateMonth(startDate),
-              time: formatters.displayTimeAsNumber(startDate),
-              name: tag
-            });
-          }
-        });
-      });
-    });
-    this.refs.chartContainer.innerHTML = "";
-    var svg = dimple.newSvg("#chartContainer", 590, 400);
-    var myChart = new dimple.chart(svg, data);
-    myChart.setBounds(60, 30, 500, 330)
-    var axis = myChart.addTimeAxis("x", "date", '%m/%d', '%m/%d');
-    axis.timePeriod = d3.time.days;
-    myChart.addMeasureAxis("y", "time");
-    myChart.addSeries("name", dimple.plot.bubble);
-    myChart.addLegend(200, 10, 360, 20, "right");
-    myChart.draw();
-  }
-  renderCalendar() {
-    if (this.state.metadata === undefined) {
-      return '';
-    }
-    let firstDate = formatters.getFirstVisualDay(this.state.date);
-    let lastDate = formatters.getLastVisualDay(this.state.date);
-    let currentDate = firstDate;
-    let weeksInMonth = formatters.getWeeksBetweenDates(firstDate, lastDate);
-    let events = {};
-    let includeTags = ['project-math-comp-sci', 'social', 'social-activity', 'date'];
-    this.state.metadata.forEach((dayMetadata) => {
-      dayMetadata.tasks.forEach((task) => {
-        let startDate = formatters.parseDate(task.start_time);
-        let taskDate = startDate.getDate();
-        if (task.tags.length > 0 && _.intersection(task.tags, includeTags).length > 0) {
-          events[taskDate] = events[taskDate] || [];
-          events[taskDate].push({
-            time: formatters.getTimeFormat(startDate),
-            name: task.tags[0]
-          });
-        }
-      });
-    });
-    let rows = _.times(weeksInMonth).map((week) => { return ( 
-        <tr key={week}>
-          {_.times(7).map((day) => { 
-            let cd = new Date(currentDate.getTime());
-            let cdate = cd.getDate();
-            currentDate.setDate(currentDate.getDate() + 1);
-            return (
-            <td key={day}>
-              <Link to={{pathname: '/', query: {date: formatters.getYearMonthDate(cd)}}} className="date">{cdate}</Link>
-              { this.state.date.getMonth() == cd.getMonth() && events[cdate] &&
-                <ul>
-                { events[cdate].map((event, index) => { return (
-                  <li key={index}>
-                    <span className="time">{event.time}</span>
-                    <span className="name">{event.name}</span>
-                  </li>
-                )})}
-                </ul>
-              }
-            </td>
-          )})}
-        </tr>
-    )});
-    return rows;
-  }
   updateState(props) {
+    const year = parseInt(props.year, 10) || new Date().getFullYear();
+    const quarter =  parseInt(props.quarter, 10) || formatters.currentQuarter();
     this.setState({
-      date: store.state.report.date,
-      selectedTags: ['wakeup', 'sleep'],
-      metadata: store.state.report.metadata ? store.state.report.metadata.metadata : undefined,
-      summary: store.state.report.metadata ? store.state.report.metadata.summary : undefined
+      year: year,
+      quarter: quarter,
+      months: formatters.getQuarterMonths(year, quarter),
+      hourOfDayTagsList: ['wakeup', 'sleep'],
+      calendarTagsList: store.state.userSettings.calendarTagsList,
+      metadata: store.state.report.metadata ? store.state.report.metadata : [],
+      summary: store.state.report.metadata && store.state.report.metadata.length > 0 ? store.state.report.metadata[0].summary : undefined,
     });
   }
   render() {
-    let calendar = this.renderCalendar();
+    if (!this.state.metadata || this.state.metadata.length === 0) {
+      return <div className="report-page" />;
+    }
+    const prevQuarter = formatters.getPrevQuarter(this.state.year, this.state.quarter);
+    const nextQuarter = formatters.getNextQuarter(this.state.year, this.state.quarter);
     return (
       <div className="report-page">
         <nav className="month-nav">
-          <a href="" className="btn prev-month" onClick={this.onPrevMonth}>&lt; Previous Month</a>
-          { formatters.getYearMonth(this.state.date) }
-          <a href="" className="btn next-month" onClick={this.onNextMonth}>Next Month &gt;</a>
+          <Link to={`/report/${prevQuarter.year}/${prevQuarter.quarter}`}>&lt; Next Quarter</Link>
+          {' '}
+          {formatters.printQuarter(this.state.year, this.state.quarter)}
+          {' '}
+          <Link to={`/report/${nextQuarter.year}/${nextQuarter.quarter}`}>Next Quarter &gt;</Link>
         </nav>
-        <table className="calendar">
-          <tbody>
-            {calendar}
-          </tbody>
-        </table>
-        <div id="chartContainer" ref="chartContainer">
+        <div className="calendars">
+          {this.state.metadata.map((metadata, index) => (
+            <Calendar
+              key={`${this.state.months[index]}-${this.state.year}`}
+              year={this.state.year}
+              month={this.state.months[index]}
+              includeTags={this.state.calendarTagsList}
+              metadata={this.state.metadata[index].metadata}
+            />
+          ))}
         </div>
-        { this.state.summary !== undefined &&
+        <div className="charts">
+          <HourOfDayChart
+            includeTags={this.state.hourOfDayTagsList}
+            metadata={this.state.metadata[0].metadata}
+          />
+          <FriendsChart
+            metadata={this.state.metadata}
+          />
+        </div>
+        {this.state.summary !== undefined &&
           <ul id="hashtags">
-            { Object.keys(this.state.summary).map((tag) => { return (
+            {Object.keys(this.state.summary).map(tag => (
               <li key={tag}>{tag}</li>
-            )})}
+            ))}
           </ul>
         }
       </div>

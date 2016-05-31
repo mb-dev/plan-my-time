@@ -10,12 +10,7 @@ export default class Header extends React.Component {
     super(props);
     this.state = {};
     this.onStoreChange = this.onStoreChange.bind(this);
-  }
-  handleLogin() {
-    actions.authorizeWithDropbox();
-  }
-  onStoreChange() {
-    this.updateState(this.props);
+    this.onClickLogin = this.onClickLogin.bind(this);
   }
   componentDidMount() {
     if (!store.state.currentUser && storage.getBearerToken()) {
@@ -26,7 +21,13 @@ export default class Header extends React.Component {
   componentWillUnmount() {
     store.removeChangeListener(this.onStoreChange);
   }
-  updateState(props) {
+  onClickLogin() {
+    actions.authorizeWithDropbox();
+  }
+  onStoreChange() {
+    this.updateState(this.props);
+  }
+  updateState() {
     this.setState({
       currentUser: store.state.currentUser,
     });
@@ -38,18 +39,19 @@ export default class Header extends React.Component {
       {name: 'Home', link: '/', className: window.location.pathname.length <= 1 ? 'active' : ''},
       {name: 'Report', link: '/report', className: window.location.pathname.indexOf('/report') >= 0 ? 'active' : ''},
       {name: 'Tags', link: '/tags', className: window.location.pathname.indexOf('/tags') >= 0 ? 'active' : ''},
+      {name: 'Settings', link: '/settings', className: window.location.pathname.indexOf('/settings') >= 0 ? 'active' : ''},
     ];
 
     if (this.state.currentUser) {
-      userSection = <div className="navbar-text">
+      userSection = (<div className="navbar-text">
         <span>Welcome {this.state.currentUser.name}</span>
         &nbsp;
         (<Link to="logout">Logout</Link>)
-      </div>;
+      </div>);
     } else {
-      userSection = <a className="btn" onClick={this.handleLogin}>
+      userSection = (<a className="btn" onClick={this.onClickLogin}>
         <i className="fa fa-dropbox"></i> Authorize Dropbox
-      </a>;
+      </a>);
     }
     return (
       <nav className="navbar navbar-default">
@@ -65,7 +67,7 @@ export default class Header extends React.Component {
           </div>
           <div className="collapse navbar-collapse">
             <ul className="nav navbar-nav">
-              { links.map((link) => (
+              {links.map((link) => (
                 <li className={link.className} key={link.name}>
                   <Link to={link.link}>{link.name}</Link>
                 </li>
@@ -81,8 +83,4 @@ export default class Header extends React.Component {
       </nav>
     );
   }
-}
-
-Header.contextTypes = {
-  router: React.PropTypes.object
 }

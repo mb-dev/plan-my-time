@@ -1,0 +1,33 @@
+@calendarGray: #aaa;
+@calendarBorder: #ddd;
+@calendarBlue: #4e87d8;
+@calendarCellWidth: 100px;
+.calendar {
+  margin: 20px;
+  td {
+    width: @calendarCellWidth;
+    max-width: @calendarCellWidth;
+    word-wrap: break-word;
+    padding: 3px;
+    border: 1px solid @calendarBorder;
+    vertical-align: top;
+    ul {
+      list-style: none;
+      padding-left: 0;
+      span.time {
+        padding-right: 5px;
+      }
+    }
+  }
+  .date {
+    color: @calendarGray;
+  }
+  .time {
+    color: @calendarBlue;
+    font-weight: bold;
+  }
+  .name {
+    color: @calendarBlue;
+  }
+}
+

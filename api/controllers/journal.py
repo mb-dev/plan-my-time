@@ -72,8 +72,8 @@ def pollChanges():
 @app.route('/api/journal', methods=['POST'])
 @auth.auth_required
 def updateJournal():
-    date_str = request.form['date']
-    content = request.form['text']
+    date_str = request.json['date']
+    content = request.json['text']
 
     # update dropbox
     dropbox = DropboxApi()

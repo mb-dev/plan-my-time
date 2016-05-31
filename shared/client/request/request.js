@@ -1,13 +1,14 @@
-const serialize = function(obj) {
-  var str = [];
-  for(var p in obj)
+function serialize(obj) {
+  const str = [];
+  for (const p in obj) {
     if (obj.hasOwnProperty(p)) {
-      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+      str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
     }
-  return str.join("&");
+  }
+  return str.join('&');
 }
 
-export default function makeRequest(type, url, req, config, success) {
+export default function makeRequest(type, url, req, config) {
   const headers = new Headers();
   if (config.token) {
     headers.append('Authorization', config.token);
@@ -21,10 +22,8 @@ export default function makeRequest(type, url, req, config, success) {
     if (type === 'GET') {
       fullurl += '?' + serialize(req.data);
     } else {
-      data.body = new FormData();
-      for ( var key in req.data ) {
-          data.body.append(key, req.data[key]);
-      }
+      headers.append('Content-Type', 'application/json');
+      data.body = JSON.stringify(req.data);
     }
   }
   return fetch(fullurl, data);

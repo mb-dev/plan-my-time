@@ -16,5 +16,6 @@
     "no-multi-spaces": [2, { "exceptions": { "VariableDeclarator": true, "ImportDeclaration": true } }],
     "max-len": 0,
     "prop-types": [0],
+    "newline-per-chained-call": 0,
   }
 }

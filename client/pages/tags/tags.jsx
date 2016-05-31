@@ -1,8 +1,9 @@
-import _               from 'lodash';
-import React           from 'react';
-import store           from '../../stores/store';
-import actions         from '../../actions/actions';
-import {Link} from 'react-router';
+import _            from 'lodash';
+import React        from 'react';
+import {Link}       from 'react-router';
+import actions      from '../../actions/actions';
+import EditTagModal from '../../components/edit_tag_modal/edit_tag_modal';
+import store        from '../../stores/store';
 
 require('./tags.less');
 
@@ -29,18 +30,22 @@ export default class TagsPage extends React.Component {
     e.preventDefault();
     this.setState({sortBy: sortBy, sortDir: dir});
   }
-  updateState(props) {
+  updateState() {
     const tagByType = _.groupBy(store.state.tags, 'type');
     this.setState({
+      calendarTagsList: store.state.userSettings.calendarTagsList,
       tags: {
         tags: tagByType.tag || [],
         people: tagByType.person || [],
         locations: tagByType.location || [],
+        showEditTagModal: store.state.modal.displayedModal === 'edit-tag',
+        tagModalParams: store.state.modal.params,
       },
     });
   }
   render() {
     const tagTypes = ['tags', 'people', 'locations'];
+    const calendarTagsListMap = _.keyBy(this.state.calendarTagsList);
     const toFullTag = function (type, tag) {
       if (type === 'tags') return `#${tag}`;
       if (type === 'people') return `@${tag}`;
@@ -66,15 +71,21 @@ export default class TagsPage extends React.Component {
         {tagTypes.map((type) => (
           <ul className="tag-list" key={type}>
             <li><b>{type}</b></li>
-            { sortedTags[type].map((tag) => (
+            {sortedTags[type].map((tag) => (
               <li key={tag.tag}>
-                <span><Link to={"/tags/" + encodeURIComponent(toFullTag(type, tag.tag))}>{tag.tag}</Link></span>{' '}
+                {type === 'tags' && calendarTagsListMap[tag.tag] &&
+                  <i className="fa fa-calendar fa-fw" />
+                }
+                <span><Link to={`/tags/${encodeURIComponent(toFullTag(type, tag.tag))}`}>{tag.tag}</Link></span>{' '}
                 <span className="count">{tag.count}</span>{' '}
                 <span className="last_date">{tag.last_date}</span>
               </li>
             ))}
           </ul>
         ))}
+        {this.state.showEditTagModal &&
+          <EditTagModal params={this.state.tagModalParams} />
+        }
       </div>
     );
   }

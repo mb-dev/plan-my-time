@@ -72,7 +72,7 @@ export default class Home extends React.Component {
       summary: store.state.metadata ? store.state.metadata.summary : undefined,
       modified: store.state.home.modified,
       saving: store.state.home.updating,
-      goalsModalOpen: store.state.goalsModal.displayed,
+      goalsModalOpen: store.state.modal.displayedModal == 'edit-goals',
       goals: store.state.home.goals,
     });
   }

@@ -4,6 +4,7 @@ import configStore from '../config/config';
 import dispatcher from '../dispatcher/dispatcher';
 import ActionType from '../stores/action_types';
 import {browserHistory} from 'react-router';
+import * as formatters from '../../shared/client/formatters/formatters';
 
 function getConfig() {
   return {apiServer: configStore.apiServer, token: storage.getBearerToken()};
@@ -37,6 +38,13 @@ class Actions {
     const response = await apiClient.getUserInfo(config);
     const data = await response.json();
     dispatcher.dispatch({actionType: ActionType.USER.INFO, info: data});
+  }
+  async saveUserSettings(settings) {
+    const config = getConfig();
+    if (!config.token) { return; }
+    dispatcher.dispatch({actionType: ActionType.REQUEST.REQUEST_STATE, state: 'pending'});
+    await apiClient.saveUserSettings(config, settings);
+    await this.getUserInfo();
   }
   // journal
   async getJournal(date) {
@@ -91,12 +99,28 @@ class Actions {
       }
     });
   }
+  async getReportMetadata(year, quarter) {
+    const config = getConfig();
+    if (!config.token) { return; }
+    const dates = formatters.getQuarterDates(year, quarter);
+    const metadata = await Promise.all(dates.map(async (date) => {
+      const response = await apiClient.getMetadata(config, date);
+      return await response.json();
+    }));
+    dispatcher.dispatch({actionType: ActionType.TASKS.GET_REPORT_METADATA, metadata: metadata});
+  }
+  // Tags
   async getAllTags() {
     const config = getConfig();
     if (!config.token) { return; }
     const response = await apiClient.getTags(config);
     const data = await response.json();
     dispatcher.dispatch({actionType: ActionType.TASKS.TAGS, tags: data.tags});
+  }
+  async saveTag(tag, params) {
+    const config = getConfig();
+    if (!config.token) { return; }
+    await apiClient.saveTag(config, tag, params);
   }
   // entries
   async getEntriesByTag(tag) {
@@ -111,11 +135,11 @@ class Actions {
     dispatcher.dispatch({actionType: ActionType.REPORT.CHANGE_DATE, date: date});
   }
   // goals
-  openEditGoalsDialog(date) {
-    dispatcher.dispatch({actionType: ActionType.GOALS.OPEN_GOALS_DIALOG, date: date});
+  openModal(name, params) {
+    dispatcher.dispatch({actionType: ActionType.OPEN_MODAL, name, params: params});
   }
-  closeEditGoalsDialog() {
-    dispatcher.dispatch({actionType: ActionType.GOALS.CLOSE_GOALS_DIALOG});
+  closeModal(name) {
+    dispatcher.dispatch({actionType: ActionType.CLOSE_MODAL, name});
   }
   async getGoals(date) {
     const config = getConfig();

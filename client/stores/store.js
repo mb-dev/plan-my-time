@@ -5,11 +5,16 @@ import ActionType from './action_types';
 import storage    from '../libraries/storage/storage';
 const CHANGE_EVENT = 'change';
 
+const defaultUserSettings = {
+  calendarTagsList: ['project-math-comp-sci', 'social', 'social-activity', 'date'],
+};
+
 class Store extends EventEmitter {
   constructor() {
     super();
     this.state = {
       currentUser: null,
+      userSettings: defaultUserSettings,
       hasToken: !!storage.getBearerToken(),
       date: new Date(),
       text: '',
@@ -23,17 +28,23 @@ class Store extends EventEmitter {
         goals: [],
       },
       report: {
-        metadata: null,
+        metadata: [],
         date: new Date(),
       },
       tagDetails: {
         entries: [],
       },
+      modal: {
+        displayedModal: null,
+        params: null,
+      },
       goalsModal: {
-        displayed: false,
         content: '',
         saving: false,
         serverError: false,
+      },
+      request: {
+        state: null,
       },
     };
   }
@@ -85,6 +96,10 @@ class Store extends EventEmitter {
         }
         this.emitChange();
         break;
+      case ActionType.TASKS.GET_REPORT_METADATA:
+        this.state.report.metadata = payload.metadata;
+        this.emitChange();
+        break;
       case ActionType.TASKS.CHANGE_DATE:
         this.state.date = payload.newDate;
         this.emitChange();
@@ -108,7 +123,11 @@ class Store extends EventEmitter {
         break;
       case ActionType.USER.INFO:
         this.state.currentUser = payload.info;
+        this.state.userSettings = this.state.currentUser.settings || defaultUserSettings;
         this.state.hasToken = true;
+        if (this.state.request.state === 'pending') {
+          this.state.request.state = 'ok';
+        }
         this.emitChange();
         break;
       case ActionType.USER.LOGOUT:
@@ -125,12 +144,13 @@ class Store extends EventEmitter {
         this.state.tagDetails.entries = payload.entries;
         this.emitChange();
         break;
-      case ActionType.GOALS.OPEN_GOALS_DIALOG:
-        this.state.goalsModal.displayed = true;
+      case ActionType.OPEN_MODAL:
+        this.state.modal.displayedModal = payload.name;
+        this.state.modal.params = payload.params;
         this.emitChange();
         break;
       case ActionType.GOALS.CLOSE_GOALS_DIALOG:
-        this.state.goalsModal.displayed = false;
+        this.state.modal.displayedModal = null;
         this.emitChange();
         break;
       case ActionType.GOALS.GOALS_RECEIVED:
@@ -154,6 +174,10 @@ class Store extends EventEmitter {
       case ActionType.GOALS.SERVER_ERROR:
         this.state.goalsModal.saving = false;
         this.state.goalsModal.serverError = true;
+        this.emitChange();
+        break;
+      case ActionType.REQUEST.REQUEST_STATE:
+        this.state.request.state = payload.state;
         this.emitChange();
         break;
       default:

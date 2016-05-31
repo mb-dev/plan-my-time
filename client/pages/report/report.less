@@ -1,6 +1,3 @@
-@calendarGray: #aaa;
-@calendarBorder: #ddd;
-@calendarBlue: #4e87d8;
 
 .report-page {
   .month-nav {
@@ -9,35 +6,12 @@
       float: right;
     }
   }
-  .calendar {
-    margin: 20px;
-    td {
-      width: 15%;
-      padding: 10px;
-      border: 1px solid @calendarBorder;
-      vertical-align: top;
-      ul {
-        list-style: none;
-        padding-left: 0;
-        span.time {
-          padding-right: 5px;
-        }
-      }
-    }
-    .date {
-      color: @calendarGray;
-    }
-    .time {
-      color: @calendarBlue;
-      font-weight: bold;
-    }
-    .name {
-      color: @calendarBlue;
-    }
+  .calendars {
+    display: flex;
   }
+  
 
-
-  #chartContainer {
+  .chart-container {
     margin-bottom: 20px;
   }
 

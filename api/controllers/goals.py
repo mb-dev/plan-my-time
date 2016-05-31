@@ -23,8 +23,8 @@ def get_goals():
 @app.route('/api/goals/file', methods=['GET'])
 @auth.auth_required
 def get_goals_file():
-    start_date_str = request.form['start_date']
-    end_date_str = request.form['end_date']
+    start_date_str = request.json['start_date']
+    end_date_str = request.json['end_date']
     if not start_date_str or not end_date_str:
         return "missing date", 400
     filename = start_date_str + "-" + end_date_str + ".md"
@@ -37,8 +37,8 @@ def get_goals_file():
 @auth.auth_required
 def update_goals():
     """ updates the goals file """
-    start_date_str = request.form['start_date']
-    end_date_str = request.form['end_date']
+    start_date_str = request.json['start_date']
+    end_date_str = request.json['end_date']
     start_date = date_helpers.parse_date_str(start_date_str)
     end_date = date_helpers.parse_date_str(end_date_str)
 

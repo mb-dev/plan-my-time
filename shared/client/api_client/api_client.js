@@ -15,6 +15,9 @@ class ApiClient {
   authByKey(config, key) {
     return request('POST', '/authorize/key', {data: {key: key}}, config);
   }
+  saveUserSettings(config, settings) {
+    return request('POST', '/user/settings', {data: settings}, config);
+  }
   // journals
   getJournal(config, date) {
     const dateStr = formatters.getYearMonthDate(date);
