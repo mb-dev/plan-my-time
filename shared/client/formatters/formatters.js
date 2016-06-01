@@ -107,3 +107,12 @@ export function getQuarterMonths(year, quarter) {
     firstMonth + 2,
   ];
 }
+
+
+// Tags
+export function toFullTag(tagWithType) {
+  if (tagWithType.type === 'tag') return `#${tagWithType.tag}`;
+  if (tagWithType.type === 'person') return `@${tagWithType.tag}`;
+  if (tagWithType.type === 'location') return `\$${tagWithType.tag}`;
+  return '';
+}

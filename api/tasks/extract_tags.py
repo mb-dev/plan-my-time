@@ -6,6 +6,8 @@ if os.path.islink(__file__):
 sys.path.insert(0, os.path.join(os.path.dirname(script_path), "../"))
 
 import lib.mongo as mongo
+import lib.tag_helpers as tag_helpers
+import models.tags
 from app import app
 
 def entry_mapper(results, type, item, entry):
@@ -27,15 +29,27 @@ def mapper(results, entry):
 
 def run():
     app.logger.info("starting extract_tags task")
-    mongo.db.tags.delete_many({})
     for user in mongo.db.users.find():
+        existing_tags = list(mongo.db.tags.find({"user_id": user["_id"]}))
+        existing_tags_dict = {}
+        for tag in existing_tags:
+            existing_tags_dict[tag_helpers.to_tag(tag)] = tag["_id"]
         results = {}
         for entry in mongo.db.entries.find({"user_id": user["_id"]}):
             mapper(results, entry)
 
-        tags = [{"user_id": user["_id"], **info} for tag, info in results.items()]
-        if len(tags) > 0:
-            mongo.db.tags.insert_many(tags)
+        updated_tags_dict = {}
+        for tag, info in results.items():
+            updated_tags_dict[tag] = True
+            if tag in existing_tags_dict:
+                models.tags.update_tag(user["_id"], tag, info)
+            else:
+                mongo.db.tags.insert_one({"user_id": user["_id"], **info})
+
+        # delete all tags that are not existing anymore
+        for key, tag_id in existing_tags_dict.items():
+            if key not in updated_tags_dict:
+                mongo.db.tags.delete_one({"_id": tag_id})
     app.logger.info("finished extract_tags task")
 
 if __name__ == "__main__":

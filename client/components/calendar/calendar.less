@@ -1,14 +1,14 @@
 @calendarGray: #aaa;
+@calendarBrightGray: #eeeeee;
 @calendarBorder: #ddd;
 @calendarBlue: #4e87d8;
 @calendarCellWidth: 100px;
 .calendar {
   margin: 20px;
   td {
-    width: @calendarCellWidth;
+    min-width: @calendarCellWidth;
     max-width: @calendarCellWidth;
     word-wrap: break-word;
-    padding: 3px;
     border: 1px solid @calendarBorder;
     vertical-align: top;
     ul {
@@ -17,10 +17,19 @@
       span.time {
         padding-right: 5px;
       }
+      li {
+        border-radius: 4px;
+        padding: 3px;
+        margin-bottom: 1px;
+        background-color: @calendarBrightGray;
+        font-size: 10px;
+        font-family: Verdana;
+      }
     }
   }
   .date {
     color: @calendarGray;
+    padding: 3px;
   }
   .time {
     color: @calendarBlue;

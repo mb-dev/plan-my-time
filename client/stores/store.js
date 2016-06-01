@@ -14,7 +14,9 @@ class Store extends EventEmitter {
     super();
     this.state = {
       currentUser: null,
-      userSettings: defaultUserSettings,
+      userSettings: {
+        calendarTagsList: [],
+      },
       hasToken: !!storage.getBearerToken(),
       date: new Date(),
       text: '',
@@ -149,7 +151,7 @@ class Store extends EventEmitter {
         this.state.modal.params = payload.params;
         this.emitChange();
         break;
-      case ActionType.GOALS.CLOSE_GOALS_DIALOG:
+      case ActionType.CLOSE_MODAL:
         this.state.modal.displayedModal = null;
         this.emitChange();
         break;

@@ -55,6 +55,13 @@ def getTags():
         tags = models.tags.get_all_tags(g.user["_id"])
     return jsonify(tags=tags)
 
+@app.route('/api/journal/tag/<tag_id>', methods=['POST'])
+@auth.auth_required
+def updateTag(tag_id):
+    tag_settings = request.json
+    models.tags.update_tag(g.user["_id"], tag_id, tag_settings)
+    return jsonify({})
+
 @app.route('/api/journal/poll', methods=['GET'])
 @auth.auth_required
 def pollChanges():

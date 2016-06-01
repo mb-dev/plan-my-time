@@ -51,6 +51,9 @@ class ApiClient {
     }
     return request('GET', '/journal/tags', {data: queryParam}, config);
   }
+  saveTag(config, tag, params) {
+    return request('POST', `/journal/tag/${encodeURIComponent(tag)}`, {data: params}, config);
+  }
   // entries
   getEntries(config, query) {
     const queryParam = query;

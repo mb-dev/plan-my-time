@@ -35,6 +35,8 @@ const ActionType = {
     INFO: 'INFO',
     LOGOUT: 'LOGOUT',
   },
+  OPEN_MODAL: 'OPEN_MODAL',
+  CLOSE_MODAL: 'CLOSE_MODAL',
 };
 
 export default ActionType;

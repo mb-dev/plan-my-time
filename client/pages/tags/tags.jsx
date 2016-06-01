@@ -4,14 +4,22 @@ import {Link}       from 'react-router';
 import actions      from '../../actions/actions';
 import EditTagModal from '../../components/edit_tag_modal/edit_tag_modal';
 import store        from '../../stores/store';
+import * as formatters from '../../../shared/client/formatters/formatters';
 
 require('./tags.less');
 
 export default class TagsPage extends React.Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {
+      sortBy: 'name',
+      tags: {
+        tags: [],
+        locations: [],
+        people: [],
+      },
+    };
     this.onStoreChanged = this.onStoreChanged.bind(this);
-    this.state = {sortBy: 'name', tags: {tags: [], locations: [], people: []}};
   }
   componentWillMount() {
     this.updateState(this.props);
@@ -26,6 +34,10 @@ export default class TagsPage extends React.Component {
   onStoreChanged() {
     this.updateState(this.props);
   }
+  onEditTag(tag, e) {
+    e.preventDefault();
+    actions.openModal('edit-tag', {tag: tag});
+  }
   onChangeSort(sortBy, dir, e) {
     e.preventDefault();
     this.setState({sortBy: sortBy, sortDir: dir});
@@ -38,20 +50,14 @@ export default class TagsPage extends React.Component {
         tags: tagByType.tag || [],
         people: tagByType.person || [],
         locations: tagByType.location || [],
-        showEditTagModal: store.state.modal.displayedModal === 'edit-tag',
-        tagModalParams: store.state.modal.params,
       },
+      showEditTagModal: store.state.modal.displayedModal === 'edit-tag',
+      tagModalParams: store.state.modal.params,
     });
   }
   render() {
     const tagTypes = ['tags', 'people', 'locations'];
-    const calendarTagsListMap = _.keyBy(this.state.calendarTagsList);
-    const toFullTag = function (type, tag) {
-      if (type === 'tags') return `#${tag}`;
-      if (type === 'people') return `@${tag}`;
-      if (type === 'locations') return `\$${tag}`;
-      return '';
-    };
+    const calendarTagsMap = _.keyBy(this.state.calendarTagsList);
     const sortedTags = {};
     tagTypes.forEach((tagType) => {
       sortedTags[tagType] = _.sortBy(this.state.tags[tagType], this.state.sortBy);
@@ -73,18 +79,24 @@ export default class TagsPage extends React.Component {
             <li><b>{type}</b></li>
             {sortedTags[type].map((tag) => (
               <li key={tag.tag}>
-                {type === 'tags' && calendarTagsListMap[tag.tag] &&
+                <a href="" onClick={this.onEditTag.bind(this, tag)}>
+                  <i className="fa fa-edit fa-fw" />
+                </a>
+                {type === 'tags' && calendarTagsMap[tag.tag] &&
                   <i className="fa fa-calendar fa-fw" />
                 }
-                <span><Link to={`/tags/${encodeURIComponent(toFullTag(type, tag.tag))}`}>{tag.tag}</Link></span>{' '}
-                <span className="count">{tag.count}</span>{' '}
+                <span><Link to={`/tags/${encodeURIComponent(formatters.toFullTag(tag.type, tag.tag))}`}>{tag.tag}</Link></span>{' '}
+                <span className="count">{tag.count}</span>
+                {' '}
                 <span className="last_date">{tag.last_date}</span>
+                {' '}
+                <span className="group-name">{tag.groupName}</span>
               </li>
             ))}
           </ul>
         ))}
         {this.state.showEditTagModal &&
-          <EditTagModal params={this.state.tagModalParams} />
+          <EditTagModal tag={this.state.tagModalParams.tag} calendarTagsList={this.state.calendarTagsList} />
         }
       </div>
     );

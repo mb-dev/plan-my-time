@@ -23,15 +23,18 @@ export default class Calendar extends React.Component {
     const weeksInMonth = formatters.getWeeksBetweenDates(firstDate, lastDate);
     const currentDate = firstDate;
     const events = {};
+    const includeTagsMap = _.keyBy(this.props.includeTags);
     this.props.metadata.forEach((dayMetadata) => {
       dayMetadata.tasks.forEach((task) => {
         const startDate = formatters.parseDate(task.start_time);
         const taskDate = startDate.getDate();
-        if (task.tags.length > 0 && _.intersection(task.tags, this.props.includeTags).length > 0) {
+        const relevantTags = _.filter(task.tags, tag => includeTagsMap[tag]);
+        if (task.tags.length > 0 && relevantTags.length > 0) {
           events[taskDate] = events[taskDate] || [];
           events[taskDate].push({
             time: formatters.getTimeFormat(startDate),
-            name: task.tags[0],
+            name: relevantTags[0],
+            line: task.line,
           });
         }
       });
@@ -50,7 +53,7 @@ export default class Calendar extends React.Component {
                 {events[cdate].map((event, index) => (
                   <li key={index}>
                     <span className="time">{event.time}</span>
-                    <span className="name">{event.name}</span>
+                    <span title={event.line} className="name">{event.name}</span>
                   </li>
                 ))}
                 </ul>
