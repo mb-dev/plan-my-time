@@ -34,6 +34,9 @@ export default class Settings extends Component {
       });
     })();
   }
+  componentWillUnmount() {
+    store.removeChangeListener(this.onStoreChanged);
+  }
   onStoreChanged() {
     this.updateState(this.props);
   }
@@ -47,7 +50,7 @@ export default class Settings extends Component {
   async onRefreshToken() {
     await actions.setApiKey(this.state.apiKey);
   }
-  updateState(props) {
+  updateState() {
     this.setState({
       notFoundError: store.state.settings.notFound,
     });
@@ -55,7 +58,7 @@ export default class Settings extends Component {
   render() {
     return (
       <View>
-        { this.state.notFoundError &&
+        {this.state.notFoundError &&
           <Text>API Key not found</Text>
         }
         <Text>API Key:</Text>
