@@ -1,33 +1,37 @@
 import React, {
   StyleSheet,
 } from 'react-native';
+import globalStyles from '../style.global';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+  },
+  dateString: {
+    fontWeight: 'bold',
+    marginBottom: 1,
   },
   innerContainer: {
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   refreshBtn: {
   },
   toolbarButton: {
-    width: 100,
+    width: 70,
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  entryRow: {
+    padding: 5,
+    backgroundColor: '#ffffff',
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  entryRowEven: {
+    backgroundColor: '#dddddd',
   },
+  ...globalStyles,
 });
 
 export default styles;

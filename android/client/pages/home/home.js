@@ -1,14 +1,12 @@
 import React, {
   Component,
   Text,
-  ToolbarAndroid,
   TouchableHighlight,
-  TouchableOpacity,
-  Dimensions,
   View,
   ListView,
 } from 'react-native';
 import Button from 'react-native-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 import store from '../../stores/store';
 import actions from '../../actions/actions';
 import * as formatters from '../../../../shared/client/formatters/formatters';
@@ -79,9 +77,10 @@ export default class Home extends Component {
       entries: ds.cloneWithRows(store.state.entries),
     });
   }
-  renderRow(entry) {
+  renderRow(entry, sectionID, rowID) {
+    const evenRow = rowID % 2 === 0;
     return (
-      <TouchableHighlight onPress={this.onEditTask.bind(this, entry)}>
+      <TouchableHighlight style={[styles.entryRow, evenRow && styles.entryRowEven]} onPress={this.onEditTask.bind(this, entry)}>
         <Text>{entry.line}</Text>
       </TouchableHighlight>
     );
@@ -89,17 +88,25 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Plan My Time
-        </Text>
-        <Button onPress={this.onAddTask}>Add Task</Button>
-        <Button onPress={this.onSettings}>Settings</Button>
+        <View style={styles.innerContainer}>
+          <Text style={styles.pageTitle}>
+            Plan My Time
+          </Text>
+          <View style={styles.buttonRow}>
+            <Button onPress={this.onAddTask}>
+              <Icon name="md-add-circle" size={30} color="#000000" />
+            </Button>
+            <Button onPress={this.onSettings}>
+              <Icon style={styles.rowButton} name="md-settings" size={30} color="#000000" />
+            </Button>
+          </View>
+        </View>
         <View style={styles.innerContainer}>
           <Button style={styles.toolbarButton} onPress={this.onPrevDay}>Prev Day</Button>
           <Button style={styles.refreshBtn}onPress={this.onRefresh}>Refresh</Button>
           <Button style={styles.toolbarButton} onPress={this.onNextDay}>Next Day</Button>
         </View>
-        <Text>{formatters.getYearMonthDate(this.state.date)}</Text>
+        <Text style={styles.dateString}>{formatters.getYearMonthDate(this.state.date)}</Text>
         <ListView dataSource={this.state.entries}
                   renderRow={this.renderRow}
         />

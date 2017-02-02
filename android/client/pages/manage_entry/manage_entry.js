@@ -98,8 +98,10 @@ export default class Entry extends Component {
       title = 'Add Line';
     }
     return (
-      <View>
-        <Text>{title}</Text>
+      <View style={styles.container}>
+        <View style={styles.innerContainer}>
+          <Text style={styles.pageTitle}>{title}</Text>
+        </View>
         <TextInput defaultValue={this.state.line} onChangeText={this.onLineChanged} />
         <View style={styles.toggleContainer}>
           <Switch
@@ -108,8 +110,10 @@ export default class Entry extends Component {
           />
           <Text style={styles.switchText}>After midnight</Text>
         </View>
-        <Button onPress={this.onAddTag}>Add Tag</Button>
-        <Button onPress={this.onSubmit}>Submit</Button>
+        <View style={styles.buttonRow}>
+          <Button onPress={this.onAddTag}>Add Tag</Button>
+          <Button style={styles.rowButton} onPress={this.onSubmit}>Submit</Button>
+        </View>
         <ListView dataSource={this.state.tags} renderRow={this.renderRow} />
       </View>
     );
